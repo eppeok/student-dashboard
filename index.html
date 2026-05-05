@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Student Dashboard 🎓</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06090f;--card:#0c1220;--border:#1a2840;
+  --math:#3b82f6;--sci:#22c55e;--hist:#f59e0b;--eng:#ec4899;
+  --white:#e2e8f0;--dim:#64748b;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* STARS BACKGROUND */
+#stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:#06090fee;backdrop-filter:blur(16px);border-bottom:1px solid #1a2840;padding:0 20px;display:flex;align-items:center;gap:6px;height:58px}
+.logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,#3b82f6,#22c55e,#f59e0b,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-right:auto;white-space:nowrap}
+.nav-btn{padding:7px 16px;border-radius:50px;border:none;background:transparent;color:var(--dim);font-weight:600;cursor:pointer;font-size:.85rem;transition:all .2s;white-space:nowrap}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:#fff}
+.nav-btn.math.active{background:#1e3a8a;color:#60a5fa}
+.nav-btn.sci.active{background:#14532d;color:#4ade80}
+.nav-btn.hist.active{background:#78350f;color:#fbbf24}
+.nav-btn.eng.active{background:#831843;color:#f9a8d4}
+
+/* HERO */
+.hero{position:relative;z-index:1;text-align:center;padding:60px 20px 40px}
+.hero h1{font-size:clamp(2rem,6vw,4rem);font-weight:900;background:linear-gradient(135deg,#3b82f6,#22c55e,#f59e0b,#ec4899,#3b82f6);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:hgrad 6s linear infinite}
+@keyframes hgrad{to{background-position:300% center}}
+.hero p{color:var(--dim);margin-top:10px;font-size:1.05rem}
+.subject-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;max-width:700px;margin:28px auto 0;padding:0 16px}
+.subject-card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:20px;text-align:center;cursor:pointer;transition:all .25s}
+.subject-card:hover{transform:translateY(-4px)}
+.subject-card .icon{font-size:2.4rem;margin-bottom:8px}
+.subject-card .name{font-weight:700;font-size:1rem}
+.subject-card .desc{font-size:.72rem;color:var(--dim);margin-top:3px}
+.sc-math{border-color:#1e3a8a} .sc-math:hover{border-color:#3b82f6;box-shadow:0 0 24px #3b82f633}
+.sc-sci{border-color:#14532d}  .sc-sci:hover{border-color:#22c55e;box-shadow:0 0 24px #22c55e33}
+.sc-hist{border-color:#78350f} .sc-hist:hover{border-color:#f59e0b;box-shadow:0 0 24px #f59e0b33}
+.sc-eng{border-color:#831843}  .sc-eng:hover{border-color:#ec4899;box-shadow:0 0 24px #ec489933}
+
+/* SECTIONS */
+.section{position:relative;z-index:1;display:none;padding:20px 16px 60px;max-width:1100px;margin:0 auto}
+.section.active{display:block}
+.sec-header{margin-bottom:24px}
+.sec-title{font-size:1.8rem;font-weight:800}
+.sec-sub{color:var(--dim);font-size:.9rem;margin-top:4px}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.tool-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;transition:border-color .2s}
+.tool-card h3{font-size:1rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.tool-card h3 span{font-size:1.3rem}
+
+/* INPUTS */
+input[type=text],input[type=number],select,textarea{
+  background:#111827;border:1px solid #1e3a5f;color:#fff;border-radius:10px;
+  padding:9px 12px;font-size:.9rem;width:100%;outline:none;transition:border-color .2s
+}
+input:focus,select:focus,textarea:focus{border-color:#3b82f6}
+textarea{resize:vertical;min-height:80px}
+
+/* BUTTONS */
+.btn{display:inline-block;padding:10px 22px;border-radius:50px;border:none;font-weight:700;cursor:pointer;font-size:.9rem;transition:all .2s;text-align:center}
+.btn-math{background:linear-gradient(90deg,#1d4ed8,#3b82f6);color:#fff}
+.btn-sci{background:linear-gradient(90deg,#15803d,#22c55e);color:#fff}
+.btn-hist{background:linear-gradient(90deg,#b45309,#f59e0b);color:#fff}
+.btn-eng{background:linear-gradient(90deg,#9d174d,#ec4899);color:#fff}
+.btn:hover{transform:scale(1.03);filter:brightness(1.1)}
+.btn:active{transform:scale(.97)}
+.btn-sm{padding:6px 16px;font-size:.8rem}
+
+/* OUTPUT BOXES */
+.output{background:#080c14;border:1px solid #1e3a5f;border-radius:12px;padding:14px;margin-top:12px;font-size:.88rem;line-height:1.7;min-height:48px;color:var(--white)}
+.output .step{color:#60a5fa;font-weight:700;display:block;margin-top:6px}
+.output .step:first-child{margin-top:0}
+.output .result{color:#4ade80;font-size:1.1rem;font-weight:800;margin-top:8px;display:block}
+.output .err{color:#f87171}
+
+/* MATH CALC */
+.calc-display{background:#080c14;border:1px solid #1e3a5f;border-radius:12px;padding:14px 16px;margin-bottom:10px;text-align:right}
+.calc-display .expr{color:var(--dim);font-size:.85rem;min-height:20px}
+.calc-display .val{font-size:2rem;font-weight:700;color:#60a5fa;min-height:44px}
+.calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.cb{padding:14px 6px;border-radius:10px;border:none;font-size:1rem;font-weight:700;cursor:pointer;transition:all .15s;background:#1e293b;color:#fff}
+.cb:hover{background:#2d3f55}
+.cb.op{background:#1e3a8a;color:#60a5fa}
+.cb.op:hover{background:#2d4fc0}
+.cb.eq{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;grid-column:span 2}
+.cb.clr{background:#3b1515;color:#f87171}
+.cb.zero{grid-column:span 2}
+
+/* GRAPH */
+#graph-canvas{border-radius:12px;border:1px solid #1e3a5f;display:block;width:100%;max-height:220px}
+
+/* UNIT CONVERTER */
+.unit-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.unit-row input{flex:1}
+.unit-row select{flex:1}
+.unit-eq{color:#f59e0b;font-size:1.1rem;font-weight:700;text-align:center;padding:6px 0}
+
+/* SOLAR SYSTEM */
+#solar-wrap{position:relative;width:100%;height:320px;overflow:hidden;border-radius:16px;background:radial-gradient(circle at center,#0a1a2e,#020408)}
+#solar-canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+.planet-info{background:#0c1220;border:1px solid #1e3a5f;border-radius:12px;padding:12px;margin-top:10px;font-size:.85rem;line-height:1.7;min-height:60px}
+.planet-info .planet-name{font-size:1.1rem;font-weight:700;color:#4ade80;margin-bottom:4px}
+
+/* PERIODIC TABLE */
+.pt-wrap{overflow-x:auto;padding-bottom:8px}
+.pt-grid{display:grid;grid-template-columns:repeat(18,minmax(36px,1fr));gap:2px;min-width:660px}
+.el{border-radius:6px;padding:3px 2px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative}
+.el:hover{transform:scale(1.15);z-index:10;box-shadow:0 0 12px #fff3}
+.el .sym{font-size:.75rem;font-weight:800;line-height:1.2}
+.el .num{font-size:.5rem;color:#ffffff99;line-height:1}
+.el .nm{font-size:.45rem;color:#ffffff88;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* element categories */
+.alk{background:#7c2d12}.alk-e{background:#78350f}.trans{background:#1e3a5f}
+.post{background:#1a2d4a}.met{background:#1e1b4b}.non{background:#14532d}
+.hal{background:#155e75}.noble{background:#2d1657}.lan{background:#3b1545}
+.act{background:#1a2907}.unk{background:#1f2937}
+
+/* ELEMENT MODAL */
+.modal-overlay{position:fixed;inset:0;background:#000a;z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{background:#0c1220;border:2px solid #1e3a5f;border-radius:20px;padding:24px;max-width:400px;width:100%;animation:popIn .25s ease}
+@keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:16px}
+.modal-sym{font-size:3rem;font-weight:900;line-height:1}
+.modal-close{background:none;border:none;color:var(--dim);font-size:1.5rem;cursor:pointer;padding:4px 8px}
+.modal-close:hover{color:#fff}
+.modal-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1e3a5f;font-size:.85rem}
+.modal-row:last-child{border:none}
+.modal-label{color:var(--dim)}
+.modal-val{font-weight:600;color:var(--white)}
+
+/* HISTORY TIMELINE */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#f59e0b,#b45309)}
+.tl-item{position:relative;margin-bottom:20px;animation:fadeIn .4s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.tl-dot{position:absolute;left:-22px;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid #f59e0b;background:var(--bg)}
+.tl-date{font-size:.72rem;color:#f59e0b;font-weight:700;margin-bottom:2px}
+.tl-title{font-size:.95rem;font-weight:700;margin-bottom:2px}
+.tl-desc{font-size:.8rem;color:var(--dim);line-height:1.5}
+.tl-cat{display:inline-block;font-size:.65rem;padding:2px 8px;border-radius:20px;font-weight:700;margin-top:4px}
+.cat-politics{background:#1e3a8a;color:#60a5fa}
+.cat-science{background:#14532d;color:#4ade80}
+.cat-war{background:#7c2d12;color:#fca5a5}
+.cat-culture{background:#2d1657;color:#c084fc}
+.cat-explore{background:#164e63;color:#67e8f9}
+.cat-religion{background:#78350f;color:#fbbf24}
+
+.filter-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.filter-btn{padding:5px 14px;border-radius:50px;border:1px solid #1e3a5f;background:transparent;color:var(--dim);cursor:pointer;font-size:.78rem;font-weight:600;transition:all .2s}
+.filter-btn.active{background:#78350f;border-color:#f59e0b;color:#fbbf24}
+
+/* ENGLISH */
+.quiz-card{background:#080c14;border:1px solid #1e3a5f;border-radius:14px;padding:18px;margin-bottom:12px}
+.quiz-word{font-size:1.5rem;font-weight:800;color:#f9a8d4;margin-bottom:4px}
+.quiz-pos{font-size:.75rem;color:var(--dim);margin-bottom:12px}
+.quiz-opts{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{padding:10px 16px;border-radius:10px;border:1px solid #1e3a5f;background:#0c1220;color:#fff;cursor:pointer;text-align:left;font-size:.88rem;transition:all .2s}
+.quiz-opt:hover{border-color:#ec4899;background:#1a0a18}
+.quiz-opt.correct{background:#14532d;border-color:#22c55e;color:#4ade80}
+.quiz-opt.wrong{background:#3b1515;border-color:#f87171;color:#f87171}
+.quiz-score{font-size:1.1rem;font-weight:700;color:#f9a8d4;text-align:center;margin:10px 0}
+
+.story-params{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.wotd{background:linear-gradient(135deg,#1a0020,#2d003a);border:1px solid #6b21a8;border-radius:14px;padding:16px;margin-bottom:14px;text-align:center}
+.wotd-word{font-size:1.8rem;font-weight:900;color:#c084fc;margin:6px 0}
+.wotd-def{font-size:.85rem;color:#94a3b8;line-height:1.5}
+.wotd-ex{font-size:.8rem;color:#6b7280;font-style:italic;margin-top:6px}
+
+/* GRAMMAR TIPS */
+.tip-card{background:#080c14;border-left:3px solid #ec4899;border-radius:0 12px 12px 0;padding:12px 16px;margin-bottom:10px}
+.tip-card .tip-title{font-size:.85rem;font-weight:700;color:#f9a8d4;margin-bottom:4px}
+.tip-card .tip-body{font-size:.8rem;color:#94a3b8;line-height:1.5}
+.tip-card .tip-ex{font-size:.78rem;color:#6b7280;font-style:italic;margin-top:4px}
+
+/* PROGRESS */
+.progress-wrap{background:#080c14;border:1px solid #1e3a5f;border-radius:14px;padding:16px;margin-bottom:16px}
+.progress-title{font-size:.8rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.prog-label{font-size:.8rem;width:70px;color:var(--dim)}
+.prog-bar-bg{flex:1;height:8px;background:#1e3a5f;border-radius:6px;overflow:hidden}
+.prog-bar-fill{height:100%;border-radius:6px;transition:width 1s ease}
+.prog-val{font-size:.78rem;font-weight:700;width:36px;text-align:right}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .story-params{grid-template-columns:1fr}
+  .tool-grid{grid-template-columns:1fr}
+  .pt-grid{min-width:580px}
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#0c1220}
+::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px}
+
+/* TAG */
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.7rem;font-weight:700;margin-left:6px;vertical-align:middle}
+.badge-new{background:#14532d;color:#4ade80}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">🎓 Student Dashboard</div>
+  <button class="nav-btn math" onclick="showSection('home')">Home</button>
+  <button class="nav-btn math" onclick="showSection('math')">➗ Math</button>
+  <button class="nav-btn sci"  onclick="showSection('sci')">🔬 Science</button>
+  <button class="nav-btn hist" onclick="showSection('hist')">📜 History</button>
+  <button class="nav-btn eng"  onclick="showSection('eng')">📖 English</button>
+</nav>
+
+<!-- HOME -->
+<div id="sec-home" class="section active">
+  <div class="hero">
+    <h1>Student Dashboard</h1>
+    <p>Your all-in-one interactive learning hub 🚀</p>
+    <div class="subject-cards">
+      <div class="subject-card sc-math" onclick="showSection('math')">
+        <div class="icon">➗</div>
+        <div class="name">Mathematics</div>
+        <div class="desc">Calculator · Grapher · Solver</div>
+      </div>
+      <div class="subject-card sc-sci" onclick="showSection('sci')">
+        <div class="icon">🔬</div>
+        <div class="name">Science</div>
+        <div class="desc">Solar System · Periodic Table</div>
+      </div>
+      <div class="subject-card sc-hist" onclick="showSection('hist')">
+        <div class="icon">📜</div>
+        <div class="name">History</div>
+        <div class="desc">World Timeline · Explorer</div>
+      </div>
+      <div class="subject-card sc-eng" onclick="showSection('eng')">
+        <div class="icon">📖</div>
+        <div class="name">English</div>
+        <div class="desc">Vocab Quiz · Story Generator</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ MATH ═══ -->
+<div id="sec-math" class="section">
+  <div class="sec-header">
+    <div class="sec-title" style="color:#60a5fa">➗ Mathematics</div>
+    <div class="sec-sub">Step-by-step calculator · Function grapher · Unit converter · Quadratic solver</div>
+  </div>
+  <div class="tool-grid">
+
+    <!-- CALCULATOR -->
+    <div class="tool-card" style="border-color:#1e3a8a">
+      <h3><span>🧮</span> Step-by-Step Calculator</h3>
+      <div class="calc-display">
+        <div class="expr" id="calc-expr"></div>
+        <div class="val" id="calc-val">0</div>
+      </div>
+      <div class="calc-btns">
+        <button class="cb clr" onclick="calcClr()">C</button>
+        <button class="cb" onclick="calcDel()">⌫</button>
+        <button class="cb op" onclick="calcOp('%')">%</button>
+        <button class="cb op" onclick="calcOp('/')">÷</button>
+        <button class="cb" onclick="calcNum('7')">7</button>
+        <button class="cb" onclick="calcNum('8')">8</button>
+        <button class="cb" onclick="calcNum('9')">9</button>
+        <button class="cb op" onclick="calcOp('*')">×</button>
+        <button class="cb" onclick="calcNum('4')">4</button>
+        <button class="cb" onclick="calcNum('5')">5</button>
+        <button class="cb" onclick="calcNum('6')">6</button>
+        <button class="cb op" onclick="calcOp('-')">−</button>
+        <button class="cb" onclick="calcNum('1')">1</button>
+        <button class="cb" onclick="calcNum('2')">2</button>
+        <button class="cb" onclick="calcNum('3')">3</button>
+        <button class="cb op" onclick="calcOp('+')">+</button>
+        <button class="cb zero" onclick="calcNum('0')">0</button>
+        <button class="cb" onclick="calcNum('.')">.</button>
+        <button class="cb eq" onclick="calcEq()">=</button>
+      </div>
+      <div class="output" id="calc-steps" style="min-height:32px"></div>
+    </div>
+
+    <!-- GRAPHING -->
+    <div class="tool-card" style="border-color:#1e3a8a">
+      <h3><span>📈</span> Function Grapher</h3>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input type="text" id="fn-input" value="x*x" placeholder="e.g. x*x, sin(x)*5, 2*x+3"/>
+        <button class="btn btn-math btn-sm" onclick="plotGraph()">Plot</button>
+      </div>
+      <canvas id="graph-canvas" width="600" height="220"></canvas>
+      <div class="output" id="fn-info" style="min-height:28px;font-size:.78rem"></div>
+    </div>
+
+    <!-- QUADRATIC SOLVER -->
+    <div class="tool-card" style="border-color:#1e3a8a">
+      <h3><span>📐</span> Quadratic Equation Solver</h3>
+      <p style="font-size:.78rem;color:var(--dim);margin-bottom:10px">Solve ax² + bx + c = 0</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+        <div><label style="font-size:.72rem;color:var(--dim)">a</label><input type="number" id="qa" value="1" placeholder="a"/></div>
+        <div><label style="font-size:.72rem;color:var(--dim)">b</label><input type="number" id="qb" value="-5" placeholder="b"/></div>
+        <div><label style="font-size:.72rem;color:var(--dim)">c</label><input type="number" id="qc" value="6" placeholder="c"/></div>
+      </div>
+      <button class="btn btn-math" style="width:100%" onclick="solveQuad()">Solve Step by Step</button>
+      <div class="output" id="quad-out"></div>
+    </div>
+
+    <!-- UNIT CONVERTER -->
+    <div class="tool-card" style="border-color:#1e3a8a">
+      <h3><span>⚖️</span> Unit Converter</h3>
+      <select id="unit-type" onchange="switchUnitType()" style="margin-bottom:10px">
+        <option value="length">📏 Length</option>
+        <option value="weight">⚖️ Weight</option>
+        <option value="temp">🌡️ Temperature</option>
+        <option value="speed">💨 Speed</option>
+        <option value="area">📐 Area</option>
+      </select>
+      <div class="unit-row">
+        <input type="number" id="unit-val" value="1" oninput="convertUnit()"/>
+        <select id="unit-from" onchange="convertUnit()"></select>
+      </div>
+      <div class="unit-eq" id="unit-arrow">→</div>
+      <div class="unit-row">
+        <input type="number" id="unit-result" readonly style="color:#4ade80"/>
+        <select id="unit-to" onchange="convertUnit()"></select>
+      </div>
+      <div class="output" id="unit-fact" style="min-height:28px;font-size:.78rem"></div>
+    </div>
+
+    <!-- TIMES TABLES -->
+    <div class="tool-card" style="border-color:#1e3a8a;grid-column:span 1">
+      <h3><span>✖️</span> Times Table Quiz</h3>
+      <div id="tt-question" class="quiz-card" style="text-align:center">
+        <div class="quiz-word" id="tt-q" style="font-size:2rem;color:#60a5fa">?</div>
+        <input type="number" id="tt-ans" placeholder="Your answer" style="margin-top:10px;text-align:center" onkeydown="if(event.key==='Enter')checkTT()"/>
+        <button class="btn btn-math" style="margin-top:10px;width:100%" onclick="checkTT()">Check Answer</button>
+      </div>
+      <div class="output" id="tt-out"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.82rem">
+        <span>Score: <b id="tt-score" style="color:#4ade80">0</b></span>
+        <span>Streak: <b id="tt-streak" style="color:#f59e0b">0</b> 🔥</span>
+        <button class="btn btn-math btn-sm" onclick="newTTQ()">Skip</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SCIENCE ═══ -->
+<div id="sec-sci" class="section">
+  <div class="sec-header">
+    <div class="sec-title" style="color:#4ade80">🔬 Science</div>
+    <div class="sec-sub">Interactive solar system · Full periodic table · Click anything to learn more</div>
+  </div>
+  <div class="tool-grid">
+
+    <!-- SOLAR SYSTEM -->
+    <div class="tool-card" style="border-color:#14532d;grid-column:1/-1">
+      <h3><span>🌌</span> Interactive Solar System <span class="badge badge-new">LIVE</span></h3>
+      <div id="solar-wrap">
+        <canvas id="solar-canvas"></canvas>
+      </div>
+      <p style="font-size:.72rem;color:var(--dim);margin-top:6px;text-align:center">Click any planet to learn about it</p>
+      <div class="planet-info" id="planet-info">
+        <div class="planet-name">☀️ Click a planet to explore it</div>
+        Welcome to the Solar System! Eight planets orbit our Sun. Click on any planet to discover facts, size, distance, and more.
+      </div>
+    </div>
+
+    <!-- PERIODIC TABLE -->
+    <div class="tool-card" style="border-color:#14532d;grid-column:1/-1">
+      <h3><span>⚗️</span> Interactive Periodic Table</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;font-size:.72rem">
+        <span style="background:#7c2d12;padding:2px 8px;border-radius:4px">Alkali Metal</span>
+        <span style="background:#78350f;padding:2px 8px;border-radius:4px">Alkaline Earth</span>
+        <span style="background:#1e3a5f;padding:2px 8px;border-radius:4px">Transition</span>
+        <span style="background:#1a2d4a;padding:2px 8px;border-radius:4px">Post-Transition</span>
+        <span style="background:#14532d;padding:2px 8px;border-radius:4px">Nonmetal</span>
+        <span style="background:#155e75;padding:2px 8px;border-radius:4px">Halogen</span>
+        <span style="background:#2d1657;padding:2px 8px;border-radius:4px">Noble Gas</span>
+        <span style="background:#1e1b4b;padding:2px 8px;border-radius:4px">Metalloid</span>
+        <span style="background:#3b1545;padding:2px 8px;border-radius:4px">Lanthanide</span>
+        <span style="background:#1a2907;padding:2px 8px;border-radius:4px">Actinide</span>
+      </div>
+      <div class="pt-wrap"><div class="pt-grid" id="pt-grid"></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ELEMENT MODAL -->
+<div class="modal-overlay" id="el-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-sym" id="m-sym">H</div>
+        <div style="font-size:1.1rem;font-weight:700;margin-top:4px" id="m-name">Hydrogen</div>
+        <div style="font-size:.78rem;color:var(--dim)" id="m-cat">Nonmetal</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="m-rows"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ HISTORY ═══ -->
+<div id="sec-hist" class="section">
+  <div class="sec-header">
+    <div class="sec-title" style="color:#fbbf24">📜 World History</div>
+    <div class="sec-sub">60+ key events from ancient civilizations to modern day</div>
+  </div>
+  <div class="tool-grid">
+    <div class="tool-card" style="border-color:#78350f;grid-column:1/-1">
+      <h3><span>🌍</span> Interactive World Timeline</h3>
+      <div class="filter-row" id="tl-filters">
+        <button class="filter-btn active" onclick="filterTL('all',this)">All</button>
+        <button class="filter-btn" onclick="filterTL('politics',this)">🏛️ Politics</button>
+        <button class="filter-btn" onclick="filterTL('science',this)">🔬 Science</button>
+        <button class="filter-btn" onclick="filterTL('war',this)">⚔️ Wars</button>
+        <button class="filter-btn" onclick="filterTL('culture',this)">🎭 Culture</button>
+        <button class="filter-btn" onclick="filterTL('explore',this)">🧭 Exploration</button>
+        <button class="filter-btn" onclick="filterTL('religion',this)">🕌 Religion</button>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </div>
+
+    <!-- HISTORY QUIZ -->
+    <div class="tool-card" style="border-color:#78350f">
+      <h3><span>🏺</span> History Quiz</h3>
+      <div id="hquiz-q" class="quiz-card">
+        <div class="quiz-word" id="hq-question" style="font-size:1rem;color:#fbbf24">Loading...</div>
+        <div class="quiz-opts" id="hq-opts"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.82rem">
+        <span>Score: <b id="hq-score" style="color:#fbbf24">0</b></span>
+        <button class="btn btn-hist btn-sm" onclick="nextHQ()">Next →</button>
+      </div>
+    </div>
+
+    <!-- HISTORICAL FIGURES -->
+    <div class="tool-card" style="border-color:#78350f">
+      <h3><span>👤</span> Historical Figures</h3>
+      <select id="figure-select" onchange="showFigure()" style="margin-bottom:10px">
+        <option value="">— Select a figure —</option>
+      </select>
+      <div class="output" id="figure-out" style="min-height:80px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ ENGLISH ═══ -->
+<div id="sec-eng" class="section">
+  <div class="sec-header">
+    <div class="sec-title" style="color:#f9a8d4">📖 English Language Arts</div>
+    <div class="sec-sub">Vocabulary quiz · Story generator · Grammar tips · Word of the day</div>
+  </div>
+  <div class="tool-grid">
+
+    <!-- WORD OF THE DAY -->
+    <div class="tool-card" style="border-color:#831843;grid-column:1/-1">
+      <h3><span>🌟</span> Word of the Day</h3>
+      <div class="wotd" id="wotd-box">
+        <div style="font-size:.72rem;color:#6b21a8;text-transform:uppercase;letter-spacing:1px">Today's Word</div>
+        <div class="wotd-word" id="wotd-word">Ephemeral</div>
+        <div style="font-size:.72rem;color:#9333ea;margin-bottom:4px" id="wotd-pos">adjective</div>
+        <div class="wotd-def" id="wotd-def">Lasting for a very short time; transitory.</div>
+        <div class="wotd-ex" id="wotd-ex">"The ephemeral beauty of cherry blossoms reminds us to appreciate fleeting moments."</div>
+      </div>
+      <button class="btn btn-eng" onclick="newWOTD()" style="width:100%">🔄 New Word</button>
+    </div>
+
+    <!-- VOCAB QUIZ -->
+    <div class="tool-card" style="border-color:#831843">
+      <h3><span>🧩</span> Vocabulary Quiz</h3>
+      <div class="quiz-score" id="vq-score-display">Score: 0 / 0</div>
+      <div id="vquiz-container"></div>
+      <button class="btn btn-eng" onclick="startVQuiz()" style="width:100%;margin-top:10px">🔄 New Quiz</button>
+    </div>
+
+    <!-- STORY GENERATOR -->
+    <div class="tool-card" style="border-color:#831843">
+      <h3><span>✍️</span> AI Story Generator</h3>
+      <div class="story-params">
+        <div>
+          <label style="font-size:.72rem;color:var(--dim)">Genre</label>
+          <select id="story-genre">
+            <option>Fantasy</option><option>Sci-Fi</option><option>Mystery</option>
+            <option>Adventure</option><option>Horror</option><option>Romance</option>
+            <option>Historical</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.72rem;color:var(--dim)">Setting</label>
+          <select id="story-setting">
+            <option>a haunted castle</option><option>a distant planet</option>
+            <option>ancient Egypt</option><option>a modern city</option>
+            <option>an enchanted forest</option><option>an underwater city</option>
+            <option>a post-apocalyptic wasteland</option><option>medieval England</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.72rem;color:var(--dim)">Hero Name</label>
+          <input type="text" id="story-hero" placeholder="e.g. Zara"/>
+        </div>
+        <div>
+          <label style="font-size:.72rem;color:var(--dim)">Villain</label>
+          <input type="text" id="story-villain" placeholder="e.g. Lord Malgrath"/>
+        </div>
+      </div>
+      <button class="btn btn-eng" style="width:100%" onclick="generateStory()">📜 Generate Story</button>
+      <div class="output" id="story-out" style="min-height:100px;line-height:1.8"></div>
+    </div>
+
+    <!-- GRAMMAR TIPS -->
+    <div class="tool-card" style="border-color:#831843">
+      <h3><span>📝</span> Grammar Tips & Rules</h3>
+      <div id="grammar-tips"></div>
+      <button class="btn btn-eng btn-sm" onclick="renderGrammar()" style="margin-top:8px">🔄 More Tips</button>
+    </div>
+
+    <!-- WRITING TOOLS -->
+    <div class="tool-card" style="border-color:#831843">
+      <h3><span>🔡</span> Writing Tools</h3>
+      <textarea id="writing-input" placeholder="Paste or type your text here..." style="margin-bottom:10px;height:100px"></textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-eng btn-sm" onclick="analyzeText()">📊 Analyze</button>
+        <button class="btn btn-eng btn-sm" onclick="countSyllables()">🎵 Syllables</button>
+        <button class="btn btn-eng btn-sm" onclick="findRhymes()">🎤 Rhymes</button>
+      </div>
+      <div class="output" id="writing-out" style="min-height:60px;margin-top:10px"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════ STARS ═══════════════════
+(function(){
+  const c=document.getElementById('stars'),ctx=c.getContext('2d');
+  c.width=window.innerWidth;c.height=window.innerHeight;
+  const stars=Array.from({length:180},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.3,o:Math.random()}));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      s.o+=.005*(Math.random()>.5?1:-1);s.o=Math.max(.1,Math.min(1,s.o));
+      ctx.fillStyle=`rgba(255,255,255,${s.o})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight});
+})();
+
+// ═══════════════════ NAV ═══════════════════
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const map={home:0,math:1,sci:2,hist:3,eng:4};
+  document.querySelectorAll('.nav-btn')[map[id]]?.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='sci'&&!solarInit){initSolar();solarInit=true}
+  if(id==='sci'&&!ptInit){buildPT();ptInit=true}
+  if(id==='hist'&&!histInit){buildTimeline();buildHQ();buildFigures();histInit=true}
+  if(id==='eng'&&!engInit){startVQuiz();renderGrammar();newWOTD();buildEngQuiz();engInit=true}
+  if(id==='math'){initConverter();newTTQ();setTimeout(plotGraph,100)}
+}
+let solarInit=false,ptInit=false,histInit=false,engInit=false;
+
+// ═══════════════════ MATH: CALCULATOR ═══════════════════
+let calcExpr='',calcCurrent='0',calcOp_='',calcPrev='';
+function calcDisp(){
+  document.getElementById('calc-val').textContent=calcCurrent;
+  document.getElementById('calc-expr').textContent=calcExpr;
+}
+function calcNum(n){
+  if(calcCurrent==='0'&&n!=='.') calcCurrent=n;
+  else if(n==='.'&&calcCurrent.includes('.'))return;
+  else calcCurrent+=n;
+  calcDisp();
+}
+function calcOp(op){
+  const opNames={'+':'plus','-':'minus','*':'times','/':'divided by','%':'percent of'};
+  calcPrev=calcCurrent;calcOp_=op;calcExpr=calcCurrent+' '+op+' ';calcCurrent='0';calcDisp();
+}
+function calcClr(){calcExpr='';calcCurrent='0';calcOp_='';calcPrev='';document.getElementById('calc-steps').innerHTML='';calcDisp()}
+function calcDel(){calcCurrent=calcCurrent.length>1?calcCurrent.slice(0,-1):'0';calcDisp()}
+function calcEq(){
+  if(!calcOp_||!calcPrev)return;
+  const a=parseFloat(calcPrev),b=parseFloat(calcCurrent);
+  const opSym={'+':'+','-':'−','*':'×','/':'÷','%':'%'};
+  let res,steps='';
+  switch(calcOp_){
+    case '+':res=a+b;steps=`<span class="step">Step 1: Add ${a} + ${b}</span><span class="step">Step 2: Count up from ${a} by ${b}</span><span class="result">= ${res}</span>`;break;
+    case '-':res=a-b;steps=`<span class="step">Step 1: Subtract ${b} from ${a}</span><span class="step">Step 2: ${a} - ${b} = ?</span><span class="result">= ${res}</span>`;break;
+    case '*':res=a*b;steps=`<span class="step">Step 1: Multiply ${a} × ${b}</span><span class="step">Step 2: Add ${a} to itself ${b} times</span><span class="step">Step 3: ${a} × ${b} = ?</span><span class="result">= ${res}</span>`;break;
+    case '/':
+      if(b===0){document.getElementById('calc-steps').innerHTML='<span class="err">❌ Cannot divide by zero!</span>';return;}
+      res=a/b;
+      steps=`<span class="step">Step 1: Divide ${a} ÷ ${b}</span><span class="step">Step 2: How many times does ${b} go into ${a}?</span><span class="result">= ${+(res.toFixed(6))}</span>`;
+      break;
+    case '%':res=a*b/100;steps=`<span class="step">Step 1: ${b}% of ${a}</span><span class="step">Step 2: ${a} × ${b} ÷ 100</span><span class="result">= ${res}</span>`;break;
+  }
+  calcExpr=`${a} ${opSym[calcOp_]} ${b} =`;
+  calcCurrent=String(+(res.toFixed(8)));
+  document.getElementById('calc-steps').innerHTML=steps;
+  calcOp_='';calcPrev='';calcDisp();
+}
+
+// ═══════════════════ MATH: GRAPHER ═══════════════════
+function plotGraph(){
+  const canvas=document.getElementById('graph-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth*2;canvas.height=440;
+  ctx.scale(2,2);
+  const W=canvas.offsetWidth,H=220;
+  const fnStr=document.getElementById('fn-input').value||'x*x';
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#080c14';ctx.fillRect(0,0,W,H);
+  const cx=W/2,cy=H/2,scale=30;
+  // grid
+  ctx.strokeStyle='#1e3a5f';ctx.lineWidth=.5;
+  for(let x=0;x<W;x+=scale/2){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+  for(let y=0;y<H;y+=scale/2){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+  // axes
+  ctx.strokeStyle='#334155';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  // axis labels
+  ctx.fillStyle='#475569';ctx.font='9px sans-serif';ctx.textAlign='center';
+  for(let i=-5;i<=5;i++){
+    if(i===0)continue;
+    ctx.fillText(i,cx+i*scale,cy+12);
+    ctx.fillText(-i,cx-5,cy-i*scale+3);
+  }
+  // function
+  let fn;
+  try{fn=new Function('x',`with(Math){return ${fnStr}}`)}
+  catch(e){document.getElementById('fn-info').innerHTML=`<span class="err">Invalid function: ${fnStr}</span>`;return}
+  ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.beginPath();
+  let first=true,vals=[];
+  for(let px=0;px<W;px++){
+    const x=(px-cx)/scale;
+    try{
+      const y=fn(x);
+      vals.push(y);
+      if(!isFinite(y)){first=true;continue}
+      const py=cy-y*scale;
+      if(first){ctx.moveTo(px,py);first=false}else ctx.lineTo(px,py);
+    }catch{first=true}
+  }
+  ctx.stroke();
+  const min=Math.min(...vals.filter(isFinite)).toFixed(2);
+  const max=Math.max(...vals.filter(isFinite)).toFixed(2);
+  document.getElementById('fn-info').innerHTML=`📊 f(x) = ${fnStr} &nbsp;|&nbsp; Range shown: min≈${min}, max≈${max}`;
+}
+
+// ═══════════════════ MATH: QUADRATIC ═══════════════════
+function solveQuad(){
+  const a=+document.getElementById('qa').value,b=+document.getElementById('qb').value,c=+document.getElementById('qc').value;
+  const disc=b*b-4*a*c;
+  let html=`<span class="step">Equation: ${a}x² ${b>=0?'+':''}${b}x ${c>=0?'+':''}${c} = 0</span>`;
+  html+=`<span class="step">Step 1: Identify a=${a}, b=${b}, c=${c}</span>`;
+  html+=`<span class="step">Step 2: Calculate discriminant: b²-4ac = ${b}²-4(${a})(${c}) = ${b*b}-${4*a*c} = ${disc}</span>`;
+  if(disc<0){
+    html+=`<span class="step">Step 3: Discriminant < 0 → No real solutions</span>`;
+    html+=`<span class="step">Complex roots: x = (${-b} ± √${Math.abs(disc)}i) / ${2*a}</span>`;
+    html+=`<span class="result">No real roots exist</span>`;
+  } else if(disc===0){
+    const x=-b/(2*a);
+    html+=`<span class="step">Step 3: Discriminant = 0 → One repeated root</span>`;
+    html+=`<span class="step">x = -b / (2a) = ${-b} / ${2*a}</span>`;
+    html+=`<span class="result">x = ${+x.toFixed(4)}</span>`;
+  } else {
+    const x1=(-b+Math.sqrt(disc))/(2*a),x2=(-b-Math.sqrt(disc))/(2*a);
+    html+=`<span class="step">Step 3: Discriminant > 0 → Two real roots</span>`;
+    html+=`<span class="step">x = (-b ± √disc) / (2a)</span>`;
+    html+=`<span class="step">x₁ = (${-b} + √${disc}) / ${2*a} = ${+x1.toFixed(4)}</span>`;
+    html+=`<span class="step">x₂ = (${-b} - √${disc}) / ${2*a} = ${+x2.toFixed(4)}</span>`;
+    html+=`<span class="result">x₁ = ${+x1.toFixed(4)}, x₂ = ${+x2.toFixed(4)}</span>`;
+  }
+  document.getElementById('quad-out').innerHTML=html;
+}
+
+// ═══════════════════ MATH: UNIT CONVERTER ═══════════════════
+const unitDefs={
+  length:{units:['meters','kilometers','miles','feet','inches','centimeters','yards'],
+    base:{meters:1,kilometers:.001,miles:.000621371,feet:3.28084,inches:39.3701,centimeters:100,yards:1.09361},
+    facts:{meters:'The meter is the SI base unit of length.',kilometers:'1 km = 1,000 meters.',miles:'1 mile = 1,760 yards.',feet:'A standard door is about 7 feet tall.',inches:'An inch was originally the width of a thumb.',centimeters:'100 cm = 1 meter.',yards:'A football field is 100 yards long.'}},
+  weight:{units:['kilograms','grams','pounds','ounces','tonnes'],
+    base:{kilograms:1,grams:1000,pounds:2.20462,ounces:35.274,tonnes:.001},
+    facts:{kilograms:'The kg is the SI unit of mass.',grams:'A paperclip weighs about 1 gram.',pounds:'1 pound = 16 ounces.',ounces:'1 ounce ≈ 28.35 grams.',tonnes:'1 metric tonne = 1,000 kg.'}},
+  temp:{units:['Celsius','Fahrenheit','Kelvin'],base:{},
+    facts:{Celsius:'Water freezes at 0°C and boils at 100°C.',Fahrenheit:'Water freezes at 32°F.',Kelvin:'0 K is absolute zero — the coldest possible temperature.'}},
+  speed:{units:['m/s','km/h','mph','knots','ft/s'],
+    base:{'m/s':1,'km/h':3.6,mph:2.23694,knots:1.94384,'ft/s':3.28084},
+    facts:{'m/s':'SI unit of speed.','km/h':'Speed limit in most countries.','mph':'Used in the US and UK.',knots:'Used in aviation and marine.','ft/s':'Often used in physics problems.'}},
+  area:{units:['m²','km²','acres','hectares','ft²'],
+    base:{'m²':1,'km²':.000001,acres:.000247105,hectares:.0001,'ft²':10.7639},
+    facts:{'m²':'Standard unit of area.','km²':'A small city might be ~100 km².','acres':'1 acre ≈ the size of a football field.',hectares:'1 hectare = 10,000 m².','ft²':'Used in US real estate.'}},
+};
+function switchUnitType(){
+  const type=document.getElementById('unit-type').value;
+  const def=unitDefs[type];
+  const from=document.getElementById('unit-from'),to=document.getElementById('unit-to');
+  const opts=def.units.map(u=>`<option>${u}</option>`).join('');
+  from.innerHTML=opts;to.innerHTML=opts;to.selectedIndex=1;convertUnit();
+}
+function convertUnit(){
+  const type=document.getElementById('unit-type').value;
+  const val=+document.getElementById('unit-val').value;
+  const from=document.getElementById('unit-from').value;
+  const to=document.getElementById('unit-to').value;
+  const def=unitDefs[type];
+  let result;
+  if(type==='temp'){
+    if(from==='Celsius'&&to==='Fahrenheit') result=val*9/5+32;
+    else if(from==='Fahrenheit'&&to==='Celsius') result=(val-32)*5/9;
+    else if(from==='Celsius'&&to==='Kelvin') result=val+273.15;
+    else if(from==='Kelvin'&&to==='Celsius') result=val-273.15;
+    else if(from==='Fahrenheit'&&to==='Kelvin') result=(val-32)*5/9+273.15;
+    else if(from==='Kelvin'&&to==='Fahrenheit') result=(val-273.15)*9/5+32;
+    else result=val;
+  } else {
+    result=val/def.base[from]*def.base[to];
+  }
+  document.getElementById('unit-result').value=+result.toFixed(6);
+  document.getElementById('unit-fact').textContent='💡 '+def.facts[from];
+}
+function initConverter(){switchUnitType()}
+
+// ═══════════════════ MATH: TIMES TABLES ═══════════════════
+let ttScore=0,ttStreak=0,ttA,ttB;
+function newTTQ(){
+  ttA=Math.floor(Math.random()*12)+1;ttB=Math.floor(Math.random()*12)+1;
+  document.getElementById('tt-q').textContent=`${ttA} × ${ttB} = ?`;
+  document.getElementById('tt-ans').value='';
+  document.getElementById('tt-out').innerHTML='';
+  document.getElementById('tt-ans').focus();
+}
+function checkTT(){
+  const ans=+document.getElementById('tt-ans').value;
+  const correct=ttA*ttB;
+  const out=document.getElementById('tt-out');
+  if(ans===correct){
+    ttScore++;ttStreak++;
+    out.innerHTML=`<span style="color:#4ade80">✅ Correct! ${ttA} × ${ttB} = ${correct}</span>`;
+    setTimeout(newTTQ,900);
+  } else {
+    ttStreak=0;
+    out.innerHTML=`<span style="color:#f87171">❌ Not quite. ${ttA} × ${ttB} = ${correct}</span>`;
+    setTimeout(newTTQ,1800);
+  }
+  document.getElementById('tt-score').textContent=ttScore;
+  document.getElementById('tt-streak').textContent=ttStreak;
+}
+
+// ═══════════════════ SCIENCE: SOLAR SYSTEM ═══════════════════
+const planets=[
+  {name:'Mercury',color:'#a8a8a8',r:4,orbit:52,speed:.047,emoji:'☿',
+   facts:{diameter:'4,879 km',distSun:'57.9M km',moons:'0',dayLen:'59 Earth days',yearLen:'88 Earth days',temp:'-180°C to 430°C',funFact:'Mercury is the smallest planet and closest to the Sun.'}},
+  {name:'Venus',color:'#e8cda0',r:7,orbit:78,speed:.035,emoji:'♀',
+   facts:{diameter:'12,104 km',distSun:'108.2M km',moons:'0',dayLen:'243 Earth days',yearLen:'225 Earth days',temp:'462°C',funFact:'Venus rotates backwards compared to most planets!'}},
+  {name:'Earth',color:'#4b9cd3',r:7,orbit:108,speed:.029,emoji:'🌍',
+   facts:{diameter:'12,742 km',distSun:'149.6M km',moons:'1',dayLen:'24 hours',yearLen:'365.25 days',temp:'-89°C to 58°C',funFact:'Earth is the only known planet with life.'}},
+  {name:'Mars',color:'#c1440e',r:5,orbit:140,speed:.024,emoji:'♂',
+   facts:{diameter:'6,779 km',distSun:'227.9M km',moons:'2',dayLen:'24h 37min',yearLen:'687 Earth days',temp:'-125°C to 20°C',funFact:'Mars has the largest volcano in the solar system: Olympus Mons.'}},
+  {name:'Jupiter',color:'#c88b3a',r:14,orbit:188,speed:.013,emoji:'♃',
+   facts:{diameter:'139,820 km',distSun:'778.5M km',moons:'95',dayLen:'10 hours',yearLen:'12 Earth years',temp:'-108°C',funFact:"Jupiter's Great Red Spot is a storm larger than Earth!"}},
+  {name:'Saturn',color:'#e4d191',r:12,orbit:230,speed:.009,emoji:'♄',
+   facts:{diameter:'116,460 km',distSun:'1.43B km',moons:'146',dayLen:'10.7 hours',yearLen:'29 Earth years',temp:'-178°C',funFact:"Saturn's rings are made of ice and rock, up to 30 meters thick."}},
+  {name:'Uranus',color:'#7de8e8',r:9,orbit:268,speed:.006,emoji:'♅',
+   facts:{diameter:'50,724 km',distSun:'2.87B km',moons:'28',dayLen:'17.2 hours',yearLen:'84 Earth years',temp:'-224°C',funFact:'Uranus rotates on its side — its axis is tilted 98°!'}},
+  {name:'Neptune',color:'#3f54ba',r:9,orbit:305,speed:.005,emoji:'♆',
+   facts:{diameter:'49,244 km',distSun:'4.50B km',moons:'16',dayLen:'16 hours',yearLen:'165 Earth years',temp:'-214°C',funFact:'Neptune has the strongest winds in the solar system — up to 2,100 km/h!'}},
+];
+let solarAngles=planets.map(()=>Math.random()*Math.PI*2);
+let solarAnim;
+
+function initSolar(){
+  const wrap=document.getElementById('solar-wrap');
+  const canvas=document.getElementById('solar-canvas');
+  canvas.width=wrap.offsetWidth;canvas.height=320;
+  const ctx=canvas.getContext('2d');
+  const cx=canvas.width/2,cy=canvas.height/2;
+  const scale=canvas.width/700;
+
+  canvas.addEventListener('click',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const mx=(e.clientX-rect.left)*(canvas.width/rect.width);
+    const my=(e.clientY-rect.top)*(canvas.height/rect.height);
+    planets.forEach((p,i)=>{
+      const px=cx+Math.cos(solarAngles[i])*p.orbit*scale;
+      const py=cy+Math.sin(solarAngles[i])*p.orbit*scale;
+      if(Math.hypot(mx-px,my-py)<p.r*scale+8) showPlanet(p);
+    });
+    if(Math.hypot(mx-cx,my-cy)<16*scale) showPlanet({name:'Sun',emoji:'☀️',color:'#ffd700',
+      facts:{diameter:'1,392,700 km',type:'Yellow Dwarf Star',age:'4.6 billion years',surfaceTemp:'5,500°C',corTemp:'15,000,000°C',funFact:'The Sun contains 99.86% of all mass in the Solar System.'}});
+  });
+
+  function drawSolar(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // sun glow
+    const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,20*scale);
+    grad.addColorStop(0,'#fff7aa');grad.addColorStop(.3,'#ffd700');grad.addColorStop(1,'transparent');
+    ctx.fillStyle=grad;ctx.beginPath();ctx.arc(cx,cy,20*scale,0,Math.PI*2);ctx.fill();
+
+    planets.forEach((p,i)=>{
+      // orbit ring
+      ctx.strokeStyle='#1e3a5f';ctx.lineWidth=.5;
+      ctx.beginPath();ctx.arc(cx,cy,p.orbit*scale,0,Math.PI*2);ctx.stroke();
+      // planet
+      solarAngles[i]+=p.speed*.01;
+      const px=cx+Math.cos(solarAngles[i])*p.orbit*scale;
+      const py=cy+Math.sin(solarAngles[i])*p.orbit*scale;
+      const gr=ctx.createRadialGradient(px-p.r*.3*scale,py-p.r*.3*scale,0,px,py,p.r*scale);
+      gr.addColorStop(0,'#fff');gr.addColorStop(.3,p.color);gr.addColorStop(1,'#000');
+      ctx.fillStyle=gr;
+      ctx.beginPath();ctx.arc(px,py,p.r*scale,0,Math.PI*2);ctx.fill();
+      // Saturn rings
+      if(p.name==='Saturn'){
+        ctx.strokeStyle='#e4d19199';ctx.lineWidth=3*scale;
+        ctx.beginPath();ctx.ellipse(px,py,p.r*scale*2.2,p.r*scale*.6,-.3,0,Math.PI*2);ctx.stroke();
+      }
+      // label
+      ctx.fillStyle='#ffffff88';ctx.font=`${8*scale}px sans-serif`;ctx.textAlign='center';
+      ctx.fillText(p.name,px,py-p.r*scale-4);
+    });
+    solarAnim=requestAnimationFrame(drawSolar);
+  }
+  drawSolar();
+}
+
+function showPlanet(p){
+  const info=document.getElementById('planet-info');
+  const facts=p.facts;
+  const rows=Object.entries(facts).map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #1e3a5f;font-size:.78rem"><span style="color:#64748b;text-transform:capitalize">${k.replace(/([A-Z])/g,' $1')}</span><span style="font-weight:600">${v}</span></div>`).join('');
+  info.innerHTML=`<div class="planet-name">${p.emoji||''} ${p.name}</div>${rows}`;
+}
+
+// ═══════════════════ SCIENCE: PERIODIC TABLE ═══════════════════
+const elements=[
+  [1,'H','Hydrogen','non',1.008,'1s¹','Gas','The lightest element, most abundant in universe.','-259°C','-253°C'],
+  [2,'He','Helium','noble',4.003,'1s²','Gas','Second most abundant element in the universe.','-272°C','-269°C'],
+  [3,'Li','Lithium','alk',6.941,'[He]2s¹','Solid','Used in batteries and psychiatric medicine.',180,1347],
+  [4,'Be','Beryllium','alk-e',9.012,'[He]2s²','Solid','Very lightweight, used in aerospace.',1287,2470],
+  [5,'B','Boron','met',10.811,'[He]2s²2p¹','Solid','Used in glass and detergents.',2077,4000],
+  [6,'C','Carbon','non',12.011,'[He]2s²2p²','Solid','Basis of all known life on Earth.',3642,4827],
+  [7,'N','Nitrogen','non',14.007,'[He]2s²2p³','Gas','Makes up 78% of Earths atmosphere.','-210°C','-196°C'],
+  [8,'O','Oxygen','non',15.999,'[He]2s²2p⁴','Gas','Essential for combustion and respiration.','-218°C','-183°C'],
+  [9,'F','Fluorine','hal',18.998,'[He]2s²2p⁵','Gas','Most electronegative element.','-220°C','-188°C'],
+  [10,'Ne','Neon','noble',20.18,'[He]2s²2p⁶','Gas','Used in neon signs and lighting.','-249°C','-246°C'],
+  [11,'Na','Sodium','alk',22.99,'[Ne]3s¹','Solid','Highly reactive with water, found in salt.',98,883],
+  [12,'Mg','Magnesium','alk-e',24.305,'[Ne]3s²','Solid','Used in flares and lightweight alloys.',650,1091],
+  [13,'Al','Aluminum','post',26.982,'[Ne]3s²3p¹','Solid','Most abundant metal in Earths crust.',660,2519],
+  [14,'Si','Silicon','met',28.086,'[Ne]3s²3p²','Solid','Base of computer chips and sand.',1414,3265],
+  [15,'P','Phosphorus','non',30.974,'[Ne]3s²3p³','Solid','Essential for DNA and ATP in cells.',44,281],
+  [16,'S','Sulfur','non',32.06,'[Ne]3s²3p⁴','Solid','Yellow solid, smells like rotten eggs.',113,445],
+  [17,'Cl','Chlorine','hal',35.45,'[Ne]3s²3p⁵','Gas','Used to purify drinking water.','-101°C','-34°C'],
+  [18,'Ar','Argon','noble',39.948,'[Ne]3s²3p⁶','Gas','Third most abundant gas in Earths atmosphere.','-189°C','-186°C'],
+  [19,'K','Potassium','alk',39.098,'[Ar]4s¹','Solid','Essential for nerve and muscle function.',63,759],
+  [20,'Ca','Calcium','alk-e',40.078,'[Ar]4s²','Solid','Essential for bones and teeth.',842,1484],
+  [21,'Sc','Scandium','trans',44.956,'[Ar]3d¹4s²','Solid','Used in aerospace and sports equipment.',1541,2836],
+  [22,'Ti','Titanium','trans',47.867,'[Ar]3d²4s²','Solid','As strong as steel but 45% lighter.',1668,3287],
+  [23,'V','Vanadium','trans',50.942,'[Ar]3d³4s²','Solid','Used in high-strength steel alloys.',1910,3407],
+  [24,'Cr','Chromium','trans',51.996,'[Ar]3d⁵4s¹','Solid','Makes steel stainless and gives rubies their red color.',1907,2671],
+  [25,'Mn','Manganese','trans',54.938,'[Ar]3d⁵4s²','Solid','Essential trace element, used in steel.',1246,2061],
+  [26,'Fe','Iron','trans',55.845,'[Ar]3d⁶4s²','Solid','Most used metal in the world, core of Earth.',1538,2861],
+  [27,'Co','Cobalt','trans',58.933,'[Ar]3d⁷4s²','Solid','Used in batteries and blue glass pigment.',1495,2927],
+  [28,'Ni','Nickel','trans',58.693,'[Ar]3d⁸4s²','Solid','Used in coins and rechargeable batteries.',1455,2913],
+  [29,'Cu','Copper','trans',63.546,'[Ar]3d¹⁰4s¹','Solid','Excellent electrical conductor, used in wiring.',1085,2562],
+  [30,'Zn','Zinc','trans',65.38,'[Ar]3d¹⁰4s²','Solid','Used to galvanize steel and in sunscreen.',420,907],
+  [31,'Ga','Gallium','post',69.723,'[Ar]3d¹⁰4s²4p¹','Solid','Melts in your hand (29.76°C)!',30,2204],
+  [32,'Ge','Germanium','met',72.63,'[Ar]3d¹⁰4s²4p²','Solid','Used in semiconductors and fiber optics.',938,2833],
+  [33,'As','Arsenic','met',74.922,'[Ar]3d¹⁰4s²4p³','Solid','Toxic metalloid, used historically as poison.',614,887],
+  [34,'Se','Selenium','non',78.971,'[Ar]3d¹⁰4s²4p⁴','Solid','Used in solar cells and glass production.',221,685],
+  [35,'Br','Bromine','hal',79.904,'[Ar]3d¹⁰4s²4p⁵','Liquid','One of only two liquid elements at room temp.',-7,59],
+  [36,'Kr','Krypton','noble',83.798,'[Ar]3d¹⁰4s²4p⁶','Gas','Used in high-performance light bulbs.','-157°C','-153°C'],
+  [37,'Rb','Rubidium','alk',85.468,'[Kr]5s¹','Solid','So reactive it ignites spontaneously in air.',39,688],
+  [38,'Sr','Strontium','alk-e',87.62,'[Kr]5s²','Solid','Gives fireworks their brilliant red color.',777,1382],
+  [39,'Y','Yttrium','trans',88.906,'[Kr]4d¹5s²','Solid','Used in LEDs and cancer treatment.',1522,3345],
+  [40,'Zr','Zirconium','trans',91.224,'[Kr]4d²5s²','Solid','Used in nuclear reactors and jewelry.',1855,4409],
+  [41,'Nb','Niobium','trans',92.906,'[Kr]4d⁴5s¹','Solid','Used in superconducting magnets.',2477,4744],
+  [42,'Mo','Molybdenum','trans',95.96,'[Kr]4d⁵5s¹','Solid','Has one of the highest melting points.',2623,4639],
+  [43,'Tc','Technetium','trans',98,'[Kr]4d⁵5s²','Solid','First element to be artificially produced.',2157,4265],
+  [44,'Ru','Ruthenium','trans',101.07,'[Kr]4d⁷5s¹','Solid','Used in electrical contacts and wear-resistant alloys.',2334,4150],
+  [45,'Rh','Rhodium','trans',102.906,'[Kr]4d⁸5s¹','Solid','Used in catalytic converters, very rare.',1964,3695],
+  [46,'Pd','Palladium','trans',106.42,'[Kr]4d¹⁰','Solid','Used in catalytic converters and electronics.',1555,2963],
+  [47,'Ag','Silver','trans',107.868,'[Kr]4d¹⁰5s¹','Solid','Best electrical conductor of all metals.',962,2162],
+  [48,'Cd','Cadmium','trans',112.411,'[Kr]4d¹⁰5s²','Solid','Used in rechargeable NiCd batteries.',321,767],
+  [49,'In','Indium','post',114.818,'[Kr]4d¹⁰5s²5p¹','Solid','Used in touchscreen displays.',157,2072],
+  [50,'Sn','Tin','post',118.71,'[Kr]4d¹⁰5s²5p²','Solid','Used in bronze alloys and food cans.',232,2602],
+  [51,'Sb','Antimony','met',121.76,'[Kr]4d¹⁰5s²5p³','Solid','Used in flame retardants and batteries.',631,1587],
+  [52,'Te','Tellurium','met',127.6,'[Kr]4d¹⁰5s²5p⁴','Solid','Used in solar panels and alloys.',450,988],
+  [53,'I','Iodine','hal',126.904,'[Kr]4d¹⁰5s²5p⁵','Solid','Essential for thyroid function.',114,184],
+  [54,'Xe','Xenon','noble',131.293,'[Kr]4d¹⁰5s²5p⁶','Gas','Used in flash lamps and ion propulsion.','-112°C','-108°C'],
+  [55,'Cs','Cesium','alk',132.905,'[Xe]6s¹','Solid','Used in atomic clocks, most accurate timekeepers.',28,671],
+  [56,'Ba','Barium','alk-e',137.327,'[Xe]6s²','Solid','Used in medical X-ray imaging.',727,1897],
+  [72,'Hf','Hafnium','trans',178.49,'[Xe]4f¹⁴5d²6s²','Solid','Used in nuclear control rods.',2233,4603],
+  [73,'Ta','Tantalum','trans',180.948,'[Xe]4f¹⁴5d³6s²','Solid','Used in capacitors for smartphones.',3017,5458],
+  [74,'W','Tungsten','trans',183.84,'[Xe]4f¹⁴5d⁴6s²','Solid','Highest melting point of all metals: 3422°C.',3422,5555],
+  [75,'Re','Rhenium','trans',186.207,'[Xe]4f¹⁴5d⁵6s²','Solid','Used in jet engine turbine blades.',3186,5596],
+  [76,'Os','Osmium','trans',190.23,'[Xe]4f¹⁴5d⁶6s²','Solid','Densest naturally occurring element.',3033,5012],
+  [77,'Ir','Iridium','trans',192.217,'[Xe]4f¹⁴5d⁷6s²','Solid','Most corrosion-resistant element known.',2446,4428],
+  [78,'Pt','Platinum','trans',195.084,'[Xe]4f¹⁴5d⁹6s¹','Solid','Used in jewelry and catalytic converters.',1768,3825],
+  [79,'Au','Gold','trans',196.967,'[Xe]4f¹⁴5d¹⁰6s¹','Solid','Does not tarnish, used in electronics.',1064,2856],
+  [80,'Hg','Mercury','trans',200.592,'[Xe]4f¹⁴5d¹⁰6s²','Liquid','Only metal liquid at room temperature.','-39°C',357],
+  [81,'Tl','Thallium','post',204.383,'[Xe]4f¹⁴5d¹⁰6s²6p¹','Solid','Highly toxic, used in infrared detectors.',304,1473],
+  [82,'Pb','Lead','post',207.2,'[Xe]4f¹⁴5d¹⁰6s²6p²','Solid','Dense, used in batteries and radiation shielding.',327,1749],
+  [83,'Bi','Bismuth','post',208.98,'[Xe]4f¹⁴5d¹⁰6s²6p³','Solid','Used in medicines and cosmetics.',271,1564],
+  [84,'Po','Polonium','met',209,'[Xe]4f¹⁴5d¹⁰6s²6p⁴','Solid','Highly radioactive, discovered by Marie Curie.',254,962],
+  [85,'At','Astatine','hal',210,'[Xe]4f¹⁴5d¹⁰6s²6p⁵','Solid','Rarest naturally occurring element on Earth.',302,337],
+  [86,'Rn','Radon','noble',222,'[Xe]4f¹⁴5d¹⁰6s²6p⁶','Gas','Radioactive noble gas, can accumulate in buildings.','-71°C','-62°C'],
+  [87,'Fr','Francium','alk',223,'[Rn]7s¹','Solid','Most unstable of naturally occurring elements.',27,677],
+  [88,'Ra','Radium','alk-e',226,'[Rn]7s²','Solid','Discovered by Marie Curie, highly radioactive.',700,1737],
+  [118,'Og','Oganesson','noble',294,'[Rn]5f¹⁴6d¹⁰7s²7p⁶','Unknown','Heaviest known element, discovered in 2002.',unknown:'unknown'],
+];
+
+// PT layout: [atomicNum, col, row]
+const ptLayout={
+  1:[1,1],2:[18,1],3:[1,2],4:[2,2],5:[13,2],6:[14,2],7:[15,2],8:[16,2],9:[17,2],10:[18,2],
+  11:[1,3],12:[2,3],13:[13,3],14:[14,3],15:[15,3],16:[16,3],17:[17,3],18:[18,3],
+  19:[1,4],20:[2,4],21:[3,4],22:[4,4],23:[5,4],24:[6,4],25:[7,4],26:[8,4],27:[9,4],28:[10,4],29:[11,4],30:[12,4],31:[13,4],32:[14,4],33:[15,4],34:[16,4],35:[17,4],36:[18,4],
+  37:[1,5],38:[2,5],39:[3,5],40:[4,5],41:[5,5],42:[6,5],43:[7,5],44:[8,5],45:[9,5],46:[10,5],47:[11,5],48:[12,5],49:[13,5],50:[14,5],51:[15,5],52:[16,5],53:[17,5],54:[18,5],
+  55:[1,6],56:[2,6],72:[4,6],73:[5,6],74:[6,6],75:[7,6],76:[8,6],77:[9,6],78:[10,6],79:[11,6],80:[12,6],81:[13,6],82:[14,6],83:[15,6],84:[16,6],85:[17,6],86:[18,6],
+  87:[1,7],88:[2,7],118:[18,7],
+};
+
+function buildPT(){
+  const grid=document.getElementById('pt-grid');
+  const cells=Array(7).fill(null).map(()=>Array(18).fill(null));
+  elements.forEach(el=>{
+    const pos=ptLayout[el[0]];
+    if(pos) cells[pos[1]-1][pos[0]-1]=el;
+  });
+  grid.innerHTML='';
+  cells.forEach((row,ri)=>{
+    row.forEach((el,ci)=>{
+      const div=document.createElement('div');
+      if(el){
+        div.className=`el ${el[3]}`;
+        div.innerHTML=`<div class="num">${el[0]}</div><div class="sym">${el[1]}</div><div class="nm">${el[2]}</div>`;
+        div.title=el[2];
+        div.onclick=()=>showElement(el);
+      }
+      grid.appendChild(div);
+    });
+  });
+}
+
+const catNames={alk:'Alkali Metal','alk-e':'Alkaline Earth',trans:'Transition Metal',post:'Post-Transition',met:'Metalloid',non:'Nonmetal',hal:'Halogen',noble:'Noble Gas',lan:'Lanthanide',act:'Actinide',unk:'Unknown'};
+
+function showElement(el){
+  document.getElementById('m-sym').textContent=el[1];
+  document.getElementById('m-sym').style.color=el[1]==='Au'?'#fbbf24':el[1]==='Cu'?'#f59e0b':el[1]==='Ag'?'#94a3b8':'#e2e8f0';
+  document.getElementById('m-name').textContent=`${el[0]}. ${el[2]}`;
+  document.getElementById('m-cat').textContent=catNames[el[3]]||el[3];
+  const rows=[
+    ['Atomic Mass',el[4]+' u'],['Electron Config',el[5]],['State',el[6]],
+    ['Melting Point',el[8]+(typeof el[8]==='number'?'°C':'')],['Boiling Point',el[9]+(typeof el[9]==='number'?'°C':'')],
+    ['Fun Fact',el[7]],
+  ];
+  document.getElementById('m-rows').innerHTML=rows.map(([l,v])=>`<div class="modal-row"><span class="modal-label">${l}</span><span class="modal-val" style="font-size:.8rem;max-width:200px;text-align:right">${v}</span></div>`).join('');
+  document.getElementById('el-modal').classList.add('open');
+}
+function closeModal(){document.getElementById('el-modal').classList.remove('open')}
+
+// ═══════════════════ HISTORY ═══════════════════
+const tlEvents=[
+  {year:'3100 BC',title:'Ancient Egypt Unified',desc:'King Menes unites Upper and Lower Egypt, founding one of history\'s greatest civilizations.',cat:'politics'},
+  {year:'2560 BC',title:'Great Pyramid of Giza Built',desc:'The Great Pyramid is constructed as a tomb for Pharaoh Khufu — it remains one of the 7 Wonders of the Ancient World.',cat:'culture'},
+  {year:'776 BC',title:'First Olympic Games',desc:'The ancient Greeks hold the first Olympic Games at Olympia, beginning a tradition that continues today.',cat:'culture'},
+  {year:'753 BC',title:'Rome Founded',desc:'According to legend, Romulus founds the city of Rome, which will grow into the greatest empire of the ancient world.',cat:'politics'},
+  {year:'563 BC',title:'Buddha Born',desc:'Siddhartha Gautama is born in Nepal. He will found Buddhism, one of the world\'s major religions.',cat:'religion'},
+  {year:'490 BC',title:'Battle of Marathon',desc:'Athenians defeat the Persian army despite being outnumbered. A messenger runs 26 miles to Athens — the origin of the marathon.',cat:'war'},
+  {year:'399 BC',title:'Death of Socrates',desc:'The philosopher Socrates is executed in Athens. His teachings, recorded by Plato, form the foundation of Western philosophy.',cat:'culture'},
+  {year:'356 BC',title:'Alexander the Great Born',desc:'Alexander III of Macedon is born. He will conquer most of the known world by age 30.',cat:'politics'},
+  {year:'221 BC',title:'Great Wall of China Begun',desc:'Emperor Qin Shi Huang begins connecting existing walls to protect China from northern invaders.',cat:'politics'},
+  {year:'44 BC',title:'Julius Caesar Assassinated',desc:'Julius Caesar is stabbed 23 times in the Roman Senate, leading to the end of the Roman Republic.',cat:'politics'},
+  {year:'4 BC',title:'Jesus of Nazareth Born',desc:'Birth of Jesus Christ, whose teachings will form the foundation of Christianity, the world\'s largest religion.',cat:'religion'},
+  {year:'79 AD',title:'Pompeii Destroyed',desc:'Mount Vesuvius erupts, burying the Roman city of Pompeii under ash and pumice, preserving it for archaeologists.',cat:'science'},
+  {year:'570 AD',title:'Muhammad Born',desc:'The Prophet Muhammad is born in Mecca. He will found Islam, which grows to over 1.8 billion followers worldwide.',cat:'religion'},
+  {year:'1066',title:'Battle of Hastings',desc:'William the Conqueror defeats King Harold II, fundamentally changing the English language and culture.',cat:'war'},
+  {year:'1215',title:'Magna Carta Signed',desc:'King John signs the Magna Carta, limiting royal power and laying foundations for modern democracy and human rights.',cat:'politics'},
+  {year:'1347',title:'Black Death Reaches Europe',desc:'The bubonic plague kills one-third of Europe\'s population — over 25 million people — transforming medieval society.',cat:'science'},
+  {year:'1439',title:'Gutenberg\'s Printing Press',desc:'Johannes Gutenberg invents moveable type printing, revolutionizing the spread of knowledge and sparking the Renaissance.',cat:'science'},
+  {year:'1492',title:'Columbus Reaches Americas',desc:'Christopher Columbus lands in the Caribbean, beginning European colonization of the Americas and changing world history forever.',cat:'explore'},
+  {year:'1503',title:'Mona Lisa Painted',desc:'Leonardo da Vinci begins painting the Mona Lisa, arguably the most famous artwork in history.',cat:'culture'},
+  {year:'1543',title:'Copernicus: Earth Orbits Sun',desc:'Nicolas Copernicus publishes his heliocentric model, proving Earth orbits the Sun — not the other way around.',cat:'science'},
+  {year:'1600',title:'East India Company Founded',desc:'The British East India Company is established, beginning the era of British colonial expansion across Asia.',cat:'politics'},
+  {year:'1609',title:'Galileo Improves Telescope',desc:'Galileo improves the telescope and uses it to observe Jupiter\'s moons, supporting the heliocentric model.',cat:'science'},
+  {year:'1687',title:'Newton\'s Laws of Motion',desc:'Isaac Newton publishes Principia Mathematica, describing gravity and the three laws of motion that define classical physics.',cat:'science'},
+  {year:'1776',title:'American Declaration of Independence',desc:'The 13 American colonies declare independence from Britain, founding the United States of America.',cat:'politics'},
+  {year:'1789',title:'French Revolution Begins',desc:'French citizens storm the Bastille, overthrowing the monarchy and spreading ideas of liberty, equality, and fraternity worldwide.',cat:'politics'},
+  {year:'1799',title:'Rosetta Stone Discovered',desc:'French soldiers discover the Rosetta Stone in Egypt, enabling scholars to finally decode ancient Egyptian hieroglyphics.',cat:'explore'},
+  {year:'1804',title:'Napoleon Becomes Emperor',desc:'Napoleon Bonaparte crowns himself Emperor of France, dominating European politics for the next decade.',cat:'politics'},
+  {year:'1859',title:'Darwin Publishes On the Origin of Species',desc:'Charles Darwin presents the theory of evolution by natural selection, fundamentally changing biology and our understanding of life.',cat:'science'},
+  {year:'1865',title:'American Civil War Ends',desc:'The Union defeats the Confederacy, ending slavery in the United States after four years of devastating conflict.',cat:'war'},
+  {year:'1869',title:'Suez Canal Opens',desc:'The Suez Canal connects the Mediterranean and Red Sea, cutting thousands of miles off shipping routes.',cat:'explore'},
+  {year:'1879',title:'Edison Invents Light Bulb',desc:'Thomas Edison demonstrates a practical incandescent light bulb, beginning the electrical age that transformed modern civilization.',cat:'science'},
+  {year:'1903',title:'First Airplane Flight',desc:'Orville Wright makes the first successful powered airplane flight at Kitty Hawk, North Carolina — lasting 12 seconds.',cat:'science'},
+  {year:'1914',title:'World War I Begins',desc:'The assassination of Archduke Franz Ferdinand triggers a world war that kills 20 million people and reshapes the world map.',cat:'war'},
+  {year:'1928',title:'Penicillin Discovered',desc:'Alexander Fleming discovers penicillin by accident, creating the first antibiotic and saving hundreds of millions of lives.',cat:'science'},
+  {year:'1939',title:'World War II Begins',desc:'Nazi Germany invades Poland. Britain and France declare war, beginning the deadliest conflict in human history.',cat:'war'},
+  {year:'1945',title:'World War II Ends',desc:'Germany surrenders in May; Japan surrenders in September after atomic bombs are dropped on Hiroshima and Nagasaki.',cat:'war'},
+  {year:'1947',title:'India Gains Independence',desc:'India achieves independence from British rule after a nonviolent independence movement led by Mahatma Gandhi.',cat:'politics'},
+  {year:'1953',title:'DNA Structure Discovered',desc:'Watson and Crick, using Rosalind Franklin\'s X-ray data, describe the double helix structure of DNA.',cat:'science'},
+  {year:'1957',title:'Space Age Begins',desc:'The Soviet Union launches Sputnik 1, the first artificial satellite, beginning the Space Race.',cat:'science'},
+  {year:'1961',title:'Berlin Wall Built',desc:'East Germany builds the Berlin Wall, dividing the city and becoming a symbol of the Cold War.',cat:'politics'},
+  {year:'1963',title:'Martin Luther King Jr. "I Have a Dream"',desc:'Dr. King delivers his iconic speech at the March on Washington, galvanizing the American civil rights movement.',cat:'culture'},
+  {year:'1969',title:'Moon Landing',desc:'Neil Armstrong and Buzz Aldrin become the first humans to walk on the Moon during the Apollo 11 mission.',cat:'science'},
+  {year:'1989',title:'Berlin Wall Falls',desc:'East and West Germans tear down the Berlin Wall, symbolizing the end of the Cold War and German reunification.',cat:'politics'},
+  {year:'1991',title:'Internet Goes Public',desc:'Tim Berners-Lee\'s World Wide Web is released to the public, beginning the information age.',cat:'science'},
+  {year:'1997',title:'Harry Potter Published',desc:'J.K. Rowling publishes Harry Potter and the Philosopher\'s Stone, becoming one of the best-selling series in history.',cat:'culture'},
+  {year:'2001',title:'September 11 Attacks',desc:'Terrorist attacks destroy the World Trade Center and strike the Pentagon, killing nearly 3,000 people and reshaping global politics.',cat:'war'},
+  {year:'2003',title:'Human Genome Sequenced',desc:'Scientists complete the first full map of the human genome, opening the door to personalized medicine.',cat:'science'},
+  {year:'2007',title:'iPhone Introduced',desc:'Steve Jobs unveils the first iPhone, beginning the smartphone revolution that changes how billions live.',cat:'science'},
+  {year:'2020',title:'COVID-19 Pandemic',desc:'A coronavirus pandemic spreads worldwide, causing millions of deaths and transforming how society works and lives.',cat:'science'},
+  {year:'2022',title:'James Webb Telescope Launched',desc:'NASA\'s most powerful space telescope begins sending stunning images of distant galaxies and exoplanets.',cat:'science'},
+];
+let tlFilter='all';
+function buildTimeline(){
+  renderTimeline();
+}
+function filterTL(cat,btn){
+  tlFilter=cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTimeline();
+}
+function renderTimeline(){
+  const items=tlFilter==='all'?tlEvents:tlEvents.filter(e=>e.cat===tlFilter);
+  document.getElementById('timeline').innerHTML=items.map((e,i)=>`
+    <div class="tl-item" style="animation-delay:${i*.03}s">
+      <div class="tl-dot"></div>
+      <div class="tl-date">${e.year}</div>
+      <div class="tl-title">${e.title}</div>
+      <div class="tl-desc">${e.desc}</div>
+      <span class="tl-cat cat-${e.cat}">${e.cat}</span>
+    </div>`).join('');
+}
+
+// ── History Quiz ──
+const hqData=[
+  {q:'Who was the first person to walk on the Moon?',a:'Neil Armstrong',opts:['Buzz Aldrin','Neil Armstrong','Yuri Gagarin','John Glenn']},
+  {q:'In which year did World War II end?',a:'1945',opts:['1943','1944','1945','1946']},
+  {q:'Which ancient wonder was located in Egypt?',a:'Great Pyramid of Giza',opts:['Colosseum','Great Pyramid of Giza','Parthenon','Machu Picchu']},
+  {q:'Who wrote the Magna Carta?',a:'It was signed by King John',opts:['Julius Caesar','King John','Napoleon','George Washington']},
+  {q:'What year did Columbus reach the Americas?',a:'1492',opts:['1488','1490','1492','1498']},
+  {q:'Who discovered penicillin?',a:'Alexander Fleming',opts:['Louis Pasteur','Marie Curie','Alexander Fleming','Isaac Newton']},
+  {q:'What empire built the Colosseum?',a:'Roman Empire',opts:['Greek Empire','Roman Empire','Ottoman Empire','Persian Empire']},
+  {q:'In which country did the French Revolution take place?',a:'France',opts:['England','Germany','France','Italy']},
+  {q:'Who was the first President of the United States?',a:'George Washington',opts:['Abraham Lincoln','Thomas Jefferson','George Washington','Benjamin Franklin']},
+  {q:'What was the name of the ship that sank in 1912?',a:'Titanic',opts:['Lusitania','Titanic','Britannic','Olympic']},
+  {q:'Who painted the Mona Lisa?',a:'Leonardo da Vinci',opts:['Michelangelo','Raphael','Leonardo da Vinci','Picasso']},
+  {q:'Which empire was Julius Caesar a leader of?',a:'Roman Republic',opts:['Greek Empire','Roman Republic','Byzantine Empire','Persian Empire']},
+];
+let hqIdx=0,hqScore=0,hqAnswered=false;
+function buildHQ(){shuffleArr(hqData);renderHQ()}
+function renderHQ(){
+  const q=hqData[hqIdx%hqData.length];
+  hqAnswered=false;
+  document.getElementById('hq-question').textContent=q.q;
+  const opts=[...q.opts];shuffleArr(opts);
+  document.getElementById('hq-opts').innerHTML=opts.map(o=>`<button class="quiz-opt" onclick="answerHQ('${o}','${q.a}',this)">${o}</button>`).join('');
+}
+function answerHQ(chosen,correct,btn){
+  if(hqAnswered)return;hqAnswered=true;
+  document.querySelectorAll('#hq-opts .quiz-opt').forEach(b=>{
+    if(b.textContent===correct)b.classList.add('correct');
+  });
+  if(chosen===correct){hqScore++;btn.classList.add('correct')}else btn.classList.add('wrong');
+  document.getElementById('hq-score').textContent=hqScore;
+}
+function nextHQ(){hqIdx++;renderHQ()}
+function shuffleArr(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+
+// ── Historical Figures ──
+const figures={
+  'Albert Einstein':'🧪 Albert Einstein (1879–1955)\nGerman-born physicist who developed the theory of relativity (E=mc²). Won the Nobel Prize in Physics in 1921. Revolutionized our understanding of space, time, gravity, and the universe. Famous for his thought experiments and wild hair.',
+  'Cleopatra':'👑 Cleopatra VII (69–30 BC)\nLast active ruler of the Ptolemaic Kingdom of Egypt. Famous for her intelligence, political skill, and relationships with Julius Caesar and Mark Antony. Spoke 9 languages and was a skilled diplomat.',
+  'Isaac Newton':'🍎 Isaac Newton (1643–1727)\nEnglish mathematician and physicist who discovered the laws of motion and universal gravitation (inspired by a falling apple!). Also invented calculus and demonstrated white light contains all colors.',
+  'Marie Curie':'⚗️ Marie Curie (1867–1934)\nFirst woman to win a Nobel Prize — and first person to win it TWICE, in Physics and Chemistry. Discovered polonium and radium. Her research on radioactivity was groundbreaking but ultimately cost her her health.',
+  'William Shakespeare':'✍️ William Shakespeare (1564–1616)\nEnglish playwright and poet widely regarded as the greatest writer in the English language. Wrote 39 plays, 154 sonnets. Created characters like Hamlet, Romeo, Juliet, and Macbeth that live on 400 years later.',
+  'Napoleon Bonaparte':'⚔️ Napoleon Bonaparte (1769–1821)\nFrench military genius who rose from humble origins to become Emperor of France. Conquered most of Europe before his catastrophic invasion of Russia. Created the Napoleonic Code, influencing modern law worldwide.',
+  'Martin Luther King Jr.':'✊ Martin Luther King Jr. (1929–1968)\nAmerican civil rights leader who used nonviolent protest to fight racial inequality. Delivered the famous "I Have a Dream" speech. Won the Nobel Peace Prize in 1964. Assassinated in Memphis, Tennessee.',
+  'Leonardo da Vinci':'🎨 Leonardo da Vinci (1452–1519)\nItalian Renaissance master — painter, sculptor, architect, musician, mathematician, engineer, inventor, geologist, botanist. Created the Mona Lisa and The Last Supper. Designed flying machines 400 years before airplanes existed.',
+};
+function buildFigures(){
+  const sel=document.getElementById('figure-select');
+  Object.keys(figures).forEach(name=>{
+    const opt=document.createElement('option');opt.value=name;opt.textContent=name;sel.appendChild(opt);
+  });
+}
+function showFigure(){
+  const name=document.getElementById('figure-select').value;
+  document.getElementById('figure-out').innerHTML=name?figures[name].replace(/\n/g,'<br>'):'';
+}
+
+// ═══════════════════ ENGLISH ═══════════════════
+const vocabWords=[
+  {word:'Ephemeral',pos:'adj',def:'Lasting for a very short time',ex:'The ephemeral flowers bloomed for just one day.',opts:['Permanent','Lasting for a very short time','Ancient','Extremely large']},
+  {word:'Benevolent',pos:'adj',def:'Well-meaning and kindly',ex:'The benevolent king shared his wealth with the poor.',opts:['Cruel','Mysterious','Well-meaning and kindly','Frightening']},
+  {word:'Eloquent',pos:'adj',def:'Fluent or persuasive in speaking or writing',ex:'Her eloquent speech moved the entire audience to tears.',opts:['Quiet','Confused','Fluent or persuasive in speaking or writing','Boring']},
+  {word:'Tenacious',pos:'adj',def:'Not giving up; persistent',ex:'The tenacious athlete trained every day for four years.',opts:['Lazy','Not giving up; persistent','Friendly','Loud']},
+  {word:'Ambiguous',pos:'adj',def:'Having more than one possible meaning; unclear',ex:'The ambiguous clue could mean several different things.',opts:['Clear','Exciting','Having more than one possible meaning; unclear','Beautiful']},
+  {word:'Pragmatic',pos:'adj',def:'Dealing with things sensibly and realistically',ex:'The pragmatic solution was simple and effective.',opts:['Dreamy','Artistic','Dealing with things sensibly and realistically','Ancient']},
+  {word:'Resilient',pos:'adj',def:'Able to recover quickly from difficulties',ex:'She was resilient enough to bounce back after every failure.',opts:['Fragile','Slow','Able to recover quickly from difficulties','Tired']},
+  {word:'Meticulous',pos:'adj',def:'Showing great attention to detail; very careful',ex:'The meticulous scientist measured each ingredient precisely.',opts:['Careless','Loud','Quick','Showing great attention to detail; very careful']},
+  {word:'Eloquence',pos:'noun',def:'Fluent and effective use of language',ex:'His eloquence in the debate won him many votes.',opts:['Silence','Clumsiness','Fluent and effective use of language','Arrogance']},
+  {word:'Ubiquitous',pos:'adj',def:'Present, appearing, or found everywhere',ex:'Smartphones are ubiquitous in modern society.',opts:['Rare','Present everywhere','Dangerous','Old-fashioned']},
+  {word:'Serendipity',pos:'noun',def:'A happy accident; finding something good unexpectedly',ex:'It was pure serendipity that we met at that cafe.',opts:['Bad luck','A happy accident','Hard work','A plan']},
+  {word:'Persevere',pos:'verb',def:'To continue despite difficulty or delay',ex:'She persevered through the tough training and won gold.',opts:['Give up','Start over','Continue despite difficulty','Complain']},
+  {word:'Candid',pos:'adj',def:'Truthful and straightforward; frank',ex:'He gave a candid assessment of the situation.',opts:['Deceptive','Shy','Truthful and straightforward','Confusing']},
+  {word:'Diligent',pos:'adj',def:'Having or showing care and effort in work',ex:'The diligent student reviewed her notes every evening.',opts:['Lazy','Having or showing care and effort','Careless','Fast']},
+  {word:'Obsolete',pos:'adj',def:'No longer produced or used; out of date',ex:'Floppy disks became obsolete in the 2000s.',opts:['Modern','Powerful','Popular','No longer used; out of date']},
+  {word:'Inference',pos:'noun',def:'A conclusion reached by reasoning',ex:'Based on the clues, the detective made a correct inference.',opts:['A guess','A fact','A conclusion reached by reasoning','A mistake']},
+];
+
+let vqSet=[],vqIdx=0,vqScore=0,vqTotal=0,vqAnswered=false;
+function startVQuiz(){
+  const shuffled=[...vocabWords];shuffleArr(shuffled);
+  vqSet=shuffled.slice(0,8);vqIdx=0;vqScore=0;vqTotal=0;vqAnswered=false;
+  renderVQ();
+}
+function renderVQ(){
+  if(vqIdx>=vqSet.length){
+    document.getElementById('vquiz-container').innerHTML=`<div class="quiz-card" style="text-align:center"><div class="quiz-word">Quiz Complete! 🎉</div><div style="font-size:1.2rem;margin-top:8px">Score: ${vqScore}/${vqSet.length}</div><div style="color:${vqScore>=7?'#4ade80':vqScore>=5?'#fbbf24':'#f87171'};margin-top:4px">${vqScore>=7?'Outstanding! 🌟':vqScore>=5?'Good work! 👍':'Keep studying! 📚'}</div></div>`;
+    document.getElementById('vq-score-display').textContent=`Final: ${vqScore} / ${vqSet.length}`;
+    return;
+  }
+  const w=vqSet[vqIdx];vqAnswered=false;
+  const opts=[...w.opts];shuffleArr(opts);
+  document.getElementById('vq-score-display').textContent=`Score: ${vqScore} / ${vqIdx}`;
+  document.getElementById('vquiz-container').innerHTML=`
+    <div class="quiz-card">
+      <div class="quiz-word">${w.word}</div>
+      <div class="quiz-pos">${w.pos} · "${w.ex}"</div>
+      <div class="quiz-opts">${opts.map(o=>`<button class="quiz-opt" onclick="answerVQ('${o.replace(/'/g,"\\'")}','${w.def.replace(/'/g,"\\'")}',this)">${o}</button>`).join('')}</div>
+    </div>`;
+}
+function answerVQ(chosen,correct,btn){
+  if(vqAnswered)return;vqAnswered=true;
+  document.querySelectorAll('#vquiz-container .quiz-opt').forEach(b=>{if(b.textContent===correct)b.classList.add('correct')});
+  if(chosen===correct){vqScore++;btn.classList.add('correct')}else btn.classList.add('wrong');
+  vqIdx++;setTimeout(renderVQ,900);
+}
+
+// Word of the Day
+const wotdPool=[
+  {word:'Ephemeral',pos:'adjective',def:'Lasting for a very short time.',ex:'"The ephemeral beauty of cherry blossoms reminds us to cherish fleeting moments."'},
+  {word:'Luminous',pos:'adjective',def:'Full of or shedding light; bright or shining.',ex:'"The luminous moon lit up the entire forest path."'},
+  {word:'Serendipity',pos:'noun',def:'The occurrence of events by chance in a happy or beneficial way.',ex:'"It was pure serendipity that led to the discovery of penicillin."'},
+  {word:'Tenacious',pos:'adjective',def:'Tending to keep a firm hold; not giving up easily.',ex:'"The tenacious climber reached the summit after three failed attempts."'},
+  {word:'Ubiquitous',pos:'adjective',def:'Present, appearing, or found everywhere.',ex:'"Social media has become ubiquitous in modern life."'},
+  {word:'Resilience',pos:'noun',def:'The capacity to recover quickly from difficulties.',ex:'"Her resilience in the face of hardship inspired everyone around her."'},
+  {word:'Melancholy',pos:'noun/adj',def:'A feeling of pensive sadness, typically with no obvious cause.',ex:'"A sense of melancholy settled over the empty playground."'},
+  {word:'Eloquent',pos:'adjective',def:'Fluent or persuasive in speaking or writing.',ex:'"The eloquent speech moved the entire crowd to tears."'},
+  {word:'Juxtapose',pos:'verb',def:'Place or deal with close together for contrasting effect.',ex:'"The painting juxtaposes dark shadows with brilliant light."'},
+  {word:'Labyrinth',pos:'noun',def:'A complicated irregular network of passages; a maze.',ex:'"Navigating the rules of the tax code felt like a labyrinth."'},
+];
+function newWOTD(){
+  const w=wotdPool[Math.floor(Math.random()*wotdPool.length)];
+  document.getElementById('wotd-word').textContent=w.word;
+  document.getElementById('wotd-pos').textContent=w.pos;
+  document.getElementById('wotd-def').textContent=w.def;
+  document.getElementById('wotd-ex').textContent=w.ex;
+}
+
+// Grammar Tips
+const grammarTips=[
+  {title:'Their / There / They\'re',body:'Their = possession ("their book"). There = place ("over there"). They\'re = they are ("they\'re happy").',ex:'Their car is over there, and they\'re very proud of it.'},
+  {title:'Your / You\'re',body:'Your = possession ("your phone"). You\'re = you are ("you\'re smart").',ex:'Your essay is great — you\'re clearly a talented writer.'},
+  {title:'Effect vs. Affect',body:'Affect is usually a verb (to affect). Effect is usually a noun (the effect).',ex:'The rain affected our plans. The effect was a shorter trip.'},
+  {title:'Active vs. Passive Voice',body:'Active: subject does the action. Passive: subject receives the action. Active is usually clearer.',ex:'Active: "The dog bit the man." Passive: "The man was bitten by the dog."'},
+  {title:'Oxford Comma',body:'Use a comma before "and" in a list for clarity.',ex:'I had eggs, toast, and juice. (Without it: "I had eggs, toast and juice" — ambiguous!)'},
+  {title:'Semicolons',body:'Use a semicolon to join two related complete sentences without a conjunction.',ex:'"I love reading; books are my favorite escape."'},
+  {title:'Who vs. Whom',body:'Use "who" for subjects, "whom" for objects. Trick: replace with he/him — if "him" works, use "whom".',ex:'"Who called?" (he called) vs. "To whom did you speak?" (you spoke to him)'},
+  {title:'Fewer vs. Less',body:'"Fewer" for things you can count; "less" for things you cannot.',ex:'"Fewer students, less homework." NOT "less students."'},
+  {title:'Apostrophes',body:'Apostrophes show possession (John\'s book) or contraction (don\'t). Never use them for plurals!',ex:'Correct: "the dogs\' toys." Wrong: "the dog\'s are playing."'},
+  {title:'Sentence Fragments',body:'A complete sentence needs a subject AND a verb. Fragments are incomplete thoughts.',ex:'Fragment: "Running through the park." ✅ Complete: "She was running through the park."'},
+];
+function renderGrammar(){
+  const shuffled=[...grammarTips];shuffleArr(shuffled);
+  document.getElementById('grammar-tips').innerHTML=shuffled.slice(0,4).map(t=>`
+    <div class="tip-card">
+      <div class="tip-title">📌 ${t.title}</div>
+      <div class="tip-body">${t.body}</div>
+      <div class="tip-ex">e.g. ${t.ex}</div>
+    </div>`).join('');
+}
+
+// Story Generator
+const storyTemplates=[
+  (g,s,h,v)=>`In the heart of ${s}, there lived a ${g.toLowerCase()} hero named ${h||'Alex'} — feared by none and known by all.\n\nFor years, ${h||'Alex'} had searched for purpose. Until one fateful night, when the skies turned blood-red and a messenger arrived: ${v||'the Shadow Lord'} had returned, and only ${h||'Alex'} possessed the ancient power to stop the darkness.\n\n"You cannot win," ${v||'the Shadow Lord'} whispered through the wind. "I have conquered a thousand worlds."\n\n${h||'Alex'} drew a slow breath. "Then I'll be number one thousand and one — the one that ends you."\n\nWhat followed was a battle that legends would be written about for a thousand years. And when the dust settled, it was ${h||'Alex'} who stood — breathless, battered, and victorious.\n\n${s.charAt(0).toUpperCase()+s.slice(1)} was saved. And ${h||'Alex'} finally had their answer.`,
+  (g,s,h,v)=>`Nobody believed ${h||'Sam'} could survive ${s}. The elders called it a death sentence. ${v||'Lord Kael'} had ruled with an iron fist for three centuries, and every hero who had challenged him had simply... disappeared.\n\nBut ${h||'Sam'} wasn't every hero.\n\nArmed with only wits, determination, and a mysterious object found in a forgotten corner of ${s}, ${h||'Sam'} began the journey that would change everything.\n\nFour trials. Four truths. And one final confrontation.\n\nWhen ${h||'Sam'} finally faced ${v||'Lord Kael'} in the great chamber, the villain laughed. "A child? This is what opposes me?"\n\n"Not a child," ${h||'Sam'} replied calmly. "Your ending."\n\nAnd that is exactly what ${h||'Sam'} became.`,
+];
+
+function generateStory(){
+  const genre=document.getElementById('story-genre').value;
+  const setting=document.getElementById('story-setting').value;
+  const hero=document.getElementById('story-hero').value||'Alex';
+  const villain=document.getElementById('story-villain').value||'the Shadow Lord';
+  const template=storyTemplates[Math.floor(Math.random()*storyTemplates.length)];
+  const story=template(genre,setting,hero,villain);
+  document.getElementById('story-out').innerHTML=story.replace(/\n/g,'<br>');
+}
+
+// Writing Analyzer
+function analyzeText(){
+  const text=document.getElementById('writing-input').value.trim();
+  if(!text){document.getElementById('writing-out').innerHTML='<span style="color:#f87171">Please enter some text first.</span>';return}
+  const words=text.split(/\s+/).filter(Boolean);
+  const sentences=text.split(/[.!?]+/).filter(s=>s.trim());
+  const chars=text.length;
+  const avgWPS=(words.length/Math.max(sentences.length,1)).toFixed(1);
+  const readingTime=Math.ceil(words.length/200);
+  const uniqueWords=new Set(words.map(w=>w.toLowerCase().replace(/[^a-z]/g,''))).size;
+  document.getElementById('writing-out').innerHTML=`
+    <span class="step">📊 Text Analysis Results</span>
+    <span class="step">Words: <b>${words.length}</b></span>
+    <span class="step">Sentences: <b>${sentences.length}</b></span>
+    <span class="step">Characters: <b>${chars}</b></span>
+    <span class="step">Avg words/sentence: <b>${avgWPS}</b> ${avgWPS>25?'(try shorter sentences!)':avgWPS<5?'(try longer sentences!)':'✅'}</span>
+    <span class="step">Unique words: <b>${uniqueWords}</b></span>
+    <span class="result">Reading time: ~${readingTime} minute${readingTime!==1?'s':''}</span>`;
+}
+
+function countSyllables(){
+  const text=document.getElementById('writing-input').value.trim();
+  if(!text){return}
+  const words=text.split(/\s+/).filter(Boolean);
+  let total=0;
+  words.forEach(w=>{
+    const cleaned=w.toLowerCase().replace(/[^a-z]/g,'');
+    if(!cleaned)return;
+    let count=cleaned.replace(/[^aeiouy]/g,'').length;
+    if(cleaned.endsWith('e')&&count>1) count--;
+    if(count<1) count=1;
+    total+=count;
+  });
+  document.getElementById('writing-out').innerHTML=`<span class="step">🎵 Syllable Count</span><span class="step">Total syllables: <b>${total}</b></span><span class="result">Average per word: ${(total/words.length).toFixed(1)}</span>`;
+}
+
+function findRhymes(){
+  const text=document.getElementById('writing-input').value.trim();
+  if(!text){return}
+  const words=[...new Set(text.toLowerCase().split(/\s+/).map(w=>w.replace(/[^a-z]/g,'')).filter(w=>w.length>2))];
+  const rhymeGroups={};
+  words.forEach(w=>{
+    const ending=w.slice(-3);
+    if(!rhymeGroups[ending]) rhymeGroups[ending]=[];
+    rhymeGroups[ending].push(w);
+  });
+  const groups=Object.values(rhymeGroups).filter(g=>g.length>1);
+  document.getElementById('writing-out').innerHTML=groups.length
+    ?`<span class="step">🎤 Rhyme Groups Found</span>${groups.map(g=>`<span class="step">${g.join(' · ')}</span>`).join('')}`
+    :`<span class="step">No obvious rhymes found in this text.</span>`;
+}
+
+function buildEngQuiz(){newWOTD();renderGrammar()}
+</script>
+</body>
+</html>

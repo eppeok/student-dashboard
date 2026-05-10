@@ -213,6 +213,24 @@ textarea{resize:vertical;min-height:80px}
   .rtab{min-width:70px;font-size:.72rem}
 }
 
+/* HOME CARDS */
+.home-card{background:var(--card);border:2px solid var(--border);border-radius:18px;padding:22px;cursor:pointer;transition:all .25s;text-align:left;display:flex;flex-direction:column}
+.home-card:hover{transform:translateY(-5px)}
+.sc-math.home-card:hover{border-color:#3b82f6;box-shadow:0 8px 32px #3b82f620}
+.sc-sci.home-card:hover{border-color:#22c55e;box-shadow:0 8px 32px #22c55e20}
+.sc-hist.home-card:hover{border-color:#f59e0b;box-shadow:0 8px 32px #f59e0b20}
+.sc-eng.home-card:hover{border-color:#ec4899;box-shadow:0 8px 32px #ec489920}
+.home-card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.home-card-icon{font-size:2rem;line-height:1}
+.home-card-title{font-size:1.15rem;font-weight:800}
+.home-card-count{font-size:.7rem;font-weight:700;padding:2px 10px;border-radius:20px;margin-left:auto;background:#1a2840;color:#64748b}
+.home-tool-list{list-style:none;padding:0;margin:0 0 16px;flex:1}
+.home-tool-list li{font-size:.78rem;color:#94a3b8;padding:5px 0;border-bottom:1px solid #0c1a2e;display:flex;align-items:center;gap:6px}
+.home-tool-list li:last-child{border:none}
+.home-card-cta{font-size:.82rem;font-weight:700;padding:8px 0;text-align:center;border-radius:50px;border:1px solid currentColor;opacity:.7;transition:opacity .2s}
+.home-card:hover .home-card-cta{opacity:1}
+.tool-hint{font-size:.76rem;color:#64748b;margin:-6px 0 10px;padding:7px 10px;background:#060c16;border-radius:8px;line-height:1.5;border-left:2px solid #1e3a5f}
+
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:#0c1220}
@@ -278,28 +296,112 @@ textarea{resize:vertical;min-height:80px}
   <div class="hero">
     <h1>Student Dashboard</h1>
     <p>Your all-in-one interactive learning hub 🚀</p>
-    <div class="subject-cards">
-      <div class="subject-card sc-math" onclick="showSection('math')">
-        <div class="icon">➗</div>
-        <div class="name">Mathematics</div>
-        <div class="desc">Calculator · Grapher · Solver</div>
+  </div>
+
+  <!-- How to use -->
+  <div style="background:#0c1220;border:1px solid #1a2840;border-radius:16px;padding:20px 24px;max-width:860px;margin:0 auto 28px;position:relative;z-index:1">
+    <div style="font-size:.75rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">📖 How to use this dashboard</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;font-size:.82rem;color:#94a3b8;text-align:center">
+      <div style="background:#060c16;border-radius:12px;padding:12px">
+        <div style="font-size:1.4rem;margin-bottom:6px">1️⃣</div>
+        <div style="font-weight:700;color:#e2e8f0;margin-bottom:4px">Pick a subject</div>
+        <div>Click any card below to open that subject</div>
       </div>
-      <div class="subject-card sc-sci" onclick="showSection('sci')">
-        <div class="icon">🔬</div>
-        <div class="name">Science</div>
-        <div class="desc">Solar System · Periodic Table</div>
+      <div style="background:#060c16;border-radius:12px;padding:12px">
+        <div style="font-size:1.4rem;margin-bottom:6px">2️⃣</div>
+        <div style="font-weight:700;color:#e2e8f0;margin-bottom:4px">Pick a tool</div>
+        <div>Scroll down to find the tool you want to use</div>
       </div>
-      <div class="subject-card sc-hist" onclick="showSection('hist')">
-        <div class="icon">📜</div>
-        <div class="name">History</div>
-        <div class="desc">World Timeline · Explorer</div>
+      <div style="background:#060c16;border-radius:12px;padding:12px">
+        <div style="font-size:1.4rem;margin-bottom:6px">3️⃣</div>
+        <div style="font-weight:700;color:#e2e8f0;margin-bottom:4px">Do quizzes</div>
+        <div>Answer questions to earn XP points</div>
       </div>
-      <div class="subject-card sc-eng" onclick="showSection('eng')">
-        <div class="icon">📖</div>
-        <div class="name">English</div>
-        <div class="desc">Vocab Quiz · Story Generator</div>
+      <div style="background:#060c16;border-radius:12px;padding:12px">
+        <div style="font-size:1.4rem;margin-bottom:6px">4️⃣</div>
+        <div style="font-weight:700;color:#e2e8f0;margin-bottom:4px">Check progress</div>
+        <div>See your scores on the Leaderboard &amp; Progress pages</div>
       </div>
     </div>
+  </div>
+
+  <!-- Subject cards with full tool lists -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;max-width:1000px;margin:0 auto 40px;padding:0 16px;position:relative;z-index:1">
+
+    <div class="home-card sc-math" onclick="showSection('math')">
+      <div class="home-card-top">
+        <div class="home-card-icon">➗</div>
+        <div class="home-card-title" style="color:#60a5fa">Mathematics</div>
+        <div class="home-card-count">10 tools</div>
+      </div>
+      <ul class="home-tool-list">
+        <li>🧮 Calculator — with step-by-step working</li>
+        <li>📈 Function Grapher — draw any equation</li>
+        <li>📐 Quadratic Solver — find x values</li>
+        <li>⚖️ Unit Converter — length, weight, temp...</li>
+        <li>✖️ Times Tables Quiz — test your speed</li>
+        <li>📐 Geometry Calculator — area & volume</li>
+        <li>📊 Statistics — mean, median, mode, charts</li>
+        <li>🔢 Number Base Converter — binary, hex...</li>
+        <li>½ Fraction Calculator — add, subtract, multiply</li>
+        <li>🔍 Prime Factorization — break numbers down</li>
+      </ul>
+      <div class="home-card-cta" style="color:#3b82f6">Open Mathematics →</div>
+    </div>
+
+    <div class="home-card sc-sci" onclick="showSection('sci')">
+      <div class="home-card-top">
+        <div class="home-card-icon">🔬</div>
+        <div class="home-card-title" style="color:#4ade80">Science</div>
+        <div class="home-card-count">6 tools</div>
+      </div>
+      <ul class="home-tool-list">
+        <li>🌌 Solar System — animated, clickable planets</li>
+        <li>⚗️ Periodic Table — all 118 elements</li>
+        <li>🚀 Projectile Motion — launch & watch physics</li>
+        <li>⚡ Physics Formulas — key equations explained</li>
+        <li>🫀 Human Body Systems — organs & facts</li>
+        <li>🔬 Scientific Notation — convert big numbers</li>
+      </ul>
+      <div class="home-card-cta" style="color:#22c55e">Open Science →</div>
+    </div>
+
+    <div class="home-card sc-hist" onclick="showSection('hist')">
+      <div class="home-card-top">
+        <div class="home-card-icon">📜</div>
+        <div class="home-card-title" style="color:#fbbf24">History</div>
+        <div class="home-card-count">6 tools</div>
+      </div>
+      <ul class="home-tool-list">
+        <li>🌍 World Timeline — 60+ events, filterable</li>
+        <li>🏺 History Quiz — test your knowledge</li>
+        <li>👤 Historical Figures — bios of famous people</li>
+        <li>📅 On This Day — what happened today in history</li>
+        <li>🏛️ Seven Wonders — ancient wonders of the world</li>
+        <li>🌍 Civilizations — compare ancient empires</li>
+      </ul>
+      <div class="home-card-cta" style="color:#f59e0b">Open History →</div>
+    </div>
+
+    <div class="home-card sc-eng" onclick="showSection('eng')">
+      <div class="home-card-top">
+        <div class="home-card-icon">📖</div>
+        <div class="home-card-title" style="color:#f9a8d4">English</div>
+        <div class="home-card-count">8 tools</div>
+      </div>
+      <ul class="home-tool-list">
+        <li>🌟 Word of the Day — learn a new word daily</li>
+        <li>🧩 Vocabulary Quiz — test SAT-level words</li>
+        <li>✍️ Story Generator — create stories instantly</li>
+        <li>📝 Grammar Tips — rules with examples</li>
+        <li>🔡 Writing Tools — analyse any text</li>
+        <li>🎭 Poem Generator — haiku, limerick & more</li>
+        <li>📚 Literary Devices Quiz — metaphor, irony...</li>
+        <li>🎓 Essay Grader — get a grade on your writing</li>
+      </ul>
+      <div class="home-card-cta" style="color:#ec4899">Open English →</div>
+    </div>
+
   </div>
 </div>
 
@@ -307,13 +409,14 @@ textarea{resize:vertical;min-height:80px}
 <div id="sec-math" class="section">
   <div class="sec-header">
     <div class="sec-title" style="color:#60a5fa">➗ Mathematics</div>
-    <div class="sec-sub">Step-by-step calculator · Function grapher · Unit converter · Quadratic solver</div>
+    <div class="sec-sub">10 interactive tools · Scroll down to find what you need · Quizzes earn XP</div>
   </div>
   <div class="tool-grid">
 
     <!-- CALCULATOR -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>🧮</span> Step-by-Step Calculator</h3>
+      <p class="tool-hint">Press the number buttons to build an equation, then press <b>=</b> to solve it. Shows you every step of the working out.</p>
       <div class="calc-display">
         <div class="expr" id="calc-expr"></div>
         <div class="val" id="calc-val">0</div>
@@ -345,6 +448,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- GRAPHING -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>📈</span> Function Grapher</h3>
+      <p class="tool-hint">Type any math equation using <b>x</b> and click Plot to see it drawn as a graph. Try: <b>x*x</b>, <b>sin(x)*5</b>, <b>2*x+3</b></p>
       <div style="display:flex;gap:8px;margin-bottom:10px">
         <input type="text" id="fn-input" value="x*x" placeholder="e.g. x*x, sin(x)*5, 2*x+3" aria-label="Math function to plot"/>
         <button class="btn btn-math btn-sm" onclick="plotGraph()">Plot</button>
@@ -356,7 +460,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- QUADRATIC SOLVER -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>📐</span> Quadratic Equation Solver</h3>
-      <p style="font-size:.78rem;color:var(--dim);margin-bottom:10px">Solve ax² + bx + c = 0</p>
+      <p class="tool-hint">Solves equations of the form <b>ax² + bx + c = 0</b>. Enter the three numbers (a, b, c) and get the answer with full working. Example: for x²−5x+6=0, enter a=1, b=−5, c=6.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
         <div><label style="font-size:.72rem;color:var(--dim)">a</label><input type="number" id="qa" value="1" placeholder="a"/></div>
         <div><label style="font-size:.72rem;color:var(--dim)">b</label><input type="number" id="qb" value="-5" placeholder="b"/></div>
@@ -369,6 +473,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- UNIT CONVERTER -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>⚖️</span> Unit Converter</h3>
+      <p class="tool-hint">Choose a measurement type (length, weight, etc.), type a number, pick the units to convert from and to — the result appears instantly.</p>
       <select id="unit-type" onchange="switchUnitType()" style="margin-bottom:10px">
         <option value="length">📏 Length</option>
         <option value="weight">⚖️ Weight</option>
@@ -391,6 +496,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- TIMES TABLES -->
     <div class="tool-card" style="border-color:#1e3a8a;grid-column:span 1">
       <h3><span>✖️</span> Times Table Quiz</h3>
+      <p class="tool-hint">A multiplication question appears — type your answer and press <b>Enter</b> or click Check. Get it right to build your streak! Earns XP for the leaderboard.</p>
       <div id="tt-question" class="quiz-card" style="text-align:center">
         <div class="quiz-word" id="tt-q" style="font-size:2rem;color:#60a5fa">?</div>
         <input type="number" id="tt-ans" placeholder="Type your answer and press Enter" aria-label="Times table answer" style="margin-top:10px;text-align:center" onkeydown="if(event.key==='Enter')checkTT()"/>
@@ -407,6 +513,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- GEOMETRY CALCULATOR -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>📐</span> Geometry Calculator</h3>
+      <p class="tool-hint">Choose a shape from the dropdown, fill in the measurements (like radius or side length), and click Calculate. Gets area, perimeter, volume — and draws a picture of the shape!</p>
       <select id="geo-shape" onchange="renderGeoInputs()" style="margin-bottom:10px">
         <option value="circle">⭕ Circle</option>
         <option value="rectangle">▭ Rectangle</option>
@@ -426,6 +533,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- STATISTICS -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>📊</span> Statistics Calculator</h3>
+      <p class="tool-hint">Type a list of numbers separated by commas, then click Analyze. Calculates mean (average), median, mode, standard deviation — and draws a bar chart.</p>
       <input type="text" id="stats-input" placeholder="Enter numbers separated by commas: 4, 8, 15, 16, 23, 42" aria-label="Dataset — enter numbers separated by commas" style="margin-bottom:10px"/>
       <button class="btn btn-math" style="width:100%" onclick="calcStats()">Analyze Dataset</button>
       <div class="output" id="stats-out"></div>
@@ -435,8 +543,9 @@ textarea{resize:vertical;min-height:80px}
     <!-- NUMBER BASE CONVERTER -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>🔢</span> Number Base Converter</h3>
+      <p class="tool-hint">Type a number in any of the 4 boxes — it automatically converts to all the others. Decimal is the normal number system (0–9). Binary uses only 0s and 1s (computers use this!).</p>
       <div style="margin-bottom:8px">
-        <label style="font-size:.72rem;color:var(--dim)">Decimal (Base 10)</label>
+        <label style="font-size:.72rem;color:var(--dim)">Decimal (Base 10) — normal numbers</label>
         <input type="number" id="base-dec" placeholder="e.g. 255" oninput="convertBases('dec')"/>
       </div>
       <div style="margin-bottom:8px">
@@ -457,6 +566,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- FRACTION CALCULATOR -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>½</span> Fraction Calculator</h3>
+      <p class="tool-hint">Enter the top number (numerator) and bottom number (denominator) for each fraction, choose the operation (+, −, ×, ÷), then click Calculate. Shows the simplified answer.</p>
       <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;align-items:center;margin-bottom:10px">
         <div style="text-align:center">
           <input type="number" id="fn1" placeholder="1" style="text-align:center"/>
@@ -485,6 +595,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- PRIME FACTORIZATION -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>🔍</span> Prime Factorization</h3>
+      <p class="tool-hint">Enter any whole number and see it broken down into its prime factors — the building blocks of that number. Example: 360 = 2³ × 3² × 5</p>
       <div style="display:flex;gap:8px;margin-bottom:10px">
         <input type="number" id="prime-input" placeholder="Enter a whole number (e.g. 360)" min="2" max="100000" aria-label="Number to factorise — enter any whole number between 2 and 100000"/>
         <button class="btn btn-math btn-sm" onclick="factorize()">Factor</button>
@@ -499,13 +610,14 @@ textarea{resize:vertical;min-height:80px}
 <div id="sec-sci" class="section">
   <div class="sec-header">
     <div class="sec-title" style="color:#4ade80">🔬 Science</div>
-    <div class="sec-sub">Interactive solar system · Full periodic table · Click anything to learn more</div>
+    <div class="sec-sub">6 interactive tools · Click planets and elements to learn more · Animate physics simulations</div>
   </div>
   <div class="tool-grid">
 
     <!-- SOLAR SYSTEM -->
     <div class="tool-card" style="border-color:#14532d;grid-column:1/-1">
       <h3><span>🌌</span> Interactive Solar System <span class="badge badge-new">LIVE</span></h3>
+      <p class="tool-hint">Watch all 8 planets orbit the Sun in real time. <b>Click on any planet</b> to see its facts — size, distance from the Sun, number of moons, and more.</p>
       <div id="solar-wrap">
         <canvas id="solar-canvas"></canvas>
       </div>
@@ -519,6 +631,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- PERIODIC TABLE -->
     <div class="tool-card" style="border-color:#14532d;grid-column:1/-1">
       <h3><span>⚗️</span> Interactive Periodic Table</h3>
+      <p class="tool-hint">All 118 chemical elements arranged in the standard periodic table layout. <b>Click any element</b> to see its atomic number, mass, group, and key facts. Colours show the element category.</p>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;font-size:.72rem">
         <span style="background:#7c2d12;padding:2px 8px;border-radius:4px">Alkali Metal</span>
         <span style="background:#78350f;padding:2px 8px;border-radius:4px">Alkaline Earth</span>
@@ -537,6 +650,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- PROJECTILE MOTION -->
     <div class="tool-card" style="border-color:#14532d;grid-column:1/-1">
       <h3><span>🚀</span> Projectile Motion Simulator</h3>
+      <p class="tool-hint">Drag the sliders to set the launch angle, speed, and gravity, then click <b>Launch!</b> to watch the projectile fly. See how far it travels and how high it goes.</p>
       <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;align-items:center">
         <div><label style="font-size:.72rem;color:var(--dim)">Launch Angle: <b id="angle-val">45</b>°</label><br><input type="range" id="proj-angle" min="5" max="85" value="45" oninput="document.getElementById('angle-val').textContent=this.value" style="width:140px"/></div>
         <div><label style="font-size:.72rem;color:var(--dim)">Speed: <b id="speed-val">50</b> m/s</label><br><input type="range" id="proj-speed" min="10" max="100" value="50" oninput="document.getElementById('speed-val').textContent=this.value" style="width:140px"/></div>
@@ -551,6 +665,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- PHYSICS FORMULAS -->
     <div class="tool-card" style="border-color:#14532d">
       <h3><span>⚡</span> Physics Formula Sheet</h3>
+      <p class="tool-hint">A cheat sheet of the most important physics formulas — each one shows the formula, what the letters mean, and what it's used for. Great for revision!</p>
       <div id="physics-formulas"></div>
     </div>
 
@@ -575,8 +690,9 @@ textarea{resize:vertical;min-height:80px}
     <!-- SCIENTIFIC NOTATION -->
     <div class="tool-card" style="border-color:#14532d">
       <h3><span>🔬</span> Scientific Notation Converter</h3>
+      <p class="tool-hint">Scientific notation is a shorter way to write very big or very small numbers. Example: 6,700,000 becomes 6.7 × 10⁶. Type a number in the top box to convert it, or use the bottom section to go the other way.</p>
       <div style="margin-bottom:8px">
-        <label style="font-size:.72rem;color:var(--dim)">Standard Number</label>
+        <label style="font-size:.72rem;color:var(--dim)">Standard Number → Scientific Notation</label>
         <input type="text" id="sci-standard" placeholder="e.g. 0.000045 or 6700000" oninput="toSciNotation()"/>
       </div>
       <div style="text-align:center;font-size:1.5rem;color:#22c55e;font-weight:700;margin:8px 0" id="sci-result">—</div>
@@ -614,11 +730,12 @@ textarea{resize:vertical;min-height:80px}
 <div id="sec-hist" class="section">
   <div class="sec-header">
     <div class="sec-title" style="color:#fbbf24">📜 World History</div>
-    <div class="sec-sub">60+ key events from ancient civilizations to modern day</div>
+    <div class="sec-sub">60+ key events on a timeline · Take the quiz to earn XP · Explore famous people & ancient wonders</div>
   </div>
   <div class="tool-grid">
     <div class="tool-card" style="border-color:#78350f;grid-column:1/-1">
       <h3><span>🌍</span> Interactive World Timeline</h3>
+      <p class="tool-hint">60+ major world events from ancient times to today. Click the buttons at the top to filter by category (wars, science, politics, etc.). Each event shows the year and a short description.</p>
       <div class="filter-row" id="tl-filters">
         <button class="filter-btn active" onclick="filterTL('all',this)">All</button>
         <button class="filter-btn" onclick="filterTL('politics',this)">🏛️ Politics</button>
@@ -634,6 +751,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- HISTORY QUIZ -->
     <div class="tool-card" style="border-color:#78350f">
       <h3><span>🏺</span> History Quiz</h3>
+      <p class="tool-hint">Read the question and click one of the 4 answer buttons. Green = correct, red = wrong. Click <b>Next →</b> for the next question. Earns XP for the leaderboard!</p>
       <div id="hquiz-q" class="quiz-card">
         <div class="quiz-word" id="hq-question" style="font-size:1rem;color:#fbbf24">Loading...</div>
         <div class="quiz-opts" id="hq-opts"></div>
@@ -657,6 +775,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- ON THIS DAY -->
     <div class="tool-card" style="border-color:#78350f">
       <h3><span>📅</span> On This Day in History</h3>
+      <p class="tool-hint">Shows real historical events that happened on today's date in past years. Click <b>New Events</b> to load more interesting facts.</p>
       <div id="otd-list"></div>
       <button class="btn btn-hist" style="width:100%;margin-top:10px" onclick="renderOTD()">🔄 New Events</button>
     </div>
@@ -664,12 +783,14 @@ textarea{resize:vertical;min-height:80px}
     <!-- ANCIENT WONDERS -->
     <div class="tool-card" style="border-color:#78350f;grid-column:1/-1">
       <h3><span>🏛️</span> Seven Wonders of the Ancient World</h3>
+      <p class="tool-hint">The 7 most incredible structures ever built in the ancient world. See where each one was, when it was built, and whether it still exists today.</p>
       <div id="wonders-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px"></div>
     </div>
 
     <!-- CIVILIZATIONS COMPARISON -->
     <div class="tool-card" style="border-color:#78350f;grid-column:1/-1">
       <h3><span>🌍</span> World Civilizations Comparison</h3>
+      <p class="tool-hint">A side-by-side comparison of the world's major ancient civilizations — when they existed, where they were, their government, achievements, and what ended them. Scroll sideways to see all columns.</p>
       <div style="overflow-x:auto">
         <table id="civ-table" style="width:100%;border-collapse:collapse;font-size:.8rem"></table>
       </div>
@@ -682,13 +803,14 @@ textarea{resize:vertical;min-height:80px}
 <div id="sec-eng" class="section">
   <div class="sec-header">
     <div class="sec-title" style="color:#f9a8d4">📖 English Language Arts</div>
-    <div class="sec-sub">Vocabulary quiz · Story generator · Grammar tips · Word of the day</div>
+    <div class="sec-sub">8 tools · Vocabulary quiz · Write stories & poems · Grade your own essay · Learn grammar rules</div>
   </div>
   <div class="tool-grid">
 
     <!-- WORD OF THE DAY -->
     <div class="tool-card" style="border-color:#831843;grid-column:1/-1">
       <h3><span>🌟</span> Word of the Day</h3>
+      <p class="tool-hint">A new advanced vocabulary word each visit — with definition, pronunciation guide, and an example sentence. Click <b>New Word</b> to see another. Great for SAT prep!</p>
       <div class="wotd" id="wotd-box">
         <div style="font-size:.72rem;color:#6b21a8;text-transform:uppercase;letter-spacing:1px">Today's Word</div>
         <div class="wotd-word" id="wotd-word">Ephemeral</div>
@@ -702,6 +824,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- VOCAB QUIZ -->
     <div class="tool-card" style="border-color:#831843">
       <h3><span>🧩</span> Vocabulary Quiz</h3>
+      <p class="tool-hint">A word appears at the top — choose the correct definition from 4 options. Green = correct, red = wrong. Your score is shown at the top. Earns XP!</p>
       <div class="quiz-score" id="vq-score-display">Score: 0 / 0</div>
       <div id="vquiz-container"></div>
       <button class="btn btn-eng" onclick="startVQuiz()" style="width:100%;margin-top:10px">🔄 New Quiz</button>
@@ -710,6 +833,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- STORY GENERATOR -->
     <div class="tool-card" style="border-color:#831843">
       <h3><span>✍️</span> AI Story Generator</h3>
+      <p class="tool-hint">Choose a genre, setting, hero name, and villain, then click <b>Generate Story</b>. A unique story is created for you instantly — perfect for writing inspiration!</p>
       <div class="story-params">
         <div>
           <label style="font-size:.72rem;color:var(--dim)">Genre</label>
@@ -744,6 +868,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- GRAMMAR TIPS -->
     <div class="tool-card" style="border-color:#831843">
       <h3><span>📝</span> Grammar Tips & Rules</h3>
+      <p class="tool-hint">Shows 4 random grammar rules at a time — each one explains the rule, gives a correct example, and shows a common mistake to avoid. Click <b>More Tips</b> to refresh.</p>
       <div id="grammar-tips"></div>
       <button class="btn btn-eng btn-sm" onclick="renderGrammar()" style="margin-top:8px">🔄 More Tips</button>
     </div>
@@ -751,6 +876,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- WRITING TOOLS -->
     <div class="tool-card" style="border-color:#831843">
       <h3><span>🔡</span> Writing Tools</h3>
+      <p class="tool-hint">Paste or type any text in the box, then click: <b>Analyze</b> for word/sentence stats, <b>Syllables</b> to count syllables in each word, or <b>Rhymes</b> to find words that rhyme.</p>
       <textarea id="writing-input" placeholder="Paste or type any text here to analyse word count, syllables, rhymes and more..." aria-label="Text to analyse" style="margin-bottom:10px;height:100px"></textarea>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-eng btn-sm" onclick="analyzeText()">📊 Analyze</button>
@@ -763,6 +889,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- POEM GENERATOR -->
     <div class="tool-card" style="border-color:#831843">
       <h3><span>🎭</span> Poem Generator</h3>
+      <p class="tool-hint">Choose a poem type (Haiku = 3 lines, Limerick = funny 5-line poem, etc.), enter a topic word, and click Generate. Use it as inspiration for your own poems!</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
         <div>
           <label style="font-size:.72rem;color:var(--dim)">Poem Type</label>
@@ -786,6 +913,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- LITERARY DEVICES -->
     <div class="tool-card" style="border-color:#831843">
       <h3><span>📚</span> Literary Devices Quiz</h3>
+      <p class="tool-hint">A sentence or example is shown — pick which literary device it is (metaphor, simile, alliteration, etc.). Click <b>Next →</b> for the next question. Earns XP!</p>
       <div id="lit-quiz-container"></div>
       <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.82rem">
         <span>Score: <b id="lit-score" style="color:#f9a8d4">0</b></span>
@@ -796,12 +924,14 @@ textarea{resize:vertical;min-height:80px}
     <!-- LITERARY DEVICES REFERENCE -->
     <div class="tool-card" style="border-color:#831843;grid-column:1/-1">
       <h3><span>🗂️</span> Literary Devices Reference</h3>
+      <p class="tool-hint">A quick-reference guide to 12 key literary devices. Each card shows the name, what it means, and an example sentence. Use it to study for the quiz above!</p>
       <div id="lit-ref-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px"></div>
     </div>
 
     <!-- ESSAY GRADER -->
     <div class="tool-card" style="border-color:#831843;grid-column:1/-1">
       <h3><span>🎓</span> Essay Structure Grader</h3>
+      <p class="tool-hint">Paste or type your essay (at least 30 words), then click Grade. You get a letter grade (A–F) and scores for vocabulary, structure, transitions, sentence variety, and length — plus tips to improve!</p>
       <textarea id="essay-input" placeholder="Paste your essay here (at least 30 words) to get instant feedback on structure, vocabulary, sentence variety, and more..." aria-label="Essay text input" style="height:140px;margin-bottom:10px"></textarea>
       <button class="btn btn-eng" style="width:100%" onclick="gradeEssay()">📋 Grade My Essay</button>
       <div id="essay-out" style="margin-top:12px"></div>

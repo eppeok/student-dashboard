@@ -221,6 +221,40 @@ textarea{resize:vertical;min-height:80px}
 /* TAG */
 .badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.7rem;font-weight:700;margin-left:6px;vertical-align:middle}
 .badge-new{background:#14532d;color:#4ade80}
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;margin-bottom:6px;background:#080c14;border:1px solid #1a2840;transition:border-color .2s}
+.lb-row:hover{border-color:#f59e0b}
+.lb-rank{font-size:1.4rem;width:36px;text-align:center;font-weight:900}
+.lb-name{flex:1;font-weight:700;font-size:.95rem}
+.lb-score{font-size:1.1rem;font-weight:800;color:#f59e0b}
+.lb-subject{font-size:.7rem;color:#64748b;margin-top:2px}
+.lb-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.lb-tab{padding:6px 16px;border-radius:50px;border:1px solid #1a2840;background:transparent;color:#64748b;cursor:pointer;font-size:.8rem;font-weight:700;transition:all .2s}
+.lb-tab.active{background:linear-gradient(90deg,#f59e0b,#ff6b35);border-color:transparent;color:#fff}
+.name-form{display:flex;gap:8px;margin-bottom:16px;background:#080c14;border:1px solid #1a2840;border-radius:12px;padding:12px}
+.name-form input{flex:1;background:transparent;border:none;color:#fff;font-size:.95rem;outline:none}
+.name-form input::placeholder{color:#334}
+
+/* PROGRESS TRACKER */
+.prog-subject{background:#080c14;border:1px solid #1a2840;border-radius:14px;padding:16px;margin-bottom:10px}
+.prog-subject-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.prog-subject-name{font-weight:700;font-size:1rem;display:flex;align-items:center;gap:8px}
+.prog-subject-pct{font-size:1.2rem;font-weight:900}
+.prog-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.prog-stat{text-align:center;background:#0c1220;border-radius:8px;padding:8px}
+.prog-stat-val{font-size:1.2rem;font-weight:800}
+.prog-stat-lbl{font-size:.65rem;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.streak-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,#f59e0b22,#ff6b3522);border:1px solid #f59e0b55;border-radius:50px;padding:6px 16px;font-size:.85rem;font-weight:700;color:#fbbf24}
+.setup-banner{background:linear-gradient(135deg,#1a0a00,#2d1400);border:2px solid #f59e0b;border-radius:16px;padding:20px;margin-bottom:20px;text-align:center}
+.setup-banner h3{color:#fbbf24;margin-bottom:8px;font-size:1.1rem}
+.setup-banner p{color:#94a3b8;font-size:.85rem;line-height:1.6}
+.setup-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;text-align:left}
+.setup-num{background:#f59e0b;color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;flex-shrink:0;margin-top:2px}
+.setup-text{font-size:.82rem;color:#94a3b8;line-height:1.5}
+.setup-text code{background:#1a2840;padding:2px 6px;border-radius:4px;font-family:monospace;color:#60a5fa;font-size:.78rem}
+.live-dot{width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;animation:livepulse 1.5s ease-in-out infinite;margin-right:6px}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
 </style>
 </head>
 <body>
@@ -235,6 +269,8 @@ textarea{resize:vertical;min-height:80px}
   <button class="nav-btn sci"  onclick="showSection('sci')"  aria-label="Go to Science">🔬 Science</button>
   <button class="nav-btn hist" onclick="showSection('hist')" aria-label="Go to History">📜 History</button>
   <button class="nav-btn eng"  onclick="showSection('eng')"  aria-label="Go to English">📖 English</button>
+  <button class="nav-btn" onclick="showSection('lb')" aria-label="Go to Leaderboard" style="color:#f59e0b">🏆 Leaderboard</button>
+  <button class="nav-btn" onclick="showSection('progress')" aria-label="Go to Progress Tracker" style="color:#22c55e">📈 Progress</button>
 </nav>
 
 <!-- HOME -->
@@ -774,6 +810,113 @@ textarea{resize:vertical;min-height:80px}
   </div>
 </div>
 
+<!-- ═══════════════════════════════════ LEADERBOARD ═══ -->
+<div id="sec-lb" class="section">
+  <div class="sec-header" style="color:#f59e0b;border-left-color:#f59e0b">
+    <div class="sec-title" style="color:#fbbf24">🏆 Global Leaderboard</div>
+    <div class="sec-sub"><span class="live-dot"></span>Live scores from students around the world</div>
+  </div>
+
+  <!-- Firebase setup banner (hidden once configured) -->
+  <div class="setup-banner" id="fb-setup-banner">
+    <h3>⚡ Set Up Live Leaderboard (Free — 5 mins)</h3>
+    <p style="margin-bottom:14px">You need a free Firebase account to enable the global leaderboard. Follow these steps:</p>
+    <div class="setup-step">
+      <div class="setup-num">1</div>
+      <div class="setup-text">Go to <strong style="color:#fbbf24">console.firebase.google.com</strong> and sign in with a Google account</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-num">2</div>
+      <div class="setup-text">Click <strong style="color:#fbbf24">"Add project"</strong> → name it anything (e.g. "student-dashboard") → click through and create</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-num">3</div>
+      <div class="setup-text">In your project, click <strong style="color:#fbbf24">Build → Realtime Database → Create Database</strong>. Choose any region and start in <strong style="color:#fbbf24">Test mode</strong></div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-num">4</div>
+      <div class="setup-text">Copy your database URL — it looks like: <code>https://YOUR-PROJECT-default-rtdb.firebaseio.com</code></div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-num">5</div>
+      <div class="setup-text">Paste your URL in the box below and click Save:</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;max-width:500px;margin-left:auto;margin-right:auto">
+      <input type="text" id="fb-url-input" placeholder="https://your-project-default-rtdb.firebaseio.com" style="font-size:.82rem" aria-label="Firebase database URL"/>
+      <button class="btn btn-hist btn-sm" onclick="saveFBUrl()" style="white-space:nowrap">💾 Save</button>
+    </div>
+  </div>
+
+  <!-- Name entry -->
+  <div class="name-form">
+    <span style="font-size:1.1rem">👤</span>
+    <input type="text" id="lb-name-input" placeholder="Enter your name to appear on the leaderboard..." maxlength="24" aria-label="Your display name for leaderboard"/>
+    <button class="btn btn-hist btn-sm" onclick="saveLBName()" aria-label="Save your name">Save Name</button>
+  </div>
+  <div id="lb-name-status" style="font-size:.78rem;color:#4ade80;margin-bottom:10px;min-height:16px"></div>
+
+  <!-- Subject tabs -->
+  <div class="lb-tabs" role="tablist" aria-label="Leaderboard subject filter">
+    <button class="lb-tab active" onclick="switchLBTab('overall',this)" role="tab" aria-selected="true">🌟 Overall</button>
+    <button class="lb-tab" onclick="switchLBTab('math',this)" role="tab" aria-selected="false">➗ Math</button>
+    <button class="lb-tab" onclick="switchLBTab('sci',this)" role="tab" aria-selected="false">🔬 Science</button>
+    <button class="lb-tab" onclick="switchLBTab('hist',this)" role="tab" aria-selected="false">📜 History</button>
+    <button class="lb-tab" onclick="switchLBTab('eng',this)" role="tab" aria-selected="false">📖 English</button>
+  </div>
+
+  <div id="lb-list" style="min-height:200px">
+    <div style="text-align:center;color:#64748b;padding:40px;font-size:.9rem">Loading leaderboard...</div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+    <div id="lb-last-update" style="font-size:.72rem;color:#64748b"></div>
+    <button class="btn btn-hist btn-sm" onclick="loadLB()" aria-label="Refresh leaderboard">🔄 Refresh</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ PROGRESS ═══ -->
+<div id="sec-progress" class="section">
+  <div class="sec-header" style="color:#22c55e;border-left-color:#22c55e">
+    <div class="sec-title" style="color:#4ade80">📈 My Progress</div>
+    <div class="sec-sub">Track your learning journey across all subjects</div>
+  </div>
+
+  <!-- XP & Streak row -->
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+    <div style="background:#080c14;border:1px solid #1a2840;border-radius:14px;padding:16px 24px;flex:1;min-width:140px;text-align:center">
+      <div style="font-size:.7rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Total XP</div>
+      <div id="prog-xp" style="font-size:2.2rem;font-weight:900;color:#fbbf24">0</div>
+    </div>
+    <div style="background:#080c14;border:1px solid #1a2840;border-radius:14px;padding:16px 24px;flex:1;min-width:140px;text-align:center">
+      <div style="font-size:.7rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">🔥 Day Streak</div>
+      <div id="prog-streak" style="font-size:2.2rem;font-weight:900;color:#fb923c">0</div>
+    </div>
+    <div style="background:#080c14;border:1px solid #1a2840;border-radius:14px;padding:16px 24px;flex:1;min-width:140px;text-align:center">
+      <div style="font-size:.7rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Questions Answered</div>
+      <div id="prog-total-q" style="font-size:2.2rem;font-weight:900;color:#60a5fa">0</div>
+    </div>
+    <div style="background:#080c14;border:1px solid #1a2840;border-radius:14px;padding:16px 24px;flex:1;min-width:140px;text-align:center">
+      <div style="font-size:.7rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Accuracy</div>
+      <div id="prog-accuracy" style="font-size:2.2rem;font-weight:900;color:#4ade80">—</div>
+    </div>
+  </div>
+
+  <!-- Per-subject breakdown -->
+  <div id="prog-subjects"></div>
+
+  <!-- Recent achievements -->
+  <div style="background:#080c14;border:1px solid #1a2840;border-radius:14px;padding:16px;margin-top:4px">
+    <div style="font-size:.8rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">🏅 Achievements</div>
+    <div id="prog-achievements" style="display:flex;flex-wrap:wrap;gap:8px">
+      <div style="color:#64748b;font-size:.82rem">Complete quizzes to earn achievements!</div>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;text-align:center">
+    <button class="btn btn-sci btn-sm" onclick="resetProgress()" style="opacity:.6;font-size:.75rem" aria-label="Reset all progress data">Reset Progress Data</button>
+  </div>
+</div>
+
 <script>
 // ═══════════════════ STARS ═══════════════════
 (function(){
@@ -798,7 +941,7 @@ function showSection(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const map={home:0,math:1,sci:2,hist:3,eng:4};
+  const map={home:0,math:1,sci:2,hist:3,eng:4,lb:5,progress:6};
   document.querySelectorAll('.nav-btn')[map[id]]?.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='sci'&&!solarInit){setTimeout(()=>{initSolar();solarInit=true},80)}
@@ -1978,6 +2121,346 @@ showSection=function(id){
   _origShowSection(id);
   if(id==='hist'){renderOTD();buildWonders();buildCivTable()}
   if(id==='sci'){buildPhysicsFormulas()}
+  if(id==='lb'){initLB()}
+  if(id==='progress'){renderProgress()}
+};
+
+// ═══════════════════ FIREBASE CONFIG ═══════════════════
+let FB_URL=localStorage.getItem('fb_url')||'';
+const FB_ENABLED=()=>!!FB_URL&&FB_URL!=='YOUR_FIREBASE_DATABASE_URL';
+
+function saveFBUrl(){
+  const v=document.getElementById('fb-url-input').value.trim().replace(/\/$/,'');
+  if(!v.startsWith('https://')){alert('Please enter a valid Firebase URL (starts with https://)');return}
+  FB_URL=v;
+  localStorage.setItem('fb_url',v);
+  document.getElementById('fb-setup-banner').style.display='none';
+  loadLB();
+}
+
+async function fbGet(path){
+  if(!FB_ENABLED())return null;
+  try{
+    const r=await fetch(`${FB_URL}/${path}.json`);
+    return r.ok?await r.json():null;
+  }catch(e){return null}
+}
+
+async function fbPush(path,data){
+  if(!FB_ENABLED())return false;
+  try{
+    const r=await fetch(`${FB_URL}/${path}.json`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    return r.ok;
+  }catch(e){return false}
+}
+
+async function fbSet(path,data){
+  if(!FB_ENABLED())return false;
+  try{
+    const r=await fetch(`${FB_URL}/${path}.json`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    return r.ok;
+  }catch(e){return false}
+}
+
+// ═══════════════════ LEADERBOARD ═══════════════════
+let lbTab='overall',lbAutoRefresh=null,lbName=localStorage.getItem('lb_name')||'';
+
+function initLB(){
+  // Show/hide setup banner
+  if(FB_ENABLED()){
+    document.getElementById('fb-setup-banner').style.display='none';
+  } else {
+    const saved=localStorage.getItem('fb_url');
+    if(saved) document.getElementById('fb-url-input').value=saved;
+  }
+  if(lbName) document.getElementById('lb-name-input').value=lbName;
+  loadLB();
+  if(lbAutoRefresh)clearInterval(lbAutoRefresh);
+  lbAutoRefresh=setInterval(loadLB,30000);
+}
+
+function saveLBName(){
+  const n=document.getElementById('lb-name-input').value.trim();
+  if(!n){document.getElementById('lb-name-status').textContent='Please enter a name!';return}
+  lbName=n;localStorage.setItem('lb_name',n);
+  document.getElementById('lb-name-status').textContent='✅ Name saved! It will appear when you complete quizzes.';
+  setTimeout(()=>document.getElementById('lb-name-status').textContent='',3000);
+}
+
+function switchLBTab(tab,btn){
+  lbTab=tab;
+  document.querySelectorAll('.lb-tab').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false')});
+  btn.classList.add('active');btn.setAttribute('aria-selected','true');
+  loadLB();
+}
+
+async function loadLB(){
+  const el=document.getElementById('lb-list');
+  if(!FB_ENABLED()){
+    el.innerHTML=renderLocalLB();
+    return;
+  }
+  el.innerHTML='<div style="text-align:center;color:#64748b;padding:30px;font-size:.85rem">⏳ Loading live scores...</div>';
+  try{
+    const data=await fbGet('scores');
+    const all=data?Object.values(data):[];
+    const filtered=lbTab==='overall'?all:all.filter(e=>e.subject===lbTab);
+    const sorted=filtered.sort((a,b)=>b.score-a.score).slice(0,20);
+    el.innerHTML=sorted.length?sorted.map((e,i)=>renderLBRow(e,i)).join('')
+      :'<div style="text-align:center;color:#64748b;padding:30px">No scores yet — be the first! Complete a quiz. 🎯</div>';
+    document.getElementById('lb-last-update').textContent='Last updated: '+new Date().toLocaleTimeString();
+  }catch(err){
+    el.innerHTML=renderLocalLB();
+  }
+}
+
+function renderLocalLB(){
+  // Fallback: show local scores only
+  const local=JSON.parse(localStorage.getItem('local_scores')||'[]');
+  const filtered=lbTab==='overall'?local:local.filter(e=>e.subject===lbTab);
+  const sorted=filtered.sort((a,b)=>b.score-a.score).slice(0,10);
+  return `<div style="background:#1a0a00;border:1px solid #f59e0b33;border-radius:10px;padding:12px;margin-bottom:12px;font-size:.8rem;color:#94a3b8">
+    ⚠️ Firebase not connected — showing local scores only. Set up Firebase above for a global leaderboard!
+  </div>`+(sorted.length?sorted.map((e,i)=>renderLBRow(e,i)).join('')
+    :'<div style="text-align:center;color:#64748b;padding:30px">Complete quizzes to see scores here!</div>');
+}
+
+function renderLBRow(e,i){
+  const medals=['🥇','🥈','🥉'];
+  const rank=i<3?medals[i]:`<span style="color:#64748b">${i+1}</span>`;
+  const subjColors={math:'#3b82f6',sci:'#22c55e',hist:'#f59e0b',eng:'#ec4899',overall:'#a855f7'};
+  const subjNames={math:'Math',sci:'Science',hist:'History',eng:'English',overall:'Overall'};
+  const color=subjColors[e.subject||'overall']||'#64748b';
+  const isMe=lbName&&e.name===lbName;
+  return `<div class="lb-row" style="${isMe?'border-color:#f59e0b;background:#1a1000':''}">
+    <div class="lb-rank">${rank}</div>
+    <div class="lb-name">${escapeHTML(e.name||'Anonymous')}${isMe?' <span style="font-size:.7rem;color:#f59e0b">(you)</span>':''}</div>
+    <div>
+      <div class="lb-score">${e.score}</div>
+      <div class="lb-subject" style="color:${color}">${subjNames[e.subject]||'Quiz'}</div>
+    </div>
+  </div>`;
+}
+
+function escapeHTML(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Called by quizzes to submit a score
+async function submitScore(subject,score,quizName){
+  if(score<=0)return;
+  const name=lbName||localStorage.getItem('lb_name')||'Anonymous';
+  const entry={name,score,subject,quiz:quizName,ts:Date.now()};
+  // Save locally always
+  const local=JSON.parse(localStorage.getItem('local_scores')||'[]');
+  local.push(entry);
+  if(local.length>100)local.shift();
+  localStorage.setItem('local_scores',JSON.stringify(local));
+  // Push to Firebase if connected
+  if(FB_ENABLED())await fbPush('scores',entry);
+  // Update progress
+  updateProgress(subject,score,1,1);
+}
+
+// ═══════════════════ PROGRESS TRACKER ═══════════════════
+const SUBJECTS_META=[
+  {id:'math',name:'Mathematics',emoji:'➗',color:'#3b82f6'},
+  {id:'sci', name:'Science',    emoji:'🔬',color:'#22c55e'},
+  {id:'hist',name:'History',    emoji:'📜',color:'#f59e0b'},
+  {id:'eng', name:'English',    emoji:'📖',color:'#ec4899'},
+];
+
+function getProgress(){
+  return JSON.parse(localStorage.getItem('student_progress')||'{}');
+}
+function saveProgress(p){
+  localStorage.setItem('student_progress',JSON.stringify(p));
+}
+
+function updateProgress(subject,score,correct,total){
+  const p=getProgress();
+  if(!p[subject])p[subject]={score:0,correct:0,total:0,sessions:0,xp:0,lastActive:0};
+  const s=p[subject];
+  s.score=Math.max(s.score,score);
+  s.correct+=correct;
+  s.total+=total;
+  s.sessions+=1;
+  s.xp+=score;
+  s.lastActive=Date.now();
+  // streak
+  const today=new Date().toDateString();
+  if(!p.lastDay||p.lastDay!==today){
+    if(p.lastDay===new Date(Date.now()-864e5).toDateString()){p.streak=(p.streak||0)+1}
+    else if(!p.lastDay){p.streak=1}
+    else{p.streak=1}
+    p.lastDay=today;
+  }
+  saveProgress(p);
+  // live-update progress page if open
+  if(document.getElementById('sec-progress').classList.contains('active'))renderProgress();
+}
+
+function renderProgress(){
+  const p=getProgress();
+  const allSubj=SUBJECTS_META.map(m=>p[m.id]||{score:0,correct:0,total:0,sessions:0,xp:0});
+  const totalXP=allSubj.reduce((s,x)=>s+(x.xp||0),0);
+  const totalQ=allSubj.reduce((s,x)=>s+(x.total||0),0);
+  const totalC=allSubj.reduce((s,x)=>s+(x.correct||0),0);
+  const acc=totalQ?Math.round(totalC/totalQ*100):null;
+  const streak=p.streak||0;
+
+  document.getElementById('prog-xp').textContent=totalXP;
+  document.getElementById('prog-streak').textContent=streak;
+  document.getElementById('prog-total-q').textContent=totalQ;
+  document.getElementById('prog-accuracy').textContent=acc!==null?acc+'%':'—';
+
+  // Subject cards
+  document.getElementById('prog-subjects').innerHTML=SUBJECTS_META.map((m,i)=>{
+    const s=allSubj[i];
+    const pct=s.total?Math.round(s.correct/s.total*100):0;
+    return `<div class="prog-subject">
+      <div class="prog-subject-header">
+        <div class="prog-subject-name">${m.emoji} ${m.name}</div>
+        <div class="prog-subject-pct" style="color:${m.color}">${pct}%</div>
+      </div>
+      <div style="background:#1a2840;border-radius:8px;height:10px;overflow:hidden;margin-bottom:10px">
+        <div style="height:100%;width:${pct}%;background:${m.color};border-radius:8px;transition:width 1s ease"></div>
+      </div>
+      <div class="prog-stat-grid">
+        <div class="prog-stat">
+          <div class="prog-stat-val" style="color:${m.color}">${s.xp||0}</div>
+          <div class="prog-stat-lbl">XP Earned</div>
+        </div>
+        <div class="prog-stat">
+          <div class="prog-stat-val">${s.correct||0}/${s.total||0}</div>
+          <div class="prog-stat-lbl">Correct / Total</div>
+        </div>
+        <div class="prog-stat">
+          <div class="prog-stat-val">${s.sessions||0}</div>
+          <div class="prog-stat-lbl">Quizzes Done</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Achievements
+  const achievements=[];
+  if(totalXP>=10)achievements.push({e:'⭐',t:'First Points','d':'Earned your first XP'});
+  if(totalXP>=100)achievements.push({e:'💯',t:'Century','d':'100 XP total'});
+  if(totalXP>=500)achievements.push({e:'🔥',t:'On Fire','d':'500 XP total'});
+  if(totalXP>=1000)achievements.push({e:'🏆',t:'Champion','d':'1000 XP total'});
+  if(streak>=3)achievements.push({e:'🎯',t:'3-Day Streak','d':'Logged in 3 days in a row'});
+  if(streak>=7)achievements.push({e:'🚀',t:'Week Warrior','d':'7-day streak!'});
+  if(totalQ>=10)achievements.push({e:'📚',t:'Quiz Starter','d':'Answered 10 questions'});
+  if(totalQ>=50)achievements.push({e:'🎓',t:'Scholar','d':'Answered 50 questions'});
+  if(acc>=80&&totalQ>=5)achievements.push({e:'🧠',t:'Sharp Mind','d':'80%+ accuracy'});
+  if(acc===100&&totalQ>=5)achievements.push({e:'💎',t:'Perfect Score','d':'100% accuracy!'});
+  // Subject mastery
+  SUBJECTS_META.forEach((m,i)=>{if(allSubj[i].sessions>=3)achievements.push({e:m.emoji,t:m.name+' Explorer','d':'Completed 3+ '+m.name+' quizzes'})});
+
+  const achEl=document.getElementById('prog-achievements');
+  achEl.innerHTML=achievements.length?achievements.map(a=>`
+    <div style="background:#0c1220;border:1px solid #1a2840;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;min-width:160px">
+      <span style="font-size:1.4rem">${a.e}</span>
+      <div>
+        <div style="font-size:.8rem;font-weight:700;color:#e2e8f0">${a.t}</div>
+        <div style="font-size:.7rem;color:#64748b">${a.d}</div>
+      </div>
+    </div>`).join('')
+    :'<div style="color:#64748b;font-size:.82rem">Complete quizzes to earn achievements! 🎯</div>';
+}
+
+function resetProgress(){
+  if(!confirm('Reset ALL progress data? This cannot be undone.'))return;
+  localStorage.removeItem('student_progress');
+  localStorage.removeItem('local_scores');
+  renderProgress();
+}
+
+// ═══════════════════ QUIZ SCORE HOOKS ═══════════════════
+// Hook into Times Tables quiz
+const _origCheckTT=typeof checkTT==='function'?checkTT:null;
+(function hookQuizzes(){
+  // Times Tables — hook answerTT
+  const origAnswerTT=window.answerTT;
+  if(origAnswerTT){
+    window.answerTT=function(ans){
+      origAnswerTT(ans);
+      // score is in ttScore global
+      setTimeout(()=>{
+        const sc=typeof ttScore!=='undefined'?ttScore:0;
+        if(sc>0)updateProgress('math',sc,sc,typeof ttQ!=='undefined'?ttQ:sc);
+      },100);
+    };
+  }
+
+  // Times Tables — also hook when quiz ends
+  const origNewTTQ=window.newTTQ;
+  if(origNewTTQ){
+    window.newTTQ=function(){
+      origNewTTQ();
+    };
+  }
+})();
+
+// Hook into vocab quiz answer
+const _origAnswerVQ=window.answerVQ;
+if(_origAnswerVQ){
+  window.answerVQ=function(chosen,correct,btn){
+    _origAnswerVQ(chosen,correct,btn);
+    setTimeout(()=>{
+      const sc=typeof vScore!=='undefined'?vScore:0;
+      updateProgress('eng',sc,sc>0?1:0,1);
+    },100);
+  };
+}
+
+// Hook into History quiz
+const _origAnswerHQ=window.answerHQ;
+if(_origAnswerHQ){
+  window.answerHQ=function(chosen,correct,btn){
+    _origAnswerHQ(chosen,correct,btn);
+    setTimeout(()=>{
+      const sc=typeof hqScore!=='undefined'?hqScore:0;
+      updateProgress('hist',sc,sc>0?1:0,1);
+    },100);
+  };
+}
+
+// Hook into Literary Devices quiz
+const _origAnswerLitQ=window.answerLitQ;
+if(_origAnswerLitQ){
+  window.answerLitQ=function(chosen,correct,btn){
+    _origAnswerLitQ(chosen,correct,btn);
+    setTimeout(()=>{
+      const sc=typeof litScore!=='undefined'?litScore:0;
+      updateProgress('eng',sc,sc>0?1:0,1);
+    },100);
+  };
+}
+
+// Submit best scores to leaderboard when leaving a quiz
+// Triggered when user navigates away from a section
+const _origShowSection2=showSection;
+showSection=function(id){
+  // Submit scores on section leave
+  const prevSection=document.querySelector('.section.active');
+  if(prevSection){
+    const prevId=prevSection.id.replace('sec-','');
+    if(prevId==='math'&&typeof ttScore!=='undefined'&&ttScore>0){
+      submitScore('math',ttScore,'Times Tables');
+    }
+    if(prevId==='hist'&&typeof hqScore!=='undefined'&&hqScore>0){
+      submitScore('hist',hqScore,'History Quiz');
+    }
+    if(prevId==='eng'&&typeof vScore!=='undefined'&&vScore>0){
+      submitScore('eng',vScore,'Vocab Quiz');
+    }
+    if(prevId==='eng'&&typeof litScore!=='undefined'&&litScore>0){
+      submitScore('eng',litScore,'Lit Devices Quiz');
+    }
+  }
+  _origShowSection2(id);
 };
 </script>
 </body>

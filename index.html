@@ -47,9 +47,10 @@ nav{position:sticky;top:0;z-index:100;background:#06090fee;backdrop-filter:blur(
 /* SECTIONS */
 .section{position:relative;z-index:1;display:none;padding:20px 16px 60px;max-width:1100px;margin:0 auto}
 .section.active{display:block}
-.sec-header{margin-bottom:24px}
-.sec-title{font-size:1.8rem;font-weight:800}
-.sec-sub{color:var(--dim);font-size:.9rem;margin-top:4px}
+.sec-header{margin-bottom:24px;background:var(--card);border-radius:14px;padding:20px 24px;border-left:4px solid currentColor}
+.sec-title{font-size:2.2rem;font-weight:900;letter-spacing:-0.5px}
+.sec-sub{color:var(--dim);font-size:.9rem;margin-top:6px}
+.tool-card h3{font-size:.95rem}
 .tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
 .tool-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;transition:border-color .2s}
 .tool-card h3{font-size:1rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
@@ -190,10 +191,26 @@ textarea{resize:vertical;min-height:80px}
 .prog-val{font-size:.78rem;font-weight:700;width:36px;text-align:right}
 
 /* RESPONSIVE */
-@media(max-width:600px){
+@media(max-width:700px){
   .story-params{grid-template-columns:1fr}
-  .tool-grid{grid-template-columns:1fr}
-  .pt-grid{min-width:580px}
+  .tool-grid{grid-template-columns:1fr!important}
+  .pt-grid{min-width:560px}
+  nav{gap:2px;padding:0 8px;overflow-x:auto}
+  .nav-btn{padding:6px 10px;font-size:.75rem}
+  .logo{font-size:.9rem}
+  h1{font-size:1.8rem}
+  .sec-title{font-size:1.5rem}
+  .calc-btns .cb{padding:12px 4px;font-size:.9rem}
+  .subject-cards{grid-template-columns:1fr 1fr}
+  .hero{padding:30px 12px 20px}
+  .section{padding:12px 10px 40px}
+  .tool-card{padding:14px 12px}
+  .unit-row{flex-direction:column}
+  .compare-grid{grid-template-columns:1fr}
+  .btn{padding:10px 16px;font-size:.85rem}
+  [style*="grid-column:1/-1"]{grid-column:1!important}
+  .result-tabs{overflow-x:auto}
+  .rtab{min-width:70px;font-size:.72rem}
 }
 
 /* SCROLLBAR */
@@ -213,11 +230,11 @@ textarea{resize:vertical;min-height:80px}
 <!-- NAV -->
 <nav>
   <div class="logo">🎓 Student Dashboard</div>
-  <button class="nav-btn math" onclick="showSection('home')">Home</button>
-  <button class="nav-btn math" onclick="showSection('math')">➗ Math</button>
-  <button class="nav-btn sci"  onclick="showSection('sci')">🔬 Science</button>
-  <button class="nav-btn hist" onclick="showSection('hist')">📜 History</button>
-  <button class="nav-btn eng"  onclick="showSection('eng')">📖 English</button>
+  <button class="nav-btn math" onclick="showSection('home')" aria-label="Go to Home">🏠 Home</button>
+  <button class="nav-btn math" onclick="showSection('math')" aria-label="Go to Mathematics">➗ Math</button>
+  <button class="nav-btn sci"  onclick="showSection('sci')"  aria-label="Go to Science">🔬 Science</button>
+  <button class="nav-btn hist" onclick="showSection('hist')" aria-label="Go to History">📜 History</button>
+  <button class="nav-btn eng"  onclick="showSection('eng')"  aria-label="Go to English">📖 English</button>
 </nav>
 
 <!-- HOME -->
@@ -293,7 +310,7 @@ textarea{resize:vertical;min-height:80px}
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>📈</span> Function Grapher</h3>
       <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input type="text" id="fn-input" value="x*x" placeholder="e.g. x*x, sin(x)*5, 2*x+3"/>
+        <input type="text" id="fn-input" value="x*x" placeholder="e.g. x*x, sin(x)*5, 2*x+3" aria-label="Math function to plot"/>
         <button class="btn btn-math btn-sm" onclick="plotGraph()">Plot</button>
       </div>
       <canvas id="graph-canvas" width="600" height="220"></canvas>
@@ -340,7 +357,7 @@ textarea{resize:vertical;min-height:80px}
       <h3><span>✖️</span> Times Table Quiz</h3>
       <div id="tt-question" class="quiz-card" style="text-align:center">
         <div class="quiz-word" id="tt-q" style="font-size:2rem;color:#60a5fa">?</div>
-        <input type="number" id="tt-ans" placeholder="Your answer" style="margin-top:10px;text-align:center" onkeydown="if(event.key==='Enter')checkTT()"/>
+        <input type="number" id="tt-ans" placeholder="Type your answer and press Enter" aria-label="Times table answer" style="margin-top:10px;text-align:center" onkeydown="if(event.key==='Enter')checkTT()"/>
         <button class="btn btn-math" style="margin-top:10px;width:100%" onclick="checkTT()">Check Answer</button>
       </div>
       <div class="output" id="tt-out"></div>
@@ -373,7 +390,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- STATISTICS -->
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>📊</span> Statistics Calculator</h3>
-      <input type="text" id="stats-input" placeholder="Enter numbers separated by commas: 4, 8, 15, 16, 23, 42" style="margin-bottom:10px"/>
+      <input type="text" id="stats-input" placeholder="Enter numbers separated by commas: 4, 8, 15, 16, 23, 42" aria-label="Dataset — enter numbers separated by commas" style="margin-bottom:10px"/>
       <button class="btn btn-math" style="width:100%" onclick="calcStats()">Analyze Dataset</button>
       <div class="output" id="stats-out"></div>
       <canvas id="stats-chart" width="400" height="120" style="display:none;margin-top:10px;border-radius:10px;border:1px solid #1e3a5f;width:100%"></canvas>
@@ -433,7 +450,7 @@ textarea{resize:vertical;min-height:80px}
     <div class="tool-card" style="border-color:#1e3a8a">
       <h3><span>🔍</span> Prime Factorization</h3>
       <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input type="number" id="prime-input" placeholder="Enter a number (e.g. 360)" min="2" max="100000"/>
+        <input type="number" id="prime-input" placeholder="Enter a whole number (e.g. 360)" min="2" max="100000" aria-label="Number to factorise — enter any whole number between 2 and 100000"/>
         <button class="btn btn-math btn-sm" onclick="factorize()">Factor</button>
       </div>
       <div class="output" id="prime-out"></div>
@@ -504,8 +521,9 @@ textarea{resize:vertical;min-height:80px}
     <!-- HUMAN BODY SYSTEMS -->
     <div class="tool-card" style="border-color:#14532d">
       <h3><span>🫀</span> Human Body Systems</h3>
-      <select id="body-system" onchange="showBodySystem()" style="margin-bottom:10px">
-        <option value="">— Select a system —</option>
+      <p style="font-size:.72rem;color:var(--dim);margin-bottom:6px">Pick a system to explore its organs and fun facts</p>
+      <select id="body-system" onchange="showBodySystem()" style="margin-bottom:10px" aria-label="Select a human body system to learn about">
+        <option value="">— Choose a body system to explore —</option>
         <option>Circulatory System</option>
         <option>Respiratory System</option>
         <option>Digestive System</option>
@@ -593,8 +611,9 @@ textarea{resize:vertical;min-height:80px}
     <!-- HISTORICAL FIGURES -->
     <div class="tool-card" style="border-color:#78350f">
       <h3><span>👤</span> Historical Figures</h3>
-      <select id="figure-select" onchange="showFigure()" style="margin-bottom:10px">
-        <option value="">— Select a figure —</option>
+      <p style="font-size:.72rem;color:var(--dim);margin-bottom:6px">Choose a person to read their biography and achievements</p>
+      <select id="figure-select" onchange="showFigure()" style="margin-bottom:10px" aria-label="Select a historical figure to learn about">
+        <option value="">— Choose a historical figure —</option>
       </select>
       <div class="output" id="figure-out" style="min-height:80px"></div>
     </div>
@@ -696,7 +715,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- WRITING TOOLS -->
     <div class="tool-card" style="border-color:#831843">
       <h3><span>🔡</span> Writing Tools</h3>
-      <textarea id="writing-input" placeholder="Paste or type your text here..." style="margin-bottom:10px;height:100px"></textarea>
+      <textarea id="writing-input" placeholder="Paste or type any text here to analyse word count, syllables, rhymes and more..." aria-label="Text to analyse" style="margin-bottom:10px;height:100px"></textarea>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-eng btn-sm" onclick="analyzeText()">📊 Analyze</button>
         <button class="btn btn-eng btn-sm" onclick="countSyllables()">🎵 Syllables</button>
@@ -747,7 +766,7 @@ textarea{resize:vertical;min-height:80px}
     <!-- ESSAY GRADER -->
     <div class="tool-card" style="border-color:#831843;grid-column:1/-1">
       <h3><span>🎓</span> Essay Structure Grader</h3>
-      <textarea id="essay-input" placeholder="Paste your essay here and get instant feedback on structure, vocabulary, and writing quality..." style="height:140px;margin-bottom:10px"></textarea>
+      <textarea id="essay-input" placeholder="Paste your essay here (at least 30 words) to get instant feedback on structure, vocabulary, sentence variety, and more..." aria-label="Essay text input" style="height:140px;margin-bottom:10px"></textarea>
       <button class="btn btn-eng" style="width:100%" onclick="gradeEssay()">📋 Grade My Essay</button>
       <div id="essay-out" style="margin-top:12px"></div>
     </div>
@@ -782,9 +801,9 @@ function showSection(id){
   const map={home:0,math:1,sci:2,hist:3,eng:4};
   document.querySelectorAll('.nav-btn')[map[id]]?.classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
-  if(id==='sci'&&!solarInit){initSolar();solarInit=true}
-  if(id==='sci'&&!ptInit){buildPT();ptInit=true}
-  if(id==='hist'&&!histInit){buildTimeline();buildHQ();buildFigures();histInit=true}
+  if(id==='sci'&&!solarInit){setTimeout(()=>{initSolar();solarInit=true},80)}
+  if(id==='sci'&&!ptInit){setTimeout(()=>{buildPT();ptInit=true},100)}
+  if(id==='hist'&&!histInit){setTimeout(()=>{buildTimeline();buildHQ();buildFigures();histInit=true},80)}
   if(id==='eng'&&!engInit){startVQuiz();renderGrammar();newWOTD();buildEngQuiz();engInit=true}
   if(id==='math'){initConverter();newTTQ();setTimeout(plotGraph,100)}
 }
@@ -834,9 +853,10 @@ function calcEq(){
 function plotGraph(){
   const canvas=document.getElementById('graph-canvas');
   const ctx=canvas.getContext('2d');
-  canvas.width=canvas.offsetWidth*2;canvas.height=440;
+  const cw=canvas.getBoundingClientRect().width||canvas.offsetWidth||600;
+  canvas.width=cw*2;canvas.height=440;
   ctx.scale(2,2);
-  const W=canvas.offsetWidth,H=220;
+  const W=cw,H=220;
   const fnStr=document.getElementById('fn-input').value||'x*x';
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#080c14';ctx.fillRect(0,0,W,H);
@@ -1003,7 +1023,9 @@ let solarAnim;
 function initSolar(){
   const wrap=document.getElementById('solar-wrap');
   const canvas=document.getElementById('solar-canvas');
-  canvas.width=wrap.offsetWidth;canvas.height=320;
+  const w=wrap.getBoundingClientRect().width||wrap.offsetWidth||700;
+  canvas.width=w;canvas.height=320;
+  canvas.setAttribute('aria-label','Interactive solar system — click a planet to learn about it');
   const ctx=canvas.getContext('2d');
   const cx=canvas.width/2,cy=canvas.height/2;
   const scale=canvas.width/700;
@@ -1279,13 +1301,20 @@ const hqData=[
   {q:'Which empire was Julius Caesar a leader of?',a:'Roman Republic',opts:['Greek Empire','Roman Republic','Byzantine Empire','Persian Empire']},
 ];
 let hqIdx=0,hqScore=0,hqAnswered=false;
-function buildHQ(){shuffleArr(hqData);renderHQ()}
+function buildHQ(){
+  try{shuffleArr(hqData);renderHQ();}
+  catch(e){const el=document.getElementById('hq-question');if(el)el.textContent='Quiz failed to load — try refreshing!';console.error('History quiz error:',e);}
+}
 function renderHQ(){
   const q=hqData[hqIdx%hqData.length];
+  if(!q){return;}
   hqAnswered=false;
-  document.getElementById('hq-question').textContent=q.q;
+  const qEl=document.getElementById('hq-question');
+  const oEl=document.getElementById('hq-opts');
+  if(!qEl||!oEl){return;}
+  qEl.textContent=q.q;
   const opts=[...q.opts];shuffleArr(opts);
-  document.getElementById('hq-opts').innerHTML=opts.map(o=>`<button class="quiz-opt" onclick="answerHQ('${o}','${q.a}',this)">${o}</button>`).join('');
+  oEl.innerHTML=opts.map(o=>`<button class="quiz-opt" aria-label="Answer: ${o}" onclick="answerHQ('${o.replace(/'/g,"\\'")}','${q.a.replace(/'/g,"\\'")}',this)">${o}</button>`).join('');
 }
 function answerHQ(chosen,correct,btn){
   if(hqAnswered)return;hqAnswered=true;

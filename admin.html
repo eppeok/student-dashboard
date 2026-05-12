@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin Panel — Student Dashboard</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#06090f;color:#e2e8f0;min-height:100vh}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#0c1220}::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px}
+
+/* LOGIN */
+#login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;text-align:center}
+.login-card{background:#0c1220;border:1px solid #1a2840;border-radius:20px;padding:40px;max-width:420px;width:100%}
+.login-logo{font-size:3rem;margin-bottom:16px}
+.login-title{font-size:1.5rem;font-weight:800;margin-bottom:6px}
+.login-sub{font-size:.85rem;color:#64748b;margin-bottom:28px;line-height:1.6}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px 24px;border-radius:50px;border:none;background:#fff;color:#1a1a2e;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s}
+.google-btn:hover{background:#f0f0f0;transform:scale(1.02)}
+.google-btn svg{width:22px;height:22px}
+.security-note{margin-top:20px;font-size:.75rem;color:#334155;line-height:1.6;background:#060c16;border-radius:10px;padding:12px}
+
+/* MAIN ADMIN */
+#admin-panel{display:none;max-width:1100px;margin:0 auto;padding:20px}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;gap:14px;background:#0c1220;border:1px solid #1a2840;border-radius:14px;padding:14px 20px;margin-bottom:20px;flex-wrap:wrap}
+.topbar-logo{font-size:1.2rem;font-weight:800;background:linear-gradient(90deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.admin-user{display:flex;align-items:center;gap:8px;margin-left:auto}
+.admin-avatar{width:32px;height:32px;border-radius:50%;border:2px solid #f59e0b}
+.admin-name{font-size:.85rem;font-weight:600}
+.sign-out-btn{padding:6px 14px;border-radius:50px;border:1px solid #3b1515;background:transparent;color:#f87171;cursor:pointer;font-size:.78rem;font-weight:600;transition:all .2s}
+.sign-out-btn:hover{background:#3b1515}
+
+/* UID SETUP BANNER */
+#uid-banner{background:linear-gradient(135deg,#1a0a00,#2d1400);border:2px solid #f59e0b;border-radius:14px;padding:18px 20px;margin-bottom:20px}
+#uid-banner h3{color:#fbbf24;margin-bottom:8px;font-size:1rem}
+.uid-box{display:flex;gap:8px;align-items:center;background:#060c16;border:1px solid #f59e0b44;border-radius:10px;padding:10px 14px;margin:10px 0;font-family:monospace;font-size:.85rem;color:#fbbf24}
+.uid-box span{flex:1;word-break:break-all}
+.copy-btn{padding:5px 12px;border-radius:20px;border:1px solid #f59e0b;background:transparent;color:#fbbf24;cursor:pointer;font-size:.75rem;font-weight:700;white-space:nowrap;transition:all .2s}
+.copy-btn:hover{background:#f59e0b22}
+.rules-block{background:#060c16;border-radius:10px;padding:12px;margin-top:10px;font-family:monospace;font-size:.75rem;color:#4ade80;white-space:pre;overflow-x:auto;line-height:1.7}
+.step-list{list-style:none;padding:0;margin-top:10px}
+.step-list li{font-size:.8rem;color:#94a3b8;padding:4px 0;display:flex;gap:8px;align-items:baseline}
+.step-list li::before{content:attr(data-n);background:#f59e0b;color:#000;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;flex-shrink:0}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:#0c1220;border:1px solid #1a2840;border-radius:12px;padding:16px;text-align:center}
+.stat-val{font-size:2rem;font-weight:900;line-height:1}
+.stat-lbl{font-size:.7rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+/* SCORES TABLE */
+.panel{background:#0c1220;border:1px solid #1a2840;border-radius:14px;padding:20px;margin-bottom:16px}
+.panel-title{font-size:1rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.search-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.search-row input,.search-row select{background:#060c16;border:1px solid #1a2840;color:#e2e8f0;border-radius:8px;padding:8px 12px;font-size:.83rem;outline:none}
+.search-row input{flex:1;min-width:150px}
+.search-row input:focus,.search-row select:focus{border-color:#f59e0b}
+
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;padding:9px 12px;background:#060c16;color:#64748b;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #1a2840}
+td{padding:9px 12px;border-bottom:1px solid #0a1420;vertical-align:middle}
+tr:last-child td{border:none}
+tr:hover td{background:#060c1680}
+.score-badge{font-weight:800;color:#f59e0b}
+.subj-pill{font-size:.65rem;padding:2px 8px;border-radius:20px;font-weight:700}
+.s-math{background:#1e3a8a;color:#60a5fa}.s-sci{background:#14532d;color:#4ade80}
+.s-hist{background:#78350f;color:#fbbf24}.s-eng{background:#831843;color:#f9a8d4}
+.s-overall{background:#2d1657;color:#c084fc}
+.del-btn{padding:4px 10px;border-radius:6px;border:1px solid #3b1515;background:transparent;color:#f87171;cursor:pointer;font-size:.72rem;font-weight:700;transition:all .2s}
+.del-btn:hover{background:#3b1515}
+.ban-btn{padding:4px 10px;border-radius:6px;border:1px solid #78350f;background:transparent;color:#fbbf24;cursor:pointer;font-size:.72rem;font-weight:700;transition:all .2s;margin-left:4px}
+.ban-btn:hover{background:#78350f22}
+.empty{text-align:center;color:#334155;padding:30px;font-size:.85rem}
+
+/* DANGER ZONE */
+.danger-zone{background:#0c0608;border:2px solid #3b1515;border-radius:14px;padding:20px;margin-bottom:16px}
+.danger-title{color:#f87171;font-weight:700;margin-bottom:12px;font-size:.95rem}
+.danger-btn{padding:10px 20px;border-radius:8px;border:2px solid #ef4444;background:transparent;color:#ef4444;cursor:pointer;font-size:.85rem;font-weight:700;transition:all .2s}
+.danger-btn:hover{background:#ef444422}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:#000b;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#0c1220;border:2px solid #3b1515;border-radius:16px;padding:28px;max-width:380px;width:100%;text-align:center}
+.modal h3{color:#f87171;margin-bottom:10px}
+.modal p{font-size:.85rem;color:#94a3b8;margin-bottom:20px;line-height:1.6}
+.modal-btns{display:flex;gap:10px;justify-content:center}
+.btn-cancel{padding:10px 22px;border-radius:50px;border:1px solid #1a2840;background:transparent;color:#64748b;cursor:pointer;font-weight:600}
+.btn-confirm{padding:10px 22px;border-radius:50px;border:none;background:#ef4444;color:#fff;cursor:pointer;font-weight:700}
+
+/* ACCESS DENIED */
+#denied-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .topbar{gap:8px}.stats-grid{grid-template-columns:1fr 1fr}
+  table{font-size:.75rem}th,td{padding:7px 8px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🛡️</div>
+    <div class="login-title">Admin Panel</div>
+    <div class="login-sub">Student Dashboard · Leaderboard Manager<br>Sign in with the Google account linked to your Firebase project.</div>
+    <button class="google-btn" onclick="signInGoogle()">
+      <svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+      Sign in with Google
+    </button>
+    <div class="security-note">
+      🔒 <strong>How security works:</strong> Your identity is verified by Google's servers — no password stored in this code. Firebase Rules on the server decide what you can do. Even if someone reads this file, they cannot access admin functions without your Google account.
+    </div>
+  </div>
+</div>
+
+<!-- ACCESS DENIED -->
+<div id="denied-screen">
+  <div style="font-size:3rem;margin-bottom:16px">🚫</div>
+  <div style="font-size:1.3rem;font-weight:800;color:#f87171;margin-bottom:8px">Access Denied</div>
+  <div style="color:#64748b;font-size:.9rem;margin-bottom:20px">Your Google account is not authorised as admin.<br>Sign in with the correct account.</div>
+  <button class="sign-out-btn" style="padding:10px 24px;font-size:.9rem" onclick="firebase.auth().signOut()">Sign Out & Try Again</button>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-logo">🛡️ Admin Panel</div>
+    <div style="font-size:.75rem;color:#64748b">Student Dashboard Leaderboard Manager</div>
+    <div class="admin-user">
+      <img class="admin-avatar" id="admin-avatar" src="" alt="Admin"/>
+      <span class="admin-name" id="admin-name"></span>
+      <button class="sign-out-btn" onclick="firebase.auth().signOut()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- UID Setup Banner -->
+  <div id="uid-banner">
+    <h3>⚙️ First Time Setup — Secure Your Delete Powers</h3>
+    <p style="font-size:.8rem;color:#94a3b8;margin-bottom:6px">Your Firebase UID (unique identity). Copy it and add it to Firebase Rules so only YOU can delete scores.</p>
+    <div class="uid-box">
+      <span id="admin-uid-display">Loading...</span>
+      <button class="copy-btn" onclick="copyUID()">Copy</button>
+    </div>
+    <ul class="step-list">
+      <li data-n="1">Go to <strong style="color:#fbbf24">console.firebase.google.com</strong> → your project → Realtime Database → <strong style="color:#fbbf24">Rules</strong></li>
+      <li data-n="2">Replace the rules with the code below (your UID is already filled in):</li>
+    </ul>
+    <div class="rules-block" id="rules-display">Loading rules...</div>
+    <ul class="step-list">
+      <li data-n="3">Click <strong style="color:#fbbf24">Publish</strong> — done! Security is now enforced by Firebase's servers.</li>
+    </ul>
+    <div style="margin-top:10px;text-align:right">
+      <button onclick="document.getElementById('uid-banner').style.display='none'" style="font-size:.75rem;color:#334155;background:none;border:none;cursor:pointer">Hide this panel ✕</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="stat-total" style="color:#f59e0b">—</div><div class="stat-lbl">Total Scores</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-users" style="color:#60a5fa">—</div><div class="stat-lbl">Unique Players</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-top" style="color:#4ade80">—</div><div class="stat-lbl">Top Score Ever</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-subj" style="color:#f9a8d4;font-size:1.1rem">—</div><div class="stat-lbl">Most Active Subject</div></div>
+  </div>
+
+  <!-- Score Manager -->
+  <div class="panel">
+    <div class="panel-title">
+      📋 All Scores
+      <span id="score-count" style="font-size:.75rem;color:#64748b;font-weight:400"></span>
+      <button onclick="loadScores()" style="margin-left:auto;padding:5px 14px;border-radius:20px;border:1px solid #1a2840;background:transparent;color:#64748b;cursor:pointer;font-size:.75rem">🔄 Refresh</button>
+    </div>
+    <div class="search-row">
+      <input type="text" id="search-name" placeholder="Search by player name..." oninput="filterScores()"/>
+      <select id="filter-subj" onchange="filterScores()">
+        <option value="">All subjects</option>
+        <option value="math">➗ Math</option>
+        <option value="sci">🔬 Science</option>
+        <option value="hist">📜 History</option>
+        <option value="eng">📖 English</option>
+      </select>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Player</th>
+            <th>Score</th>
+            <th>Subject</th>
+            <th>Quiz</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="scores-tbody">
+          <tr><td colspan="7" class="empty">Loading scores...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Danger Zone -->
+  <div class="danger-zone">
+    <div class="danger-title">⚠️ Danger Zone</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+      <button class="danger-btn" onclick="confirmAction('clear')">🗑️ Clear ALL Scores</button>
+      <div style="font-size:.78rem;color:#64748b">This permanently deletes every score from the global leaderboard. Cannot be undone.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <h3 id="modal-title">Are you sure?</h3>
+    <p id="modal-body">This action cannot be undone.</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm" id="modal-confirm-btn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════ FIREBASE CONFIG ═══════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyAfflbNLrrn95tPvLW0bzR8Q4iAqOKUOrM",
+  authDomain: "sdvb-d16b2.firebaseapp.com",
+  databaseURL: "https://sdvb-d16b2-default-rtdb.firebaseio.com",
+  projectId: "sdvb-d16b2",
+  storageBucket: "sdvb-d16b2.firebasestorage.app",
+  messagingSenderId: "1007920126855",
+  appId: "1:1007920126855:web:4d5fd1d73d311bd694d122"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.database();
+
+// ═══════════════ AUTH ═══════════════
+// Put your UID here after first sign-in — get it from the yellow box above
+const ADMIN_UID = '';   // e.g. 'abc123xyz...'
+
+function signInGoogle(){
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(err => alert('Sign-in failed: ' + err.message));
+}
+
+auth.onAuthStateChanged(user => {
+  document.getElementById('login-screen').style.display  = 'none';
+  document.getElementById('denied-screen').style.display = 'none';
+  document.getElementById('admin-panel').style.display   = 'none';
+
+  if(!user){
+    document.getElementById('login-screen').style.display = 'flex';
+    return;
+  }
+
+  // If ADMIN_UID is set, verify it matches
+  if(ADMIN_UID && user.uid !== ADMIN_UID){
+    document.getElementById('denied-screen').style.display = 'flex';
+    return;
+  }
+
+  // Authorised — show admin panel
+  document.getElementById('admin-panel').style.display = 'block';
+  document.getElementById('admin-name').textContent    = user.displayName || user.email;
+  document.getElementById('admin-avatar').src          = user.photoURL || '';
+
+  const uid = user.uid;
+  document.getElementById('admin-uid-display').textContent = uid;
+  document.getElementById('rules-display').textContent =
+`{
+  "rules": {
+    "scores": {
+      ".read": true,
+      "$scoreId": {
+        ".write": "!data.exists() || (auth != null && auth.uid === '${uid}')"
+      }
+    }
+  }
+}`;
+
+  // Hide UID banner if UID already set
+  if(ADMIN_UID) document.getElementById('uid-banner').style.display = 'none';
+
+  loadScores();
+});
+
+// ═══════════════ SCORES ═══════════════
+let allScores = [];   // [{key, name, score, subject, quiz, ts}]
+
+function loadScores(){
+  document.getElementById('scores-tbody').innerHTML = '<tr><td colspan="7" class="empty">Loading...</td></tr>';
+  db.ref('scores').once('value').then(snap => {
+    const raw = snap.val() || {};
+    allScores = Object.entries(raw).map(([key, v]) => ({key, ...v}))
+                      .sort((a,b) => b.score - a.score);
+    renderStats();
+    filterScores();
+  }).catch(err => {
+    document.getElementById('scores-tbody').innerHTML =
+      `<tr><td colspan="7" class="empty" style="color:#f87171">Error loading: ${err.message}</td></tr>`;
+  });
+}
+
+function renderStats(){
+  const total  = allScores.length;
+  const users  = new Set(allScores.map(s => s.name?.toLowerCase())).size;
+  const top    = allScores[0]?.score ?? '—';
+  const subjCount = {};
+  allScores.forEach(s => { subjCount[s.subject] = (subjCount[s.subject]||0)+1 });
+  const topSubj = Object.entries(subjCount).sort((a,b)=>b[1]-a[1])[0];
+  const subjLabels = {math:'Math ➗', sci:'Science 🔬', hist:'History 📜', eng:'English 📖'};
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-users').textContent = users;
+  document.getElementById('stat-top').textContent   = top;
+  document.getElementById('stat-subj').textContent  = topSubj ? (subjLabels[topSubj[0]]||topSubj[0]) : '—';
+}
+
+function filterScores(){
+  const q    = document.getElementById('search-name').value.toLowerCase();
+  const subj = document.getElementById('filter-subj').value;
+  const filtered = allScores.filter(s =>
+    (!q    || (s.name||'').toLowerCase().includes(q)) &&
+    (!subj || s.subject === subj)
+  );
+  document.getElementById('score-count').textContent = `(${filtered.length} of ${allScores.length})`;
+  const subjCls = {math:'s-math',sci:'s-sci',hist:'s-hist',eng:'s-eng'};
+  const subjLabel = {math:'Math',sci:'Science',hist:'History',eng:'English'};
+  if(!filtered.length){
+    document.getElementById('scores-tbody').innerHTML = '<tr><td colspan="7" class="empty">No scores match your filter.</td></tr>';
+    return;
+  }
+  document.getElementById('scores-tbody').innerHTML = filtered.map((s,i) => `
+    <tr>
+      <td style="color:#64748b">${i+1}</td>
+      <td style="font-weight:600">${esc(s.name||'Anonymous')}</td>
+      <td class="score-badge">${s.score}</td>
+      <td><span class="subj-pill ${subjCls[s.subject]||'s-overall'}">${subjLabel[s.subject]||s.subject||'?'}</span></td>
+      <td style="color:#64748b;font-size:.75rem">${esc(s.quiz||'—')}</td>
+      <td style="color:#64748b;font-size:.72rem">${s.ts ? new Date(s.ts).toLocaleDateString() : '—'}</td>
+      <td>
+        <button class="del-btn" onclick="confirmAction('delete','${s.key}','${esc(s.name||'Anonymous')}')">Delete</button>
+        <button class="ban-btn" onclick="confirmAction('ban','${esc(s.name||'')}')">Ban User</button>
+      </td>
+    </tr>`).join('');
+}
+
+// ═══════════════ ACTIONS ═══════════════
+let pendingAction = null;
+
+function confirmAction(type, key='', name=''){
+  pendingAction = {type, key, name};
+  const titles = {delete:`Delete score from "${name}"?`, ban:`Ban "${name}" — delete ALL their scores?`, clear:'Clear ENTIRE leaderboard?'};
+  const bodies  = {delete:'This score will be permanently removed from the leaderboard.', ban:`Every score submitted by "${name}" will be deleted. They can still play but their history is wiped.`, clear:'This deletes every single score from Firebase. The leaderboard will be completely empty.'};
+  document.getElementById('modal-title').textContent = titles[type];
+  document.getElementById('modal-body').textContent  = bodies[type];
+  document.getElementById('confirm-modal').classList.add('open');
+  document.getElementById('modal-confirm-btn').onclick = executeAction;
+}
+
+function closeModal(){
+  document.getElementById('confirm-modal').classList.remove('open');
+  pendingAction = null;
+}
+
+async function executeAction(){
+  closeModal();
+  if(!pendingAction) return;
+  const {type, key, name} = pendingAction;
+  try{
+    if(type === 'delete'){
+      await db.ref('scores/' + key).remove();
+      allScores = allScores.filter(s => s.key !== key);
+    } else if(type === 'ban'){
+      const toDelete = allScores.filter(s => (s.name||'').toLowerCase() === name.toLowerCase());
+      await Promise.all(toDelete.map(s => db.ref('scores/' + s.key).remove()));
+      allScores = allScores.filter(s => (s.name||'').toLowerCase() !== name.toLowerCase());
+    } else if(type === 'clear'){
+      await db.ref('scores').remove();
+      allScores = [];
+    }
+    renderStats();
+    filterScores();
+  } catch(err){
+    alert('Action failed: ' + err.message + '\n\nMake sure you have set up Firebase Rules with your UID.');
+  }
+}
+
+// ═══════════════ HELPERS ═══════════════
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+
+function copyUID(){
+  const uid = document.getElementById('admin-uid-display').textContent;
+  navigator.clipboard.writeText(uid).then(()=>{
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(()=>btn.textContent='Copy', 2000);
+  });
+}
+
+// Close modal on overlay click
+document.getElementById('confirm-modal').addEventListener('click', e => {
+  if(e.target === document.getElementById('confirm-modal')) closeModal();
+});
+</script>
+</body>
+</html>

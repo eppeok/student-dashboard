@@ -2916,8 +2916,8 @@ showSection=function(id){
 };
 
 // ═══════════════════ FIREBASE CONFIG ═══════════════════
-let FB_URL=localStorage.getItem('fb_url')||'';
-const FB_ENABLED=()=>!!FB_URL&&FB_URL!=='YOUR_FIREBASE_DATABASE_URL';
+let FB_URL='https://sdvb-d16b2-default-rtdb.firebaseio.com';
+const FB_ENABLED=()=>true;
 
 function saveFBUrl(){
   const v=document.getElementById('fb-url-input').value.trim().replace(/\/$/,'');

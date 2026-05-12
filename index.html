@@ -332,7 +332,7 @@ textarea{resize:vertical;min-height:80px}
       <div class="home-card-top">
         <div class="home-card-icon">➗</div>
         <div class="home-card-title" style="color:#60a5fa">Mathematics</div>
-        <div class="home-card-count">10 tools</div>
+        <div class="home-card-count">13 tools</div>
       </div>
       <ul class="home-tool-list">
         <li>🧮 Calculator — with step-by-step working</li>
@@ -345,6 +345,9 @@ textarea{resize:vertical;min-height:80px}
         <li>🔢 Number Base Converter — binary, hex...</li>
         <li>½ Fraction Calculator — add, subtract, multiply</li>
         <li>🔍 Prime Factorization — break numbers down</li>
+        <li>📐 Trigonometry — sin, cos, tan with unit circle</li>
+        <li>💯 Percentage Calculator — 3 types in one</li>
+        <li>🎲 Probability — dice, coins, cards, combos</li>
       </ul>
       <div class="home-card-cta" style="color:#3b82f6">Open Mathematics →</div>
     </div>
@@ -353,7 +356,7 @@ textarea{resize:vertical;min-height:80px}
       <div class="home-card-top">
         <div class="home-card-icon">🔬</div>
         <div class="home-card-title" style="color:#4ade80">Science</div>
-        <div class="home-card-count">6 tools</div>
+        <div class="home-card-count">9 tools</div>
       </div>
       <ul class="home-tool-list">
         <li>🌌 Solar System — animated, clickable planets</li>
@@ -362,6 +365,9 @@ textarea{resize:vertical;min-height:80px}
         <li>⚡ Physics Formulas — key equations explained</li>
         <li>🫀 Human Body Systems — organs & facts</li>
         <li>🔬 Scientific Notation — convert big numbers</li>
+        <li>⚗️ Element Symbol Quiz — name↔symbol flashcards</li>
+        <li>🧪 pH Scale — explore acids & alkalis visually</li>
+        <li>⚙️ Simple Machines — lever, pulley & more</li>
       </ul>
       <div class="home-card-cta" style="color:#22c55e">Open Science →</div>
     </div>
@@ -370,7 +376,7 @@ textarea{resize:vertical;min-height:80px}
       <div class="home-card-top">
         <div class="home-card-icon">📜</div>
         <div class="home-card-title" style="color:#fbbf24">History</div>
-        <div class="home-card-count">6 tools</div>
+        <div class="home-card-count">9 tools</div>
       </div>
       <ul class="home-tool-list">
         <li>🌍 World Timeline — 60+ events, filterable</li>
@@ -379,6 +385,9 @@ textarea{resize:vertical;min-height:80px}
         <li>📅 On This Day — what happened today in history</li>
         <li>🏛️ Seven Wonders — ancient wonders of the world</li>
         <li>🌍 Civilizations — compare ancient empires</li>
+        <li>🌐 World Capitals Quiz — 30 countries</li>
+        <li>💡 Famous Inventions — from wheel to iPhone</li>
+        <li>🃏 History Flashcards — flip & study key facts</li>
       </ul>
       <div class="home-card-cta" style="color:#f59e0b">Open History →</div>
     </div>
@@ -387,7 +396,7 @@ textarea{resize:vertical;min-height:80px}
       <div class="home-card-top">
         <div class="home-card-icon">📖</div>
         <div class="home-card-title" style="color:#f9a8d4">English</div>
-        <div class="home-card-count">8 tools</div>
+        <div class="home-card-count">11 tools</div>
       </div>
       <ul class="home-tool-list">
         <li>🌟 Word of the Day — learn a new word daily</li>
@@ -398,6 +407,9 @@ textarea{resize:vertical;min-height:80px}
         <li>🎭 Poem Generator — haiku, limerick & more</li>
         <li>📚 Literary Devices Quiz — metaphor, irony...</li>
         <li>🎓 Essay Grader — get a grade on your writing</li>
+        <li>🔄 Synonym & Antonym Finder — expand vocabulary</li>
+        <li>🐝 Spelling Bee — practice tricky spellings</li>
+        <li>❝ Punctuation Guide — commas, apostrophes & more</li>
       </ul>
       <div class="home-card-cta" style="color:#ec4899">Open English →</div>
     </div>
@@ -409,7 +421,7 @@ textarea{resize:vertical;min-height:80px}
 <div id="sec-math" class="section">
   <div class="sec-header">
     <div class="sec-title" style="color:#60a5fa">➗ Mathematics</div>
-    <div class="sec-sub">10 interactive tools · Scroll down to find what you need · Quizzes earn XP</div>
+    <div class="sec-sub">13 interactive tools · Scroll down to find what you need · Quizzes earn XP</div>
   </div>
   <div class="tool-grid">
 
@@ -603,6 +615,72 @@ textarea{resize:vertical;min-height:80px}
       <div class="output" id="prime-out"></div>
     </div>
 
+    <!-- TRIGONOMETRY CALCULATOR -->
+    <div class="tool-card" style="border-color:#1e3a8a">
+      <h3><span>📐</span> Trigonometry Calculator</h3>
+      <p class="tool-hint">Calculate sin, cos, tan and inverses for any angle. Toggle degrees or radians. The unit circle diagram shows exactly where your angle is.</p>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <select id="trig-mode" style="width:130px" aria-label="Angle unit">
+          <option value="deg">Degrees °</option>
+          <option value="rad">Radians</option>
+        </select>
+        <input type="number" id="trig-angle" placeholder="Angle (e.g. 45)" style="flex:1" aria-label="Angle value"/>
+        <button class="btn btn-math btn-sm" onclick="calcTrig()">Calculate</button>
+      </div>
+      <div class="output" id="trig-out" style="min-height:32px"></div>
+      <canvas id="trig-canvas" width="400" height="180" style="width:100%;border-radius:10px;border:1px solid #1e3a5f;margin-top:10px;display:none"></canvas>
+    </div>
+
+    <!-- PERCENTAGE CALCULATOR -->
+    <div class="tool-card" style="border-color:#1e3a8a">
+      <h3><span>💯</span> Percentage Calculator</h3>
+      <p class="tool-hint">Three tools in one: find what X% of a number is, find what percentage one number is of another, or calculate % increase/decrease between two values.</p>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <button class="lb-tab active" onclick="switchPctTab(0,this)" style="font-size:.75rem">X% of Y</button>
+        <button class="lb-tab" onclick="switchPctTab(1,this)" style="font-size:.75rem">X is ?% of Y</button>
+        <button class="lb-tab" onclick="switchPctTab(2,this)" style="font-size:.75rem">% Change</button>
+      </div>
+      <div id="pct-panel-0">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <input type="number" id="pct-a0" placeholder="%" style="width:80px" aria-label="Percentage"/>
+          <span style="color:#60a5fa;font-weight:700">% of</span>
+          <input type="number" id="pct-b0" placeholder="Number" style="flex:1" aria-label="Number"/>
+        </div>
+      </div>
+      <div id="pct-panel-1" style="display:none">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <input type="number" id="pct-a1" placeholder="Value" style="flex:1" aria-label="Part value"/>
+          <span style="color:#60a5fa;font-weight:700">is ?% of</span>
+          <input type="number" id="pct-b1" placeholder="Total" style="flex:1" aria-label="Total value"/>
+        </div>
+      </div>
+      <div id="pct-panel-2" style="display:none">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <input type="number" id="pct-a2" placeholder="From" style="flex:1" aria-label="Original value"/>
+          <span style="color:#60a5fa;font-weight:700">→</span>
+          <input type="number" id="pct-b2" placeholder="To" style="flex:1" aria-label="New value"/>
+        </div>
+      </div>
+      <button class="btn btn-math" style="width:100%" onclick="calcPct()">Calculate</button>
+      <div class="output" id="pct-out" style="margin-top:10px;min-height:32px"></div>
+    </div>
+
+    <!-- PROBABILITY CALCULATOR -->
+    <div class="tool-card" style="border-color:#1e3a8a">
+      <h3><span>🎲</span> Probability Calculator</h3>
+      <p class="tool-hint">Explore probability with dice, coins, and cards — or calculate combinations and permutations. Shows the chance as a fraction, decimal, and percentage.</p>
+      <select id="prob-mode" onchange="renderProbInputs()" style="margin-bottom:10px" aria-label="Probability scenario">
+        <option value="dice">🎲 Rolling Dice</option>
+        <option value="coin">🪙 Flipping Coins</option>
+        <option value="cards">🃏 Drawing Cards</option>
+        <option value="combo">🔢 Combinations (nCr)</option>
+        <option value="perm">🔀 Permutations (nPr)</option>
+      </select>
+      <div id="prob-inputs"></div>
+      <button class="btn btn-math" style="width:100%;margin-top:10px" onclick="calcProb()">Calculate Probability</button>
+      <div class="output" id="prob-out" style="margin-top:10px;min-height:32px"></div>
+    </div>
+
   </div>
 </div>
 
@@ -610,7 +688,7 @@ textarea{resize:vertical;min-height:80px}
 <div id="sec-sci" class="section">
   <div class="sec-header">
     <div class="sec-title" style="color:#4ade80">🔬 Science</div>
-    <div class="sec-sub">6 interactive tools · Click planets and elements to learn more · Animate physics simulations</div>
+    <div class="sec-sub">9 interactive tools · Click planets and elements to learn more · Element quiz · pH scale · Simple machines</div>
   </div>
   <div class="tool-grid">
 
@@ -708,6 +786,58 @@ textarea{resize:vertical;min-height:80px}
       <div class="output" id="sci-out2" style="margin-top:8px;min-height:28px;font-size:.78rem"></div>
     </div>
 
+    <!-- ELEMENT SYMBOL QUIZ -->
+    <div class="tool-card" style="border-color:#14532d">
+      <h3><span>⚗️</span> Element Symbol Quiz</h3>
+      <p class="tool-hint">An element name or symbol appears — type the correct answer and press Check. Do you know that Iron is <b>Fe</b> and Gold is <b>Au</b>? Earns XP!</p>
+      <div class="quiz-card" style="text-align:center;margin-bottom:10px">
+        <div style="font-size:.72rem;color:#4ade80;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px" id="elq-label">Name → Symbol</div>
+        <div style="font-size:1.6rem;font-weight:800;color:#4ade80;margin-bottom:10px" id="elq-question">?</div>
+        <input type="text" id="elq-ans" placeholder="Type your answer..." style="text-align:center;max-width:200px;margin:0 auto" aria-label="Element quiz answer" onkeydown="if(event.key==='Enter')checkELQ()"/>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sci" style="flex:1" onclick="checkELQ()">✅ Check</button>
+        <button class="btn btn-sci btn-sm" onclick="nextELQ()">Skip →</button>
+      </div>
+      <div class="output" id="elq-out" style="margin-top:10px;min-height:28px"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.82rem">
+        <span>Score: <b id="elq-score" style="color:#4ade80">0</b></span>
+        <span>Streak: <b id="elq-streak" style="color:#f59e0b">0</b> 🔥</span>
+      </div>
+    </div>
+
+    <!-- pH SCALE -->
+    <div class="tool-card" style="border-color:#14532d">
+      <h3><span>🧪</span> pH Scale Explorer</h3>
+      <p class="tool-hint">The pH scale goes from 0 (most acidic) to 14 (most alkaline). Type any pH value to see what it means, or click a common substance to see its pH.</p>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="number" id="ph-input" placeholder="Enter pH (0–14)" min="0" max="14" step="0.1" style="flex:1" aria-label="pH value to look up" oninput="lookupPH()"/>
+      </div>
+      <div id="ph-scale-bar" style="height:24px;border-radius:12px;background:linear-gradient(90deg,#ef4444,#f97316,#eab308,#22c55e,#3b82f6,#6366f1,#7c3aed);margin-bottom:8px;position:relative">
+        <div id="ph-marker" style="position:absolute;top:-6px;width:4px;height:36px;background:#fff;border-radius:2px;transform:translateX(-50%);transition:left .3s;left:50%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.65rem;color:#64748b;margin-bottom:12px"><span>0 Acid</span><span>7 Neutral</span><span>14 Alkaline</span></div>
+      <div class="output" id="ph-out" style="min-height:40px"></div>
+      <div style="margin-top:10px;font-size:.75rem;color:#64748b;margin-bottom:6px">Common substances — click to explore:</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px" id="ph-buttons"></div>
+    </div>
+
+    <!-- SIMPLE MACHINES -->
+    <div class="tool-card" style="border-color:#14532d">
+      <h3><span>⚙️</span> Simple Machines Calculator</h3>
+      <p class="tool-hint">Simple machines multiply force to make work easier. Pick a machine type, enter the values, and see the Mechanical Advantage — how much easier the machine makes the job.</p>
+      <select id="machine-type" onchange="renderMachineInputs()" style="margin-bottom:10px" aria-label="Simple machine type">
+        <option value="lever">⚖️ Lever</option>
+        <option value="inclined">📐 Inclined Plane</option>
+        <option value="pulley">🪤 Pulley System</option>
+        <option value="wheel">⭕ Wheel & Axle</option>
+        <option value="screw">🔩 Screw</option>
+      </select>
+      <div id="machine-inputs"></div>
+      <button class="btn btn-sci" style="width:100%;margin-top:10px" onclick="calcMachine()">Calculate</button>
+      <div class="output" id="machine-out" style="margin-top:10px;min-height:32px"></div>
+    </div>
+
   </div>
 </div>
 
@@ -730,7 +860,7 @@ textarea{resize:vertical;min-height:80px}
 <div id="sec-hist" class="section">
   <div class="sec-header">
     <div class="sec-title" style="color:#fbbf24">📜 World History</div>
-    <div class="sec-sub">60+ key events on a timeline · Take the quiz to earn XP · Explore famous people & ancient wonders</div>
+    <div class="sec-sub">9 tools · 60+ timeline events · Capitals quiz · Inventions timeline · Flashcards · Famous people</div>
   </div>
   <div class="tool-grid">
     <div class="tool-card" style="border-color:#78350f;grid-column:1/-1">
@@ -796,6 +926,42 @@ textarea{resize:vertical;min-height:80px}
       </div>
     </div>
 
+    <!-- WORLD CAPITALS QUIZ -->
+    <div class="tool-card" style="border-color:#78350f">
+      <h3><span>🌐</span> World Capitals Quiz</h3>
+      <p class="tool-hint">A country appears — pick its capital city from 4 options. Tests your geography knowledge across all continents! Earns XP.</p>
+      <div class="quiz-card" style="margin-bottom:10px">
+        <div style="font-size:.72rem;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">What is the capital of...</div>
+        <div style="font-size:1.3rem;font-weight:800;color:#fbbf24;margin-bottom:12px" id="cap-country">Loading...</div>
+        <div class="quiz-opts" id="cap-opts"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.82rem">
+        <span>Score: <b id="cap-score" style="color:#fbbf24">0</b></span>
+        <button class="btn btn-hist btn-sm" onclick="nextCapQ()">Next →</button>
+      </div>
+    </div>
+
+    <!-- FAMOUS INVENTIONS -->
+    <div class="tool-card" style="border-color:#78350f">
+      <h3><span>💡</span> Famous Inventions Timeline</h3>
+      <p class="tool-hint">The most important inventions in human history, in order from oldest to newest. Click any invention to see who invented it and why it changed the world.</p>
+      <div id="inventions-list" style="max-height:320px;overflow-y:auto"></div>
+    </div>
+
+    <!-- HISTORY FLASHCARDS -->
+    <div class="tool-card" style="border-color:#78350f">
+      <h3><span>🃏</span> History Flashcards</h3>
+      <p class="tool-hint">Click the card to flip it and reveal the answer. Use these to study key dates, people, and events before a test!</p>
+      <div id="flashcard-box" onclick="flipFlashcard()" style="cursor:pointer;background:#0c1220;border:2px solid #78350f;border-radius:16px;padding:24px;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:background .2s" role="button" aria-label="Flip flashcard">
+        <div style="font-size:.7rem;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px" id="fc-side">Question (click to flip)</div>
+        <div style="font-size:1rem;font-weight:700;color:#e2e8f0;line-height:1.5" id="fc-text">Loading...</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px">
+        <span style="font-size:.8rem;color:#64748b" id="fc-counter">Card 1 of ?</span>
+        <button class="btn btn-hist btn-sm" onclick="nextFlashcard()">Next Card →</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -803,7 +969,7 @@ textarea{resize:vertical;min-height:80px}
 <div id="sec-eng" class="section">
   <div class="sec-header">
     <div class="sec-title" style="color:#f9a8d4">📖 English Language Arts</div>
-    <div class="sec-sub">8 tools · Vocabulary quiz · Write stories & poems · Grade your own essay · Learn grammar rules</div>
+    <div class="sec-sub">11 tools · Vocab quiz · Spelling bee · Synonym finder · Punctuation guide · Stories & poems · Essay grader</div>
   </div>
   <div class="tool-grid">
 
@@ -935,6 +1101,45 @@ textarea{resize:vertical;min-height:80px}
       <textarea id="essay-input" placeholder="Paste your essay here (at least 30 words) to get instant feedback on structure, vocabulary, sentence variety, and more..." aria-label="Essay text input" style="height:140px;margin-bottom:10px"></textarea>
       <button class="btn btn-eng" style="width:100%" onclick="gradeEssay()">📋 Grade My Essay</button>
       <div id="essay-out" style="margin-top:12px"></div>
+    </div>
+
+    <!-- SYNONYM & ANTONYM FINDER -->
+    <div class="tool-card" style="border-color:#831843">
+      <h3><span>🔄</span> Synonym & Antonym Finder</h3>
+      <p class="tool-hint">Type any common word and instantly see synonyms (words with similar meaning) and antonyms (opposite meaning). Great for making your writing more varied!</p>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input type="text" id="syn-input" placeholder="Type a word (e.g. happy, big, fast...)" aria-label="Word to look up" onkeydown="if(event.key==='Enter')findSynonyms()"/>
+        <button class="btn btn-eng btn-sm" onclick="findSynonyms()">Search</button>
+      </div>
+      <div class="output" id="syn-out" style="min-height:60px"></div>
+    </div>
+
+    <!-- SPELLING BEE -->
+    <div class="tool-card" style="border-color:#831843">
+      <h3><span>🐝</span> Spelling Bee Practice</h3>
+      <p class="tool-hint">A definition appears — read it carefully and spell the word correctly. These are commonly misspelled words. Earns XP!</p>
+      <div class="quiz-card" style="text-align:center;margin-bottom:10px">
+        <div style="font-size:.72rem;color:#f9a8d4;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Spell the word that means...</div>
+        <div style="font-size:.95rem;color:#e2e8f0;font-style:italic;line-height:1.6;margin-bottom:12px" id="bee-def">Loading definition...</div>
+        <input type="text" id="bee-ans" placeholder="Type the correct spelling..." style="text-align:center" aria-label="Spelling answer" onkeydown="if(event.key==='Enter')checkBee()"/>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-eng" style="flex:1" onclick="checkBee()">✅ Check Spelling</button>
+        <button class="btn btn-eng btn-sm" onclick="nextBeeWord()">Skip →</button>
+      </div>
+      <div class="output" id="bee-out" style="margin-top:10px;min-height:28px"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.82rem">
+        <span>Score: <b id="bee-score" style="color:#f9a8d4">0</b></span>
+        <span>Streak: <b id="bee-streak" style="color:#f59e0b">0</b> 🔥</span>
+      </div>
+    </div>
+
+    <!-- PUNCTUATION GUIDE -->
+    <div class="tool-card" style="border-color:#831843">
+      <h3><span>❝</span> Punctuation Guide</h3>
+      <p class="tool-hint">Click any punctuation mark to see the rules for using it correctly, with clear examples of right vs wrong. Never misuse a comma or apostrophe again!</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px" id="punct-buttons"></div>
+      <div class="output" id="punct-out" style="min-height:80px"></div>
     </div>
 
   </div>
@@ -1925,6 +2130,468 @@ function factorize(){
     <span class="step">Prime factors: <b>${[...new Set(factors)].join(', ')}</b></span>
     <span class="result">${isPrime?`${orig} is a PRIME number! ✨`:`Not prime — has ${factors.length} prime factors`}</span>`;
 }
+
+// ═══════════════════ MATH: TRIGONOMETRY ═══════════════════
+function calcTrig(){
+  const mode=document.getElementById('trig-mode').value;
+  const raw=parseFloat(document.getElementById('trig-angle').value);
+  if(isNaN(raw)){document.getElementById('trig-out').innerHTML='<span class="err">Please enter an angle first.</span>';return}
+  const rad=mode==='deg'?raw*Math.PI/180:raw;
+  const deg=mode==='deg'?raw:raw*180/Math.PI;
+  const sinV=Math.sin(rad),cosV=Math.cos(rad);
+  const tanV=Math.abs(cosV)<1e-10?null:Math.tan(rad);
+  const fmt=n=>Math.abs(n)<1e-10?'0':n.toFixed(6).replace(/\.?0+$/,'');
+  document.getElementById('trig-out').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;margin-bottom:8px">
+      <div style="background:#0c1220;border-radius:8px;padding:8px"><div style="font-size:.65rem;color:#64748b;margin-bottom:4px">sin(${deg.toFixed(1)}°)</div><div style="font-size:1.1rem;font-weight:800;color:#60a5fa">${fmt(sinV)}</div></div>
+      <div style="background:#0c1220;border-radius:8px;padding:8px"><div style="font-size:.65rem;color:#64748b;margin-bottom:4px">cos(${deg.toFixed(1)}°)</div><div style="font-size:1.1rem;font-weight:800;color:#4ade80">${fmt(cosV)}</div></div>
+      <div style="background:#0c1220;border-radius:8px;padding:8px"><div style="font-size:.65rem;color:#64748b;margin-bottom:4px">tan(${deg.toFixed(1)}°)</div><div style="font-size:1.1rem;font-weight:800;color:#fbbf24">${tanV===null?'undefined':fmt(tanV)}</div></div>
+    </div>
+    <div style="font-size:.75rem;color:#64748b">${deg.toFixed(2)}° = ${rad.toFixed(4)} rad &nbsp;·&nbsp; sec=${Math.abs(cosV)<1e-10?'∞':fmt(1/cosV)} &nbsp;·&nbsp; csc=${Math.abs(sinV)<1e-10?'∞':fmt(1/sinV)}</div>`;
+  const canvas=document.getElementById('trig-canvas');
+  canvas.style.display='block';
+  drawUnitCircle(canvas,rad);
+}
+function drawUnitCircle(c,rad){
+  const ctx=c.getContext('2d'),w=c.width,h=c.height,cx=w/2,cy=h/2,r=Math.min(w,h)/2-18;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#080c14';ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='#1a2840';ctx.lineWidth=1;
+  [[cx-r-5,cy,cx+r+5,cy],[cx,cy-r-5,cx,cy+r+5]].forEach(([x1,y1,x2,y2])=>{ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()});
+  ctx.strokeStyle='#1e3a5f';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+  const px=cx+Math.cos(rad)*r,py=cy-Math.sin(rad)*r;
+  ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);ctx.stroke();
+  ctx.strokeStyle='#60a5fa55';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,cy);ctx.stroke();
+  ctx.strokeStyle='#4ade8055';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,cy);ctx.stroke();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fill();
+  ctx.font='11px sans-serif';ctx.fillStyle='#94a3b8';ctx.textAlign='center';
+  ctx.fillText('0°/360°',cx+r+14,cy+4);ctx.fillText('90°',cx,cy-r-8);ctx.fillText('180°',cx-r-16,cy+4);ctx.fillText('270°',cx,cy+r+12);
+}
+
+// ═══════════════════ MATH: PERCENTAGE CALCULATOR ═══════════════════
+let pctTab=0;
+function switchPctTab(i,btn){
+  pctTab=i;
+  document.querySelectorAll('[id^="pct-panel-"]').forEach((p,j)=>p.style.display=j===i?'block':'none');
+  btn.closest('.tool-card').querySelectorAll('.lb-tab').forEach((b,j)=>{b.classList.toggle('active',j===i)});
+  document.getElementById('pct-out').innerHTML='';
+}
+function calcPct(){
+  const out=document.getElementById('pct-out');
+  if(pctTab===0){
+    const p=parseFloat(document.getElementById('pct-a0').value),n=parseFloat(document.getElementById('pct-b0').value);
+    if(isNaN(p)||isNaN(n)){out.innerHTML='<span class="err">Fill in both fields</span>';return}
+    const r=p/100*n;
+    out.innerHTML=`<span class="step">${p}% of ${n}</span><span class="result">= ${r.toFixed(4).replace(/\.?0+$/,'')} (≈ ${r.toFixed(2)})</span><span class="step">Working: ${n} × ${p} ÷ 100 = ${r.toFixed(2)}</span>`;
+  } else if(pctTab===1){
+    const a=parseFloat(document.getElementById('pct-a1').value),b=parseFloat(document.getElementById('pct-b1').value);
+    if(isNaN(a)||isNaN(b)||b===0){out.innerHTML='<span class="err">Fill in both fields (total cannot be 0)</span>';return}
+    const r=a/b*100;
+    out.innerHTML=`<span class="step">${a} out of ${b}</span><span class="result">= ${r.toFixed(2)}%</span><span class="step">Working: (${a} ÷ ${b}) × 100 = ${r.toFixed(2)}%</span>`;
+  } else {
+    const a=parseFloat(document.getElementById('pct-a2').value),b=parseFloat(document.getElementById('pct-b2').value);
+    if(isNaN(a)||isNaN(b)||a===0){out.innerHTML='<span class="err">Fill in both fields</span>';return}
+    const r=(b-a)/Math.abs(a)*100;
+    const dir=r>=0?'increase ↑':'decrease ↓';
+    out.innerHTML=`<span class="step">From ${a} to ${b}</span><span class="result">${r>=0?'+':''}${r.toFixed(2)}% ${dir}</span><span class="step">Working: (${b} − ${a}) ÷ ${Math.abs(a)} × 100 = ${r.toFixed(2)}%</span>`;
+  }
+}
+(function initPctInputs(){
+  [['pct-panel-0',`<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><input type="number" id="pct-a0" placeholder="%" style="width:80px" aria-label="Percentage"/><span style="color:#60a5fa;font-weight:700">% of</span><input type="number" id="pct-b0" placeholder="Number" style="flex:1" aria-label="Number"/></div>`],
+   ['pct-panel-1',`<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><input type="number" id="pct-a1" placeholder="Value" style="flex:1" aria-label="Part value"/><span style="color:#60a5fa;font-weight:700">is ?% of</span><input type="number" id="pct-b1" placeholder="Total" style="flex:1" aria-label="Total value"/></div>`],
+   ['pct-panel-2',`<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><input type="number" id="pct-a2" placeholder="From" style="flex:1" aria-label="Original value"/><span style="color:#60a5fa;font-weight:700">→</span><input type="number" id="pct-b2" placeholder="To" style="flex:1" aria-label="New value"/></div>`]
+  ].forEach(([id,html])=>{const el=document.getElementById(id);if(el)el.innerHTML=html});
+})();
+
+// ═══════════════════ MATH: PROBABILITY ═══════════════════
+function renderProbInputs(){
+  const mode=document.getElementById('prob-mode').value;
+  const inputs={
+    dice:`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><label style="font-size:.8rem;color:var(--dim)">Number of dice:</label><input type="number" id="prob-n" value="2" min="1" max="6" style="width:70px"/><label style="font-size:.8rem;color:var(--dim)">Target sum:</label><input type="number" id="prob-k" value="7" style="width:70px"/></div>`,
+    coin:`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><label style="font-size:.8rem;color:var(--dim)">Flips:</label><input type="number" id="prob-n" value="3" min="1" max="20" style="width:70px"/><label style="font-size:.8rem;color:var(--dim)">Heads wanted:</label><input type="number" id="prob-k" value="2" style="width:70px"/></div>`,
+    cards:`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><label style="font-size:.8rem;color:var(--dim)">Cards drawn:</label><input type="number" id="prob-n" value="5" min="1" max="52" style="width:70px"/><label style="font-size:.8rem;color:var(--dim)">Aces wanted:</label><input type="number" id="prob-k" value="2" style="width:70px"/></div>`,
+    combo:`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><label style="font-size:.8rem;color:var(--dim)">n (total):</label><input type="number" id="prob-n" value="10" min="1" style="width:70px"/><label style="font-size:.8rem;color:var(--dim)">r (choose):</label><input type="number" id="prob-k" value="3" style="width:70px"/></div>`,
+    perm:`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><label style="font-size:.8rem;color:var(--dim)">n (total):</label><input type="number" id="prob-n" value="10" min="1" style="width:70px"/><label style="font-size:.8rem;color:var(--dim)">r (arrange):</label><input type="number" id="prob-k" value="3" style="width:70px"/></div>`
+  };
+  document.getElementById('prob-inputs').innerHTML=inputs[mode]||'';
+}
+function fact(n){if(n<=1)return 1;let r=1;for(let i=2;i<=n;i++)r*=i;return r}
+function nCr(n,r){if(r>n)return 0;return fact(n)/(fact(r)*fact(n-r))}
+function nPr(n,r){if(r>n)return 0;return fact(n)/fact(n-r)}
+function calcProb(){
+  const mode=document.getElementById('prob-mode').value;
+  const n=parseInt(document.getElementById('prob-n').value),k=parseInt(document.getElementById('prob-k').value);
+  const out=document.getElementById('prob-out');
+  if(isNaN(n)||isNaN(k)){out.innerHTML='<span class="err">Fill in both fields</span>';return}
+  let prob,desc,working;
+  if(mode==='dice'){
+    // probability of sum k with n dice (simplified via simulation count)
+    let ways=0,total=Math.pow(6,n);
+    function countWays(dice,remaining){if(dice===0){if(remaining===0)ways++;return}for(let f=1;f<=6;f++)countWays(dice-1,remaining-f)}
+    if(n<=4&&k>=n&&k<=6*n){countWays(n,k);prob=ways/total;working=`${ways} ways to get sum ${k} out of ${total} total combinations`}
+    else{out.innerHTML='<span class="err">Sum must be between '+n+' and '+(6*n)+' for '+n+' dice</span>';return}
+    desc=`Rolling ${n} dice and getting a sum of ${k}`;
+  } else if(mode==='coin'){
+    if(k>n){out.innerHTML='<span class="err">Can\'t get more heads than flips!</span>';return}
+    const ways=nCr(n,k);const total=Math.pow(2,n);
+    prob=ways/total;working=`C(${n},${k}) = ${ways} ways out of ${total} possible outcomes`;
+    desc=`${k} heads in ${n} coin flips`;
+  } else if(mode==='cards'){
+    // P(exactly k aces in n cards from 52-card deck, 4 aces)
+    if(k>4||k>n||n>52){out.innerHTML='<span class="err">Invalid values (max 4 aces in 52-card deck)</span>';return}
+    const ways=nCr(4,k)*nCr(48,n-k);const total=nCr(52,n);
+    prob=ways/total;working=`C(4,${k})×C(48,${n-k}) / C(52,${n}) = ${ways}/${total}`;
+    desc=`Exactly ${k} ace(s) in ${n} cards drawn from a full deck`;
+  } else if(mode==='combo'){
+    const r=nCr(n,k);
+    out.innerHTML=`<span class="step">C(${n},${k}) — choosing ${k} from ${n} (order doesn't matter)</span><span class="result">= ${r.toLocaleString()} combinations</span><span class="step">Formula: ${n}! ÷ (${k}! × ${n-k}!) = ${r.toLocaleString()}</span>`;return;
+  } else {
+    const r=nPr(n,k);
+    out.innerHTML=`<span class="step">P(${n},${k}) — arranging ${k} from ${n} (order matters)</span><span class="result">= ${r.toLocaleString()} permutations</span><span class="step">Formula: ${n}! ÷ ${n-k}! = ${r.toLocaleString()}</span>`;return;
+  }
+  const pct=(prob*100).toFixed(4);
+  out.innerHTML=`<span class="step">${desc}</span><span class="result">P = ${prob.toFixed(6)} (${pct}%)</span><span class="step">${working}</span><span class="step">${pct<1?'Unlikely!':pct<25?'Low chance':pct<50?'Possible':pct<75?'Likely':'Very likely!'} ${pct<1?'🎰':pct<50?'🤔':'✅'}</span>`;
+}
+document.addEventListener('DOMContentLoaded',()=>{renderProbInputs()});
+
+// ═══════════════════ SCIENCE: ELEMENT QUIZ ═══════════════════
+const EL_QUIZ_DATA=[
+  ['Hydrogen','H'],['Helium','He'],['Carbon','C'],['Nitrogen','N'],['Oxygen','O'],['Sodium','Na'],
+  ['Magnesium','Mg'],['Aluminium','Al'],['Silicon','Si'],['Phosphorus','P'],['Sulfur','S'],['Chlorine','Cl'],
+  ['Potassium','K'],['Calcium','Ca'],['Iron','Fe'],['Copper','Cu'],['Zinc','Zn'],['Silver','Ag'],
+  ['Gold','Au'],['Lead','Pb'],['Mercury','Hg'],['Uranium','U'],['Neon','Ne'],['Argon','Ar'],
+  ['Fluorine','F'],['Bromine','Br'],['Iodine','I'],['Tin','Sn'],['Nickel','Ni'],['Chromium','Cr'],
+  ['Manganese','Mn'],['Cobalt','Co'],['Lithium','Li'],['Beryllium','Be'],['Boron','B'],['Titanium','Ti']
+];
+let elqIdx=0,elqScore=0,elqStreak=0,elqAnswered=false,elqMode='nameToSym';
+function shuffleArr(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a}
+function nextELQ(){
+  elqAnswered=false;
+  elqIdx=Math.floor(Math.random()*EL_QUIZ_DATA.length);
+  elqMode=Math.random()>0.5?'nameToSym':'symToName';
+  const [name,sym]=EL_QUIZ_DATA[elqIdx];
+  document.getElementById('elq-label').textContent=elqMode==='nameToSym'?'Name → Symbol (abbreviation)':'Symbol → Full Name';
+  document.getElementById('elq-question').textContent=elqMode==='nameToSym'?name:sym;
+  document.getElementById('elq-ans').value='';
+  document.getElementById('elq-out').innerHTML='';
+  document.getElementById('elq-ans').focus();
+}
+function checkELQ(){
+  if(elqAnswered)return;
+  const ans=document.getElementById('elq-ans').value.trim();
+  const [name,sym]=EL_QUIZ_DATA[elqIdx];
+  const correct=elqMode==='nameToSym'?sym:name;
+  const isRight=ans.toLowerCase()===correct.toLowerCase();
+  elqAnswered=true;
+  if(isRight){elqScore++;elqStreak++;document.getElementById('elq-out').innerHTML=`<span style="color:#4ade80;font-weight:700">✅ Correct! ${sym} = ${name}</span>`}
+  else{elqStreak=0;document.getElementById('elq-out').innerHTML=`<span class="err">❌ It was <b>${correct}</b> (${name} = ${sym})</span>`}
+  document.getElementById('elq-score').textContent=elqScore;
+  document.getElementById('elq-streak').textContent=elqStreak;
+  setTimeout(()=>{elqAnswered=false;nextELQ()},1800);
+}
+
+// ═══════════════════ SCIENCE: pH SCALE ═══════════════════
+const PH_SUBSTANCES=[
+  {name:'Battery Acid',ph:0},{name:'Gastric Acid (stomach)',ph:1.5},{name:'Lemon Juice',ph:2.2},
+  {name:'Vinegar',ph:3},{name:'Tomato Juice',ph:4},{name:'Black Coffee',ph:5},
+  {name:'Milk',ph:6.5},{name:'Pure Water',ph:7},{name:'Blood',ph:7.4},
+  {name:'Baking Soda',ph:8.3},{name:'Sea Water',ph:8.5},{name:'Milk of Magnesia',ph:10},
+  {name:'Ammonia',ph:11.5},{name:'Bleach',ph:13},{name:'Drain Cleaner',ph:14}
+];
+function initPHButtons(){
+  const el=document.getElementById('ph-buttons');
+  if(!el)return;
+  el.innerHTML=PH_SUBSTANCES.map(s=>`<button onclick="document.getElementById('ph-input').value=${s.ph};lookupPH()" style="font-size:.7rem;padding:3px 8px;border-radius:20px;border:1px solid #1e3a5f;background:#0c1220;color:#94a3b8;cursor:pointer">${s.name}</button>`).join('');
+}
+function lookupPH(){
+  const v=parseFloat(document.getElementById('ph-input').value);
+  if(isNaN(v)||v<0||v>14){document.getElementById('ph-out').innerHTML='<span class="err">pH must be between 0 and 14</span>';return}
+  document.getElementById('ph-marker').style.left=(v/14*100)+'%';
+  const type=v<7?'Acid 🔴':v===7?'Neutral ⚪':'Alkaline 🔵';
+  const strength=v<=2?'Strong acid':v<=4?'Weak acid':v<=6?'Mildly acidic':v===7?'Perfectly neutral':v<=9?'Mildly alkaline':v<=11?'Weak base':'Strong base';
+  const nearest=PH_SUBSTANCES.reduce((a,b)=>Math.abs(b.ph-v)<Math.abs(a.ph-v)?b:a);
+  document.getElementById('ph-out').innerHTML=`
+    <span class="step">pH ${v} — <b>${type}</b> (${strength})</span>
+    <span class="step">Closest common substance: <b>${nearest.name}</b> (pH ${nearest.ph})</span>
+    <span class="step">${v<7?`[H⁺] = 10⁻${v.toFixed(1)} mol/L (${v<3?'dangerous — do not touch!':v<5?'corrosive':'handle with care'})`:v===7?'Pure neutral — no excess H⁺ or OH⁻ ions':`[OH⁻] = 10⁻${(14-v).toFixed(1)} mol/L (${v>12?'caustic — very dangerous!':v>10?'corrosive':'mildly alkaline'})`}</span>`;
+}
+
+// ═══════════════════ SCIENCE: SIMPLE MACHINES ═══════════════════
+function renderMachineInputs(){
+  const type=document.getElementById('machine-type').value;
+  const inputs={
+    lever:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label style="font-size:.72rem;color:var(--dim)">Effort Arm (m)</label><input type="number" id="mach-a" value="4" min="0.1"/></div><div><label style="font-size:.72rem;color:var(--dim)">Load Arm (m)</label><input type="number" id="mach-b" value="1" min="0.1"/></div></div>`,
+    inclined:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label style="font-size:.72rem;color:var(--dim)">Slope Length (m)</label><input type="number" id="mach-a" value="5" min="0.1"/></div><div><label style="font-size:.72rem;color:var(--dim)">Height (m)</label><input type="number" id="mach-b" value="1" min="0.1"/></div></div>`,
+    pulley:`<div><label style="font-size:.72rem;color:var(--dim)">Number of supporting ropes</label><input type="number" id="mach-a" value="3" min="1" max="10"/></div>`,
+    wheel:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label style="font-size:.72rem;color:var(--dim)">Wheel Radius (cm)</label><input type="number" id="mach-a" value="30" min="1"/></div><div><label style="font-size:.72rem;color:var(--dim)">Axle Radius (cm)</label><input type="number" id="mach-b" value="5" min="1"/></div></div>`,
+    screw:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label style="font-size:.72rem;color:var(--dim)">Handle Length (cm)</label><input type="number" id="mach-a" value="20" min="1"/></div><div><label style="font-size:.72rem;color:var(--dim)">Screw Pitch (cm)</label><input type="number" id="mach-b" value="0.5" min="0.01" step="0.01"/></div></div>`
+  };
+  document.getElementById('machine-inputs').innerHTML=inputs[type]||'';
+}
+function calcMachine(){
+  const type=document.getElementById('machine-type').value;
+  const a=parseFloat(document.getElementById('mach-a').value);
+  const b=type==='pulley'?null:parseFloat(document.getElementById('mach-b')?document.getElementById('mach-b').value:0);
+  const out=document.getElementById('machine-out');
+  let ma,desc,tip;
+  if(type==='lever'){ma=a/b;desc=`Effort arm ${a}m ÷ Load arm ${b}m`;tip=`For every 1N you push, you lift ${ma.toFixed(2)}N`}
+  else if(type==='inclined'){ma=a/b;desc=`Slope ${a}m ÷ Height ${b}m`;tip=`${ma.toFixed(2)}× easier than lifting straight up`}
+  else if(type==='pulley'){ma=a;desc=`${a} supporting ropes`;tip=`Lifts ${a}× the weight with ${a}× less force`}
+  else if(type==='wheel'){ma=a/b;desc=`Wheel radius ${a}cm ÷ Axle radius ${b}cm`;tip=`Steering wheel, doorknob — ${ma.toFixed(2)}× force multiplier`}
+  else{ma=2*Math.PI*a/b;desc=`2π × ${a}cm ÷ pitch ${b}cm`;tip=`One full turn advances screw ${b}cm`}
+  out.innerHTML=`<span class="step">${desc}</span><span class="result">Mechanical Advantage = ${ma.toFixed(2)}</span><span class="step">💡 ${tip}</span><span class="step">${ma>1?'This machine multiplies force (makes it easier)':ma===1?'No mechanical advantage':'This machine increases distance/speed instead'}`;
+}
+document.addEventListener('DOMContentLoaded',()=>{renderMachineInputs()});
+
+// ═══════════════════ HISTORY: WORLD CAPITALS QUIZ ═══════════════════
+const CAPITALS=[
+  ['France','Paris','Berlin','Madrid','Rome'],['Japan','Tokyo','Beijing','Seoul','Bangkok'],
+  ['Brazil','Brasília','Buenos Aires','Lima','Santiago'],['Australia','Canberra','Sydney','Melbourne','Brisbane'],
+  ['Canada','Ottawa','Toronto','Vancouver','Montreal'],['Russia','Moscow','St Petersburg','Kiev','Minsk'],
+  ['India','New Delhi','Mumbai','Kolkata','Chennai'],['Germany','Berlin','Hamburg','Munich','Vienna'],
+  ['China','Beijing','Shanghai','Guangzhou','Nanjing'],['Mexico','Mexico City','Guadalajara','Monterrey','Tijuana'],
+  ['Egypt','Cairo','Alexandria','Luxor','Aswan'],['South Africa','Pretoria','Cape Town','Johannesburg','Durban'],
+  ['Argentina','Buenos Aires','Córdoba','Rosario','Mendoza'],['Saudi Arabia','Riyadh','Jeddah','Mecca','Medina'],
+  ['Turkey','Ankara','Istanbul','Izmir','Bursa'],['Spain','Madrid','Barcelona','Seville','Valencia'],
+  ['Italy','Rome','Milan','Naples','Turin'],['South Korea','Seoul','Busan','Incheon','Daegu'],
+  ['Indonesia','Jakarta','Surabaya','Bandung','Medan'],['Pakistan','Islamabad','Karachi','Lahore','Faisalabad'],
+  ['Nigeria','Abuja','Lagos','Kano','Ibadan'],['Kenya','Nairobi','Mombasa','Kisumu','Nakuru'],
+  ['Sweden','Stockholm','Gothenburg','Malmö','Uppsala'],['Norway','Oslo','Bergen','Stavanger','Trondheim'],
+  ['Greece','Athens','Thessaloniki','Patras','Heraklion'],['Portugal','Lisbon','Porto','Braga','Coimbra'],
+  ['Netherlands','Amsterdam','Rotterdam','The Hague','Utrecht'],['Poland','Warsaw','Kraków','Łódź','Wrocław'],
+  ['Thailand','Bangkok','Chiang Mai','Pattaya','Phuket'],['Vietnam','Hanoi','Ho Chi Minh City','Da Nang','Hue']
+];
+let capIdx=0,capScore=0,capAnswered=false;
+function nextCapQ(){
+  capAnswered=false;
+  capIdx=Math.floor(Math.random()*CAPITALS.length);
+  const row=CAPITALS[capIdx];
+  const [country,...opts]=row;
+  const shuffled=shuffleArr([...opts]);
+  document.getElementById('cap-country').textContent=country+' 🌍';
+  document.getElementById('cap-opts').innerHTML=shuffled.map(o=>`<button class="quiz-opt" onclick="answerCapQ('${o.replace(/'/g,"\\'")}','${row[1].replace(/'/g,"\\'")}',this)">${o}</button>`).join('');
+}
+function answerCapQ(chosen,correct,btn){
+  if(capAnswered)return;capAnswered=true;
+  document.querySelectorAll('#cap-opts .quiz-opt').forEach(b=>{if(b.textContent===correct)b.classList.add('correct')});
+  if(chosen===correct){capScore++;btn.classList.add('correct');updateProgress('hist',capScore,1,1)}else btn.classList.add('wrong');
+  document.getElementById('cap-score').textContent=capScore;
+}
+
+// ═══════════════════ HISTORY: INVENTIONS ═══════════════════
+const INVENTIONS=[
+  {y:'3500 BC',n:'The Wheel',w:'Mesopotamia',d:'Revolutionised transport and led to carts, pulleys, and eventually engines'},
+  {y:'3000 BC',n:'Writing (Cuneiform)',w:'Sumer (Iraq)',d:'First writing system — allowed laws, trade records, and stories to be preserved'},
+  {y:'105 AD',n:'Paper',w:'China (Cai Lun)',d:'Made writing and record-keeping much cheaper and easier than clay or papyrus'},
+  {y:'1040',n:'Movable Type Printing',w:'China (Bi Sheng)',d:'Allowed books to be printed quickly — spread knowledge to ordinary people'},
+  {y:'1439',n:'Printing Press',w:'Germany (Gutenberg)',d:'Mass-produced books changed Europe forever — triggered the Renaissance and Reformation'},
+  {y:'1608',n:'Telescope',w:'Netherlands (Hans Lippershey)',d:'Allowed us to see distant stars, planets, and moons for the first time'},
+  {y:'1687',n:"Newton's Laws of Motion",w:'England (Isaac Newton)',d:'Explained how forces work — foundation of all engineering and physics'},
+  {y:'1769',n:'Steam Engine (improved)',w:'Scotland (James Watt)',d:'Powered the Industrial Revolution — factories, trains, ships'},
+  {y:'1826',n:'Photography',w:'France (Nicéphore Niépce)',d:'First permanent image captured — changed art, science, and journalism'},
+  {y:'1837',n:'Electric Telegraph',w:'USA/UK (Morse & Cooke)',d:'First instant long-distance communication — changed business and war'},
+  {y:'1876',n:'Telephone',w:'USA (Alexander Graham Bell)',d:'Voice communication over long distances — connected the world'},
+  {y:'1879',n:'Electric Light Bulb',w:'USA (Thomas Edison)',d:'Allowed people to work and socialise after dark safely'},
+  {y:'1885',n:'Automobile',w:'Germany (Karl Benz)',d:'Personal transport — reshaped cities, economies, and daily life'},
+  {y:'1895',n:'Radio',w:'Italy (Guglielmo Marconi)',d:'Wireless communication — news, music, and emergency signals worldwide'},
+  {y:'1903',n:'Aeroplane',w:'USA (Wright Brothers)',d:'Heavier-than-air flight — connected continents in hours'},
+  {y:'1928',n:'Penicillin',w:'Scotland (Alexander Fleming)',d:'First antibiotic — saved hundreds of millions of lives from infections'},
+  {y:'1945',n:'Computer (ENIAC)',w:'USA',d:'First general-purpose electronic computer — led to everything digital'},
+  {y:'1954',n:'Solar Cell',w:'USA (Bell Labs)',d:'Converting sunlight to electricity — foundation of renewable energy'},
+  {y:'1969',n:'Internet (ARPANET)',w:'USA (DARPA)',d:'Network linking computers — became the World Wide Web we use today'},
+  {y:'1973',n:'Mobile Phone',w:'USA (Motorola)',d:'First handheld cell call made by Martin Cooper — changed communication forever'},
+  {y:'1990',n:'World Wide Web',w:'Switzerland (Tim Berners-Lee)',d:'HTML, URLs, and browsers — made the internet usable for everyone'},
+  {y:'2007',n:'iPhone (Smartphone)',w:'USA (Apple/Steve Jobs)',d:'Touch-screen internet-connected phone — changed how we live and communicate'}
+];
+function buildInventions(){
+  document.getElementById('inventions-list').innerHTML=INVENTIONS.map(inv=>`
+    <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #0c1a2e;cursor:pointer" onclick="this.querySelector('.inv-detail').style.display=this.querySelector('.inv-detail').style.display==='none'?'block':'none'">
+      <div style="min-width:72px;font-size:.72rem;font-weight:700;color:#f59e0b;padding-top:2px">${inv.y}</div>
+      <div style="flex:1">
+        <div style="font-size:.88rem;font-weight:700;color:#e2e8f0">💡 ${inv.n}</div>
+        <div style="font-size:.72rem;color:#64748b">📍 ${inv.w}</div>
+        <div class="inv-detail" style="display:none;font-size:.78rem;color:#94a3b8;margin-top:4px;line-height:1.5">${inv.d}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════ HISTORY: FLASHCARDS ═══════════════════
+const FLASHCARDS=[
+  {q:'Which year did World War II end?',a:'1945 — Germany surrendered in May, Japan in September after atomic bombs on Hiroshima and Nagasaki'},
+  {q:'Who was the first person to walk on the Moon?',a:'Neil Armstrong — on July 20, 1969, during NASA\'s Apollo 11 mission'},
+  {q:'What ancient wonder was located in Alexandria, Egypt?',a:'The Lighthouse of Alexandria — one of the tallest man-made structures of the ancient world'},
+  {q:'Who was Julius Caesar?',a:'A Roman general and dictator (100–44 BC) who conquered Gaul and transformed Rome. Assassinated on the Ides of March (March 15)'},
+  {q:'What caused the fall of the Roman Empire?',a:'Multiple causes: barbarian invasions, economic troubles, military overstretch, political instability, and the split into East/West empires'},
+  {q:'What was the Magna Carta (1215)?',a:'A charter signed by King John of England limiting royal power and establishing that everyone, including the king, must obey the law'},
+  {q:'What was the Black Death?',a:'A bubonic plague pandemic (1347–1353) that killed 30–60% of Europe\'s population — spread by fleas on rats'},
+  {q:'Who was Cleopatra?',a:'Last active pharaoh of ancient Egypt (69–30 BC). Famous for alliances with Julius Caesar and Mark Antony. Spoke 9 languages'},
+  {q:'What started World War I?',a:'The assassination of Archduke Franz Ferdinand of Austria-Hungary in Sarajevo on June 28, 1914, triggering a chain of alliances'},
+  {q:'What was the Renaissance?',a:'A cultural rebirth in Europe (14th–17th century) reviving art, science, and learning from ancient Greece and Rome. Started in Italy'},
+  {q:'Who was Genghis Khan?',a:'Founder of the Mongol Empire — the largest contiguous land empire in history, stretching from China to Eastern Europe'},
+  {q:'What was the Cold War?',a:'Political and military tension (1947–1991) between the USA and USSR — not direct fighting but an arms race, space race, and proxy wars'},
+  {q:'Who invented the telephone?',a:'Alexander Graham Bell, patented in 1876. However, Elisha Gray filed a similar patent the same day, sparking a legal dispute'},
+  {q:'What was the Industrial Revolution?',a:'A period (1760s–1840s) when manufacturing shifted from hand tools to machines, starting in Britain. Changed where and how people lived and worked'},
+  {q:'Who was Nelson Mandela?',a:'South African anti-apartheid leader imprisoned for 27 years. Released 1990, became the first Black president of South Africa in 1994. Nobel Peace Prize winner'}
+];
+let fcIdx=0,fcFlipped=false;
+function showFlashcard(){
+  const c=FLASHCARDS[fcIdx];
+  fcFlipped=false;
+  document.getElementById('fc-side').textContent='Question (click to flip)';
+  document.getElementById('fc-text').textContent=c.q;
+  document.getElementById('fc-counter').textContent=`Card ${fcIdx+1} of ${FLASHCARDS.length}`;
+  document.getElementById('flashcard-box').style.background='#0c1220';
+}
+function flipFlashcard(){
+  fcFlipped=!fcFlipped;
+  const c=FLASHCARDS[fcIdx];
+  document.getElementById('fc-side').textContent=fcFlipped?'Answer (click to go back)':'Question (click to flip)';
+  document.getElementById('fc-text').textContent=fcFlipped?c.a:c.q;
+  document.getElementById('flashcard-box').style.background=fcFlipped?'#0f2d1a':'#0c1220';
+}
+function nextFlashcard(){fcIdx=(fcIdx+1)%FLASHCARDS.length;showFlashcard()}
+
+// ═══════════════════ ENGLISH: SYNONYM FINDER ═══════════════════
+const SYN_DB={
+  happy:{syn:['joyful','cheerful','content','delighted','elated','pleased','ecstatic','blissful','gleeful'],ant:['sad','unhappy','miserable','gloomy','sorrowful']},
+  sad:{syn:['unhappy','melancholy','sorrowful','gloomy','dejected','despondent','forlorn','mournful'],ant:['happy','joyful','cheerful','elated','content']},
+  big:{syn:['large','huge','enormous','gigantic','vast','immense','colossal','massive','grand'],ant:['small','tiny','little','minuscule','compact']},
+  small:{syn:['tiny','little','miniature','petite','compact','minuscule','microscopic','diminutive'],ant:['big','large','huge','enormous','massive']},
+  fast:{syn:['quick','rapid','swift','speedy','brisk','hasty','prompt','nimble','fleet'],ant:['slow','sluggish','leisurely','gradual','unhurried']},
+  slow:{syn:['sluggish','leisurely','unhurried','gradual','plodding','dawdling','sluggard'],ant:['fast','quick','rapid','swift','speedy']},
+  good:{syn:['excellent','great','wonderful','superb','fine','splendid','terrific','outstanding','exceptional'],ant:['bad','terrible','awful','dreadful','horrible']},
+  bad:{syn:['terrible','awful','dreadful','horrible','poor','inferior','unpleasant','wretched'],ant:['good','excellent','great','wonderful','superb']},
+  beautiful:{syn:['gorgeous','stunning','lovely','attractive','handsome','elegant','exquisite','radiant','magnificent'],ant:['ugly','plain','unattractive','hideous']},
+  ugly:{syn:['unattractive','hideous','plain','unsightly','grotesque','repulsive'],ant:['beautiful','gorgeous','lovely','attractive','stunning']},
+  smart:{syn:['intelligent','clever','bright','brilliant','sharp','gifted','astute','shrewd','wise'],ant:['dumb','stupid','foolish','ignorant','dim']},
+  brave:{syn:['courageous','bold','fearless','daring','heroic','valiant','intrepid','gallant'],ant:['cowardly','timid','fearful','weak','afraid']},
+  angry:{syn:['furious','irate','livid','enraged','infuriated','incensed','irritated','agitated'],ant:['calm','peaceful','content','pleased','serene']},
+  calm:{syn:['peaceful','serene','tranquil','composed','relaxed','placid','unruffled','cool'],ant:['angry','agitated','nervous','anxious','frantic']},
+  old:{syn:['ancient','aged','elderly','antique','archaic','vintage','veteran','mature'],ant:['new','young','modern','fresh','current','recent']},
+  new:{syn:['fresh','modern','recent','current','novel','brand-new','contemporary','latest'],ant:['old','ancient','aged','antique','archaic']},
+  difficult:{syn:['hard','challenging','tough','demanding','complex','complicated','arduous','strenuous'],ant:['easy','simple','effortless','straightforward']},
+  easy:{syn:['simple','effortless','straightforward','uncomplicated','basic','elementary','painless'],ant:['difficult','hard','challenging','complex','tough']},
+  important:{syn:['significant','crucial','vital','essential','critical','fundamental','key','major','pivotal'],ant:['unimportant','trivial','minor','insignificant']},
+  interesting:{syn:['fascinating','engaging','compelling','captivating','intriguing','gripping','absorbing','riveting'],ant:['boring','dull','tedious','monotonous','uninteresting']}
+};
+function findSynonyms(){
+  const word=document.getElementById('syn-input').value.trim().toLowerCase();
+  const out=document.getElementById('syn-out');
+  if(!word){out.innerHTML='<span class="err">Type a word first!</span>';return}
+  const data=SYN_DB[word];
+  if(!data){out.innerHTML=`<span class="err">Word not in database. Try: happy, sad, big, small, fast, good, smart, brave, calm, interesting, difficult...</span>`;return}
+  out.innerHTML=`
+    <div style="margin-bottom:10px">
+      <div style="font-size:.7rem;color:#4ade80;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">✅ Synonyms (similar meaning)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">${data.syn.map(w=>`<span style="background:#14532d;color:#4ade80;padding:3px 10px;border-radius:20px;font-size:.78rem">${w}</span>`).join('')}</div>
+    </div>
+    <div>
+      <div style="font-size:.7rem;color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">❌ Antonyms (opposite meaning)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">${data.ant.map(w=>`<span style="background:#3b1515;color:#f87171;padding:3px 10px;border-radius:20px;font-size:.78rem">${w}</span>`).join('')}</div>
+    </div>`;
+}
+
+// ═══════════════════ ENGLISH: SPELLING BEE ═══════════════════
+const BEE_WORDS=[
+  {w:'necessary',d:'Something you absolutely must have or do; cannot be avoided'},
+  {w:'definitely',d:'Without any doubt; certainly and absolutely'},
+  {w:'separate',d:'To keep apart or divide into different groups'},
+  {w:'occurrence',d:'Something that happens; an event or incident'},
+  {w:'embarrass',d:'To make someone feel ashamed or awkward in a social situation'},
+  {w:'receive',d:'To be given or to accept something that is offered'},
+  {w:'believe',d:'To think that something is true or real; to have faith in'},
+  {w:'achieve',d:'To successfully reach a goal through effort and hard work'},
+  {w:'privilege',d:'A special right or advantage that not everyone has access to'},
+  {w:'rhythm',d:'A regular repeated pattern of sounds or movements'},
+  {w:'conscience',d:'The inner sense of right and wrong that guides your behaviour'},
+  {w:'government',d:'The group of people who control and make decisions for a country'},
+  {w:'environment',d:'The natural world around us including air, water, land, and all living things'},
+  {w:'accommodate',d:'To provide space or make room for something or someone'},
+  {w:'appreciate',d:'To recognise and value the quality or importance of something'},
+  {w:'foreign',d:'Belonging to or coming from another country'},
+  {w:'committee',d:'A group of people chosen to make decisions on behalf of a larger group'},
+  {w:'questionnaire',d:'A written set of questions used to collect information from people'},
+  {w:'conscience',d:'Your moral sense of right and wrong that guides your actions'},
+  {w:'millennium',d:'A period of one thousand years'},
+  {w:'miscellaneous',d:'A mixed variety of different things that do not belong to one category'},
+  {w:'fluorescent',d:'Producing a very bright light, especially of a particular colour like yellow-green'},
+  {w:'bureaucracy',d:'A system of government or organisation with many complicated rules and processes'}
+];
+let beeIdx=0,beeScore=0,beeStreak=0;
+function nextBeeWord(){
+  beeIdx=Math.floor(Math.random()*BEE_WORDS.length);
+  document.getElementById('bee-def').textContent=BEE_WORDS[beeIdx].d;
+  document.getElementById('bee-ans').value='';
+  document.getElementById('bee-out').innerHTML='';
+}
+function checkBee(){
+  const ans=document.getElementById('bee-ans').value.trim().toLowerCase();
+  const correct=BEE_WORDS[beeIdx].w;
+  const isRight=ans===correct;
+  if(isRight){beeScore++;beeStreak++;document.getElementById('bee-out').innerHTML=`<span style="color:#4ade80;font-weight:700">✅ Correct! "${correct}" — great spelling!</span>`;updateProgress('eng',beeScore,1,1)}
+  else{beeStreak=0;document.getElementById('bee-out').innerHTML=`<span class="err">❌ The correct spelling is <b>"${correct}"</b></span>`}
+  document.getElementById('bee-score').textContent=beeScore;
+  document.getElementById('bee-streak').textContent=beeStreak;
+  setTimeout(nextBeeWord,1800);
+}
+
+// ═══════════════════ ENGLISH: PUNCTUATION GUIDE ═══════════════════
+const PUNCT_DATA=[
+  {sym:'.',name:'Full Stop / Period',rules:[{r:'End a declarative sentence',g:'She loves reading books.',b:'She loves reading books'},
+    {r:'Used in abbreviations',g:'Dr. Smith, Mr. Jones, etc.',b:'Dr Smith Mr Jones'}]},
+  {sym:',',name:'Comma',rules:[{r:'Separate items in a list',g:'I bought apples, oranges, and bananas.',b:'I bought apples oranges and bananas.'},
+    {r:'After an introductory phrase',g:'However, I disagreed with him.',b:'However I disagreed with him.'},
+    {r:'Before coordinating conjunctions (FANBOYS)',g:'I wanted to go, but it was raining.',b:'I wanted to go but it was raining.'}]},
+  {sym:"'",name:'Apostrophe',rules:[{r:"Show possession (ownership)",g:"The dog's bone. The teacher's pen.",b:"The dogs bone. The teachers pen."},
+    {r:'Contractions (shortened words)',g:"It's (it is), don't (do not), I'm (I am)",b:"Its hot outside. Im hungry."},
+    {r:'Common mistake: NEVER use apostrophe for plurals',g:'The cats sat on the mats.',b:"The cat's sat on the mat's. ❌"}]},
+  {sym:';',name:'Semicolon',rules:[{r:'Join two closely related independent clauses',g:'I studied hard; I passed the exam.',b:'I studied hard, I passed the exam.'},
+    {r:'Separate complex list items',g:'We visited Paris, France; Rome, Italy; and Berlin, Germany.',b:''}]},
+  {sym:':',name:'Colon',rules:[{r:'Introduce a list',g:'I need three things: a pen, paper, and time.',b:'I need three things, a pen, paper, and time.'},
+    {r:'Introduce an explanation or example',g:'There is one rule: never give up.',b:''}]},
+  {sym:'?',name:'Question Mark',rules:[{r:'End a direct question',g:'Where are you going?',b:'Where are you going.'},
+    {r:'Do NOT use after indirect questions',g:'She asked where I was going.',b:'She asked where I was going?'}]},
+  {sym:'!',name:'Exclamation Mark',rules:[{r:'Show strong emotion or emphasis (use sparingly)',g:"Help! That's amazing!",b:'I went to the shop! I bought milk! It was nice!'},
+    {r:'Never use multiple in formal writing',g:"'This is unacceptable!' he shouted.",b:"This is unacceptable!!! ❌"}]},
+  {sym:'""',name:'Quotation Marks',rules:[{r:'Enclose direct speech or exact quotes',g:'"I will be there," she promised.',b:'She promised she will be there.'},
+    {r:'Titles of short works (articles, songs)',g:'The song "Bohemian Rhapsody" is famous.',b:''},
+    {r:'Full stop/comma goes INSIDE the quotes',g:'"Hello," he said.',b:'"Hello", he said. ❌'}]},
+  {sym:'—',name:'Em Dash',rules:[{r:'Add emphasis or explanation — like parentheses but stronger',g:'She had one goal — to win the championship.',b:''},
+    {r:'Show a sudden break in thought',g:"I was going to say — oh, never mind.",b:''}]},
+  {sym:'...',name:'Ellipsis',rules:[{r:'Show text has been left out from a quote',g:'"To be...or not to be" (Shakespeare)',b:''},
+    {r:'Create suspense or trailing off',g:'And then she opened the door...',b:''}]}
+];
+function initPunctButtons(){
+  const el=document.getElementById('punct-buttons');
+  if(!el)return;
+  el.innerHTML=PUNCT_DATA.map(p=>`<button onclick="showPunct('${p.sym}')" style="font-size:1.1rem;font-weight:800;padding:6px 14px;border-radius:10px;border:1px solid #831843;background:#0c1220;color:#f9a8d4;cursor:pointer;min-width:44px">${p.sym}</button>`).join('');
+}
+function showPunct(sym){
+  const p=PUNCT_DATA.find(x=>x.sym===sym);
+  if(!p)return;
+  document.getElementById('punct-out').innerHTML=`
+    <div style="font-size:1rem;font-weight:700;color:#f9a8d4;margin-bottom:10px">${p.sym} — ${p.name}</div>
+    ${p.rules.map(r=>`<div style="margin-bottom:10px;padding:10px;background:#0c1220;border-radius:10px;border-left:3px solid #831843">
+      <div style="font-size:.78rem;font-weight:700;color:#e2e8f0;margin-bottom:4px">📌 ${r.r}</div>
+      <div style="font-size:.75rem;color:#4ade80">✅ <b>Correct:</b> ${r.g}</div>
+      ${r.b?`<div style="font-size:.75rem;color:#f87171;margin-top:2px">❌ <b>Incorrect:</b> ${r.b}</div>`:''}
+    </div>`).join('')}`;
+}
+
+// ═══════════════════ INIT ALL NEW TOOLS ═══════════════════
+const _origShowSection3=showSection;
+showSection=function(id){
+  _origShowSection3(id);
+  if(id==='sci'){
+    setTimeout(()=>{nextELQ();initPHButtons();renderMachineInputs()},120);
+  }
+  if(id==='hist'){
+    setTimeout(()=>{nextCapQ();buildInventions();showFlashcard()},120);
+  }
+  if(id==='eng'){
+    setTimeout(()=>{nextBeeWord();initPunctButtons()},120);
+  }
+};
 
 // ═══════════════════ SCIENCE: PROJECTILE MOTION ═══════════════════
 let projAnimId=null;

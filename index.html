@@ -943,38 +943,31 @@ textarea{resize:vertical;min-height:80px}
 <!-- ═══════════════════════════════════ LEADERBOARD ═══ -->
 <div id="sec-lb" class="section">
   <div class="sec-header" style="color:#f59e0b;border-left-color:#f59e0b">
-    <div class="sec-title" style="color:#fbbf24">🏆 Global Leaderboard</div>
+    <div class="sec-title" style="color:#fbbf24" id="lb-title-tap">🏆 Global Leaderboard</div>
     <div class="sec-sub"><span class="live-dot"></span>Live scores from students around the world</div>
   </div>
 
-  <!-- Firebase setup banner (hidden once configured) -->
-  <div class="setup-banner" id="fb-setup-banner">
-    <h3>⚡ Set Up Live Leaderboard (Free — 5 mins)</h3>
-    <p style="margin-bottom:14px">You need a free Firebase account to enable the global leaderboard. Follow these steps:</p>
+  <!-- Firebase setup panel — hidden by default, only shown via triple-tap on title -->
+  <div class="setup-banner" id="fb-setup-banner" style="display:none">
+    <h3>⚙️ Admin: Connect Firebase Database</h3>
+    <p style="margin-bottom:14px">Paste your Firebase Realtime Database URL below to enable the global leaderboard.</p>
     <div class="setup-step">
       <div class="setup-num">1</div>
-      <div class="setup-text">Go to <strong style="color:#fbbf24">console.firebase.google.com</strong> and sign in with a Google account</div>
+      <div class="setup-text">Go to <strong style="color:#fbbf24">console.firebase.google.com</strong> → your project → Build → Realtime Database</div>
     </div>
     <div class="setup-step">
       <div class="setup-num">2</div>
-      <div class="setup-text">Click <strong style="color:#fbbf24">"Add project"</strong> → name it anything (e.g. "student-dashboard") → click through and create</div>
+      <div class="setup-text">Copy the database URL (looks like <code>https://YOUR-PROJECT-default-rtdb.firebaseio.com</code>)</div>
     </div>
     <div class="setup-step">
       <div class="setup-num">3</div>
-      <div class="setup-text">In your project, click <strong style="color:#fbbf24">Build → Realtime Database → Create Database</strong>. Choose any region and start in <strong style="color:#fbbf24">Test mode</strong></div>
-    </div>
-    <div class="setup-step">
-      <div class="setup-num">4</div>
-      <div class="setup-text">Copy your database URL — it looks like: <code>https://YOUR-PROJECT-default-rtdb.firebaseio.com</code></div>
-    </div>
-    <div class="setup-step">
-      <div class="setup-num">5</div>
-      <div class="setup-text">Paste your URL in the box below and click Save:</div>
+      <div class="setup-text">Paste it below and click Save — it'll be stored on this device:</div>
     </div>
     <div style="display:flex;gap:8px;margin-top:10px;max-width:500px;margin-left:auto;margin-right:auto">
       <input type="text" id="fb-url-input" placeholder="https://your-project-default-rtdb.firebaseio.com" style="font-size:.82rem" aria-label="Firebase database URL"/>
       <button class="btn btn-hist btn-sm" onclick="saveFBUrl()" style="white-space:nowrap">💾 Save</button>
     </div>
+    <div style="margin-top:10px;font-size:.72rem;color:#64748b">Triple-tap the leaderboard title to show/hide this panel</div>
   </div>
 
   <!-- Name entry -->
@@ -2294,19 +2287,32 @@ async function fbSet(path,data){
 
 // ═══════════════════ LEADERBOARD ═══════════════════
 let lbTab='overall',lbAutoRefresh=null,lbName=localStorage.getItem('lb_name')||'';
+let lbTitleTaps=0,lbTitleTimer=null;
 
 function initLB(){
-  // Show/hide setup banner
-  if(FB_ENABLED()){
-    document.getElementById('fb-setup-banner').style.display='none';
-  } else {
-    const saved=localStorage.getItem('fb_url');
-    if(saved) document.getElementById('fb-url-input').value=saved;
-  }
+  // Setup banner is hidden by default — triple-tap title to reveal (admin only)
   if(lbName) document.getElementById('lb-name-input').value=lbName;
+  // Pre-fill URL if saved on this device
+  const saved=localStorage.getItem('fb_url');
+  if(saved) document.getElementById('fb-url-input').value=saved;
   loadLB();
   if(lbAutoRefresh)clearInterval(lbAutoRefresh);
   lbAutoRefresh=setInterval(loadLB,30000);
+  // Triple-tap secret to show admin panel
+  const title=document.getElementById('lb-title-tap');
+  if(title&&!title._tapBound){
+    title._tapBound=true;
+    title.addEventListener('click',()=>{
+      lbTitleTaps++;
+      if(lbTitleTimer)clearTimeout(lbTitleTimer);
+      lbTitleTimer=setTimeout(()=>{lbTitleTaps=0},800);
+      if(lbTitleTaps>=3){
+        lbTitleTaps=0;
+        const banner=document.getElementById('fb-setup-banner');
+        banner.style.display=banner.style.display==='none'?'block':'none';
+      }
+    });
+  }
 }
 
 function saveLBName(){
@@ -2345,14 +2351,13 @@ async function loadLB(){
 }
 
 function renderLocalLB(){
-  // Fallback: show local scores only
+  // No Firebase — show local scores cleanly with no confusing error messages
   const local=JSON.parse(localStorage.getItem('local_scores')||'[]');
   const filtered=lbTab==='overall'?local:local.filter(e=>e.subject===lbTab);
   const sorted=filtered.sort((a,b)=>b.score-a.score).slice(0,10);
-  return `<div style="background:#1a0a00;border:1px solid #f59e0b33;border-radius:10px;padding:12px;margin-bottom:12px;font-size:.8rem;color:#94a3b8">
-    ⚠️ Firebase not connected — showing local scores only. Set up Firebase above for a global leaderboard!
-  </div>`+(sorted.length?sorted.map((e,i)=>renderLBRow(e,i)).join('')
-    :'<div style="text-align:center;color:#64748b;padding:30px">Complete quizzes to see scores here!</div>');
+  return sorted.length
+    ? sorted.map((e,i)=>renderLBRow(e,i)).join('')
+    : '<div style="text-align:center;color:#64748b;padding:40px;font-size:.9rem">No scores yet — complete a quiz to be first on the board! 🎯</div>';
 }
 
 function renderLBRow(e,i){

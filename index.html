@@ -18,7 +18,11 @@ body{background:var(--bg);color:var(--white);font-family:'Segoe UI',system-ui,sa
 #stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:100;background:#06090fee;backdrop-filter:blur(16px);border-bottom:1px solid #1a2840;padding:0 20px;display:flex;align-items:center;gap:6px;height:58px}
+nav{position:sticky;top:0;z-index:100;background:#06090fee;backdrop-filter:blur(16px);border-bottom:1px solid #1a2840;padding:0 12px;display:flex;align-items:center;gap:6px;height:58px}
+.nav-scroll{display:flex;align-items:center;gap:4px;overflow-x:auto;flex:1;scrollbar-width:none;-ms-overflow-style:none}
+.nav-scroll::-webkit-scrollbar{display:none}
+.nav-signin{flex-shrink:0;padding:7px 16px;border-radius:50px;font-size:.85rem;font-weight:800;color:#a78bfa;background:#1a0a2e;border:1px solid #4c1d95;text-decoration:none;white-space:nowrap;transition:all .2s}
+.nav-signin:hover{background:#2d1060;color:#c4b5fd}
 .logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,#3b82f6,#22c55e,#f59e0b,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-right:auto;white-space:nowrap}
 .nav-btn{padding:7px 16px;border-radius:50px;border:none;background:transparent;color:var(--dim);font-weight:600;cursor:pointer;font-size:.85rem;transition:all .2s;white-space:nowrap}
 .nav-btn:hover{color:#fff}
@@ -197,9 +201,10 @@ textarea{resize:vertical;min-height:80px}
   .story-params{grid-template-columns:1fr}
   .tool-grid{grid-template-columns:1fr!important}
   .pt-grid{min-width:560px}
-  nav{gap:2px;padding:0 8px;overflow-x:auto}
-  .nav-btn{padding:6px 10px;font-size:.75rem}
-  .logo{font-size:.9rem}
+  nav{gap:4px;padding:0 8px}
+  .nav-btn{padding:5px 8px;font-size:.72rem}
+  .logo{font-size:.85rem}
+  .nav-signin{padding:5px 11px;font-size:.75rem}
   h1{font-size:1.8rem}
   .sec-title{font-size:1.5rem}
   .calc-btns .cb{padding:12px 4px;font-size:.9rem}
@@ -283,19 +288,21 @@ textarea{resize:vertical;min-height:80px}
 
 <!-- NAV -->
 <nav>
-  <a href="https://eppeok.github.io" style="font-size:.75rem;font-weight:700;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid var(--border);border-radius:20px;white-space:nowrap;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">← All Tools</a>
-  <div class="logo">🎓 Student Dashboard</div>
-  <button class="nav-btn math" onclick="showSection('home')" aria-label="Go to Home">🏠 Home</button>
-  <button class="nav-btn math" onclick="showSection('math')" aria-label="Go to Mathematics">➗ Math</button>
-  <button class="nav-btn sci"  onclick="showSection('sci')"  aria-label="Go to Science">🔬 Science</button>
-  <button class="nav-btn hist" onclick="showSection('hist')" aria-label="Go to History">📜 History</button>
-  <button class="nav-btn eng"  onclick="showSection('eng')"  aria-label="Go to English">📖 English</button>
-  <button class="nav-btn" onclick="showSection('lb')" aria-label="Go to Leaderboard" style="color:#f59e0b">🏆 Leaderboard</button>
-  <button class="nav-btn" onclick="showSection('progress')" aria-label="Go to Progress Tracker" style="color:#22c55e">📈 Progress</button>
-  <a href="https://eppeok.github.io/quizblitz/" target="_blank" class="nav-btn" style="color:#a78bfa;text-decoration:none;border:1px solid #4c1d95;border-radius:50px;animation:qbpulse 2.5s infinite" aria-label="Open QuizBlitz multiplayer quiz game">⚡ QuizBlitz</a>
-  <a href="https://eppeok.github.io/typeblitz/" target="_blank" class="nav-btn" style="color:#e2b714;text-decoration:none;border:1px solid #3a2e00;border-radius:50px" aria-label="Open TypeBlitz typing speed test">⌨️ TypeBlitz</a>
-  <a href="https://eppeok.github.io/classroom-toolkit/" target="_blank" class="nav-btn" style="color:#22c55e;text-decoration:none;border:1px solid #14532d;border-radius:50px" aria-label="Open Classroom Toolkit">🎓 Toolkit</a>
-  <a href="https://eppeok.github.io/account/" target="_blank" class="nav-btn" style="color:#a78bfa;text-decoration:none;border:1px solid #4c1d95;border-radius:50px;font-weight:800" aria-label="Sign in to your account">👤 Sign In</a>
+  <a href="https://eppeok.github.io" style="flex-shrink:0;font-size:.75rem;font-weight:700;color:var(--dim);text-decoration:none;padding:5px 10px;border:1px solid var(--border);border-radius:20px;white-space:nowrap;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">← All</a>
+  <div class="logo" style="flex-shrink:0">🎓 Dashboard</div>
+  <div class="nav-scroll">
+    <button class="nav-btn math" onclick="showSection('home')" aria-label="Go to Home">🏠 Home</button>
+    <button class="nav-btn math" onclick="showSection('math')" aria-label="Go to Mathematics">➗ Math</button>
+    <button class="nav-btn sci"  onclick="showSection('sci')"  aria-label="Go to Science">🔬 Science</button>
+    <button class="nav-btn hist" onclick="showSection('hist')" aria-label="Go to History">📜 History</button>
+    <button class="nav-btn eng"  onclick="showSection('eng')"  aria-label="Go to English">📖 English</button>
+    <button class="nav-btn" onclick="showSection('lb')" aria-label="Go to Leaderboard" style="color:#f59e0b">🏆 LB</button>
+    <button class="nav-btn" onclick="showSection('progress')" aria-label="Go to Progress Tracker" style="color:#22c55e">📈 Progress</button>
+    <a href="https://eppeok.github.io/quizblitz/" target="_blank" class="nav-btn" style="color:#a78bfa;text-decoration:none;border:1px solid #4c1d95;border-radius:50px;animation:qbpulse 2.5s infinite" aria-label="Open QuizBlitz">⚡ QuizBlitz</a>
+    <a href="https://eppeok.github.io/typeblitz/" target="_blank" class="nav-btn" style="color:#e2b714;text-decoration:none;border:1px solid #3a2e00;border-radius:50px" aria-label="Open TypeBlitz">⌨️ TypeBlitz</a>
+    <a href="https://eppeok.github.io/classroom-toolkit/" target="_blank" class="nav-btn" style="color:#22c55e;text-decoration:none;border:1px solid #14532d;border-radius:50px" aria-label="Open Classroom Toolkit">🎓 Toolkit</a>
+  </div>
+  <a href="https://eppeok.github.io/account/" target="_blank" class="nav-signin" aria-label="Sign in to your account">👤 Sign In</a>
 </nav>
 
 <!-- HOME -->

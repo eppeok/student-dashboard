@@ -396,7 +396,7 @@ textarea{resize:vertical;min-height:80px}
       <div class="home-card-top">
         <div class="home-card-icon">📖</div>
         <div class="home-card-title" style="color:#f9a8d4">English</div>
-        <div class="home-card-count">11 tools</div>
+        <div class="home-card-count">12 tools</div>
       </div>
       <ul class="home-tool-list">
         <li>🌟 Word of the Day — learn a new word daily</li>
@@ -410,6 +410,7 @@ textarea{resize:vertical;min-height:80px}
         <li>🔄 Synonym & Antonym Finder — expand vocabulary</li>
         <li>🐝 Spelling Bee — practice tricky spellings</li>
         <li>❝ Punctuation Guide — commas, apostrophes & more</li>
+        <li>✍️ Spell Checker — paste text, catch errors instantly</li>
       </ul>
       <div class="home-card-cta" style="color:#ec4899">Open English →</div>
     </div>
@@ -507,12 +508,17 @@ textarea{resize:vertical;min-height:80px}
 
     <!-- TIMES TABLES -->
     <div class="tool-card" style="border-color:#1e3a8a;grid-column:span 1">
-      <h3><span>✖️</span> Times Table Quiz</h3>
-      <p class="tool-hint">A multiplication question appears — type your answer and press <b>Enter</b> or click Check. Get it right to build your streak! Earns XP for the leaderboard.</p>
+      <h3><span>✖️</span> Times Table Quiz ⚡</h3>
+      <p class="tool-hint">Answer before the timer runs out — <b>no time to use a calculator!</b> Press Enter or click Check. Right answers build your streak.</p>
+      <!-- Timer bar -->
+      <div style="background:#1a2840;border-radius:6px;height:8px;margin-bottom:10px;overflow:hidden">
+        <div id="tt-timer-bar" style="height:100%;width:100%;background:linear-gradient(90deg,#3b82f6,#60a5fa);border-radius:6px;transition:width .1s linear"></div>
+      </div>
+      <div style="text-align:center;font-size:.72rem;color:#64748b;margin-bottom:6px">Time left: <b id="tt-timer-display" style="color:#60a5fa">6s</b></div>
       <div id="tt-question" class="quiz-card" style="text-align:center">
         <div class="quiz-word" id="tt-q" style="font-size:2rem;color:#60a5fa">?</div>
-        <input type="number" id="tt-ans" placeholder="Type your answer and press Enter" aria-label="Times table answer" style="margin-top:10px;text-align:center" onkeydown="if(event.key==='Enter')checkTT()"/>
-        <button class="btn btn-math" style="margin-top:10px;width:100%" onclick="checkTT()">Check Answer</button>
+        <input type="number" id="tt-ans" placeholder="Answer here..." aria-label="Times table answer" style="margin-top:10px;text-align:center" onkeydown="if(event.key==='Enter')checkTT()" autocomplete="off"/>
+        <button class="btn btn-math" style="margin-top:10px;width:100%" onclick="checkTT()">✅ Check Answer</button>
       </div>
       <div class="output" id="tt-out"></div>
       <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.82rem">
@@ -969,7 +975,7 @@ textarea{resize:vertical;min-height:80px}
 <div id="sec-eng" class="section">
   <div class="sec-header">
     <div class="sec-title" style="color:#f9a8d4">📖 English Language Arts</div>
-    <div class="sec-sub">11 tools · Vocab quiz · Spelling bee · Synonym finder · Punctuation guide · Stories & poems · Essay grader</div>
+    <div class="sec-sub">12 tools · Spell checker · Vocab quiz · Spelling bee · Synonym finder · Punctuation guide · Stories & poems · Essay grader</div>
   </div>
   <div class="tool-grid">
 
@@ -1101,6 +1107,15 @@ textarea{resize:vertical;min-height:80px}
       <textarea id="essay-input" placeholder="Paste your essay here (at least 30 words) to get instant feedback on structure, vocabulary, sentence variety, and more..." aria-label="Essay text input" style="height:140px;margin-bottom:10px"></textarea>
       <button class="btn btn-eng" style="width:100%" onclick="gradeEssay()">📋 Grade My Essay</button>
       <div id="essay-out" style="margin-top:12px"></div>
+    </div>
+
+    <!-- SPELL CHECKER -->
+    <div class="tool-card" style="border-color:#831843;grid-column:1/-1">
+      <h3><span>✍️</span> Spell Checker</h3>
+      <p class="tool-hint">Type or paste any text and click <b>Check Spelling</b>. Misspelled words light up in red with the correct spelling shown. Also catches commonly confused words like <i>their/there</i>, <i>affect/effect</i>.</p>
+      <textarea id="spellcheck-input" placeholder="Type or paste your text here — any amount. Then click Check Spelling..." aria-label="Text to spell check" style="height:120px;margin-bottom:10px"></textarea>
+      <button class="btn btn-eng" style="width:100%" onclick="runSpellCheck()">🔍 Check Spelling</button>
+      <div id="spellcheck-out" style="margin-top:12px"></div>
     </div>
 
     <!-- SYNONYM & ANTONYM FINDER -->
@@ -1444,25 +1459,72 @@ function convertUnit(){
 function initConverter(){switchUnitType()}
 
 // ═══════════════════ MATH: TIMES TABLES ═══════════════════
-let ttScore=0,ttStreak=0,ttA,ttB;
+let ttScore=0,ttStreak=0,ttA,ttB,ttTimerInterval=null,ttTimeLeft=0,ttAnswered=false;
+const TT_TIME=6; // seconds per question
+
 function newTTQ(){
-  ttA=Math.floor(Math.random()*12)+1;ttB=Math.floor(Math.random()*12)+1;
+  ttAnswered=false;
+  ttA=Math.floor(Math.random()*12)+1;
+  ttB=Math.floor(Math.random()*12)+1;
   document.getElementById('tt-q').textContent=`${ttA} × ${ttB} = ?`;
   document.getElementById('tt-ans').value='';
   document.getElementById('tt-out').innerHTML='';
   document.getElementById('tt-ans').focus();
+  startTTTimer();
 }
+
+function startTTTimer(){
+  if(ttTimerInterval)clearInterval(ttTimerInterval);
+  ttTimeLeft=TT_TIME;
+  updateTTTimerBar();
+  ttTimerInterval=setInterval(()=>{
+    ttTimeLeft-=0.1;
+    updateTTTimerBar();
+    if(ttTimeLeft<=0){
+      clearInterval(ttTimerInterval);
+      if(!ttAnswered)timeOutTT();
+    }
+  },100);
+}
+
+function updateTTTimerBar(){
+  const pct=Math.max(0,ttTimeLeft/TT_TIME*100);
+  const bar=document.getElementById('tt-timer-bar');
+  const disp=document.getElementById('tt-timer-display');
+  if(!bar)return;
+  bar.style.width=pct+'%';
+  // colour shifts red as time runs low
+  const col=ttTimeLeft>3?'linear-gradient(90deg,#3b82f6,#60a5fa)':ttTimeLeft>1.5?'linear-gradient(90deg,#f59e0b,#fbbf24)':'linear-gradient(90deg,#ef4444,#f87171)';
+  bar.style.background=col;
+  if(disp)disp.textContent=Math.max(0,ttTimeLeft).toFixed(1)+'s';
+}
+
+function timeOutTT(){
+  ttAnswered=true;
+  ttStreak=0;
+  const correct=ttA*ttB;
+  document.getElementById('tt-out').innerHTML=`<span style="color:#f87171">⏰ Too slow! ${ttA} × ${ttB} = <b>${correct}</b></span>`;
+  document.getElementById('tt-streak').textContent=ttStreak;
+  setTimeout(newTTQ,1800);
+}
+
 function checkTT(){
+  if(ttAnswered)return;
   const ans=+document.getElementById('tt-ans').value;
+  if(document.getElementById('tt-ans').value==='')return;
+  ttAnswered=true;
+  clearInterval(ttTimerInterval);
   const correct=ttA*ttB;
   const out=document.getElementById('tt-out');
   if(ans===correct){
     ttScore++;ttStreak++;
-    out.innerHTML=`<span style="color:#4ade80">✅ Correct! ${ttA} × ${ttB} = ${correct}</span>`;
+    // bonus points for fast answers
+    const bonus=ttTimeLeft>4?'⚡ Fast!':ttTimeLeft>2?'':'';
+    out.innerHTML=`<span style="color:#4ade80">✅ Correct! ${ttA} × ${ttB} = ${correct} ${bonus}</span>`;
     setTimeout(newTTQ,900);
   } else {
     ttStreak=0;
-    out.innerHTML=`<span style="color:#f87171">❌ Not quite. ${ttA} × ${ttB} = ${correct}</span>`;
+    out.innerHTML=`<span style="color:#f87171">❌ Wrong! ${ttA} × ${ttB} = <b>${correct}</b></span>`;
     setTimeout(newTTQ,1800);
   }
   document.getElementById('tt-score').textContent=ttScore;
@@ -2450,6 +2512,124 @@ function flipFlashcard(){
   document.getElementById('flashcard-box').style.background=fcFlipped?'#0f2d1a':'#0c1220';
 }
 function nextFlashcard(){fcIdx=(fcIdx+1)%FLASHCARDS.length;showFlashcard()}
+
+// ═══════════════════ ENGLISH: SPELL CHECKER ═══════════════════
+const MISSPELLINGS={
+  // Common misspellings → correct spelling
+  'recieve':'receive','beleive':'believe','occured':'occurred','occurance':'occurrence',
+  'definately':'definitely','seperate':'separate','neccessary':'necessary','accomodate':'accommodate',
+  'aquire':'acquire','begining':'beginning','calender':'calendar','catagory':'category',
+  'cemetary':'cemetery','collegue':'colleague','comming':'coming','commited':'committed',
+  'concious':'conscious','dependant':'dependent','dissapear':'disappear','doesnt':'doesn\'t',
+  'embarass':'embarrass','enviroment':'environment','existance':'existence','familier':'familiar',
+  'foriegn':'foreign','fourty':'forty','freind':'friend','goverment':'government',
+  'grammer':'grammar','greatful':'grateful','guidence':'guidance','harrass':'harass',
+  'hieght':'height','humourous':'humorous','ignorence':'ignorance','imaginery':'imaginary',
+  'immedietly':'immediately','independant':'independent','intresting':'interesting',
+  'irregardless':'regardless','jewelery':'jewelry','knowlege':'knowledge','liesure':'leisure',
+  'liason':'liaison','lisense':'license','maintainance':'maintenance','medeval':'medieval',
+  'millenium':'millennium','miniscule':'minuscule','mispell':'misspell','mischevious':'mischievous',
+  'misspelt':'misspelled','neice':'niece','noticable':'noticeable','ocasion':'occasion',
+  'occassion':'occasion','offence':'offense','paralell':'parallel','parliment':'parliament',
+  'pasttime':'pastime','peice':'piece','perseverence':'perseverance','pharoah':'pharaoh',
+  'plagerism':'plagiarism','playright':'playwright','posession':'possession','practise':'practice',
+  'predjudice':'prejudice','privelege':'privilege','pronounciation':'pronunciation',
+  'publically':'publicly','questionaire':'questionnaire','realise':'realize','reccommend':'recommend',
+  'relavant':'relevant','religous':'religious','repitition':'repetition','rythm':'rhythm',
+  'sacrilegious':'sacrilegious','scedule':'schedule','seige':'siege','sence':'sense',
+  'sentance':'sentence','similer':'similar','sincerly':'sincerely','speach':'speech',
+  'succesful':'successful','supercede':'supersede','suprised':'surprised','temperture':'temperature',
+  'tendancy':'tendency','therefor':'therefore','tounge':'tongue','truely':'truly',
+  'untill':'until','vaccuum':'vacuum','visable':'visible','wierd':'weird','writting':'writing',
+  'youre':'you\'re','its a':'it\'s a','wont':'won\'t','cant':'can\'t','dont':'don\'t',
+  'thier':'their','teh':'the','adn':'and','nad':'and','tge':'the','hte':'the',
+  'alot':'a lot','alright':'all right','irregardless':'regardless','conversate':'converse',
+  'supposably':'supposedly','expresso':'espresso','exspecially':'especially',
+  'excape':'escape','sherbert':'sherbet','nucular':'nuclear','libary':'library',
+  'febuary':'February','Wendsday':'Wednesday','tommorow':'tomorrow','tomarrow':'tomorrow',
+  'untill':'until','arguement':'argument','judgement':'judgment','acknowledement':'acknowledgment'
+};
+
+// Commonly confused word pairs with explanations
+const CONFUSED_WORDS=[
+  {words:['their','there','they\'re'],tip:"their = belonging to them | there = a place | they're = they are"},
+  {words:['your','you\'re'],tip:"your = belonging to you | you're = you are"},
+  {words:['its','it\'s'],tip:"its = belonging to it | it's = it is"},
+  {words:['affect','effect'],tip:"affect = verb (to influence) | effect = noun (the result)"},
+  {words:['then','than'],tip:"then = next in time | than = comparison (bigger than)"},
+  {words:['to','too','two'],tip:"to = direction/verb | too = also/very | two = the number 2"},
+  {words:['lose','loose'],tip:"lose = to not win | loose = not tight"},
+  {words:['whose','who\'s'],tip:"whose = belonging to whom | who's = who is"},
+  {words:['accept','except'],tip:"accept = to receive | except = excluding"},
+  {words:['weather','whether'],tip:"weather = sun/rain/wind | whether = if"},
+  {words:['principal','principle'],tip:"principal = head teacher/main | principle = a rule or belief"},
+  {words:['complement','compliment'],tip:"complement = to complete | compliment = to praise"},
+  {words:['stationary','stationery'],tip:"stationary = not moving | stationery = paper/pens"},
+  {words:['allusion','illusion'],tip:"allusion = indirect reference | illusion = false image"},
+];
+
+function runSpellCheck(){
+  const text=document.getElementById('spellcheck-input').value;
+  if(!text.trim()){document.getElementById('spellcheck-out').innerHTML='<span class="err">Please type some text first!</span>';return}
+
+  const words=text.split(/(\s+|[,.!?;:"'()\[\]{}])/);
+  let errorCount=0;
+  const errors=[];
+  const corrected=words.map(word=>{
+    const clean=word.toLowerCase().replace(/[^a-z']/g,'');
+    const fix=MISSPELLINGS[clean]||MISSPELLINGS[clean.replace(/'/g,'')];
+    if(fix&&word.trim()){
+      errorCount++;
+      errors.push({wrong:word.trim(),correct:fix});
+      return `<mark style="background:#3b1515;color:#f87171;border-radius:3px;padding:0 2px;text-decoration:underline wavy #f87171;cursor:help" title="Did you mean: ${fix}">${word}</mark>`;
+    }
+    return word.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }).join('');
+
+  // Check for confused words
+  const confusedFound=[];
+  const lowerText=text.toLowerCase();
+  CONFUSED_WORDS.forEach(pair=>{
+    const found=pair.words.filter(w=>lowerText.includes(w));
+    if(found.length>=1) confusedFound.push(pair);
+  });
+
+  const wordCount=text.trim().split(/\s+/).length;
+  const out=document.getElementById('spellcheck-out');
+
+  let html=`
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <div style="background:#0c1220;border-radius:8px;padding:8px 14px;font-size:.8rem"><b style="color:#e2e8f0">${wordCount}</b> <span style="color:#64748b">words</span></div>
+      <div style="background:#0c1220;border-radius:8px;padding:8px 14px;font-size:.8rem"><b style="color:${errorCount?'#f87171':'#4ade80'}">${errorCount}</b> <span style="color:#64748b">spelling error${errorCount!==1?'s':''}</span></div>
+      <div style="background:#0c1220;border-radius:8px;padding:8px 14px;font-size:.8rem"><b style="color:${confusedFound.length?'#fbbf24':'#4ade80'}">${confusedFound.length}</b> <span style="color:#64748b">confused word warning${confusedFound.length!==1?'s':''}</span></div>
+    </div>`;
+
+  if(errorCount===0&&confusedFound.length===0){
+    html+=`<div style="background:#0f2d1a;border:1px solid #14532d;border-radius:10px;padding:14px;color:#4ade80;font-weight:700;text-align:center">✅ No spelling errors found! Great work.</div>`;
+  } else {
+    // Show annotated text
+    html+=`<div style="background:#060c16;border:1px solid #1a2840;border-radius:10px;padding:14px;line-height:2;font-size:.88rem;margin-bottom:12px">${corrected}</div>`;
+
+    // Error list
+    if(errors.length){
+      const unique=[...new Map(errors.map(e=>[e.wrong.toLowerCase(),e])).values()];
+      html+=`<div style="margin-bottom:12px"><div style="font-size:.72rem;color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">❌ Corrections needed:</div>
+        ${unique.map(e=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #0a1420;font-size:.83rem">
+          <span style="color:#f87171;text-decoration:line-through;min-width:120px">${e.wrong}</span>
+          <span style="color:#64748b">→</span>
+          <span style="color:#4ade80;font-weight:700">${e.correct}</span>
+        </div>`).join('')}</div>`;
+    }
+
+    // Confused words warnings
+    if(confusedFound.length){
+      html+=`<div><div style="font-size:.72rem;color:#fbbf24;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">⚠️ Commonly confused words found — double check:</div>
+        ${confusedFound.map(p=>`<div style="background:#1a1000;border:1px solid #f59e0b33;border-radius:8px;padding:8px 12px;margin-bottom:6px;font-size:.8rem;color:#94a3b8">${p.tip}</div>`).join('')}</div>`;
+    }
+  }
+
+  out.innerHTML=html;
+}
 
 // ═══════════════════ ENGLISH: SYNONYM FINDER ═══════════════════
 const SYN_DB={

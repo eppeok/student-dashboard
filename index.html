@@ -43,6 +43,8 @@ nav{position:sticky;top:0;z-index:100;background:#06090fee;backdrop-filter:blur(
 .sc-sci{border-color:#14532d}  .sc-sci:hover{border-color:#22c55e;box-shadow:0 0 24px #22c55e33}
 .sc-hist{border-color:#78350f} .sc-hist:hover{border-color:#f59e0b;box-shadow:0 0 24px #f59e0b33}
 .sc-eng{border-color:#831843}  .sc-eng:hover{border-color:#ec4899;box-shadow:0 0 24px #ec489933}
+.sc-qb{border-color:#4c1d95}   .sc-qb:hover{border-color:#a78bfa;box-shadow:0 0 24px #a78bfa33}
+@keyframes qbpulse{0%,100%{box-shadow:0 0 0 0 #a78bfa44}50%{box-shadow:0 0 8px 3px #a78bfa66}}
 
 /* SECTIONS */
 .section{position:relative;z-index:1;display:none;padding:20px 16px 60px;max-width:1100px;margin:0 auto}
@@ -289,6 +291,7 @@ textarea{resize:vertical;min-height:80px}
   <button class="nav-btn eng"  onclick="showSection('eng')"  aria-label="Go to English">📖 English</button>
   <button class="nav-btn" onclick="showSection('lb')" aria-label="Go to Leaderboard" style="color:#f59e0b">🏆 Leaderboard</button>
   <button class="nav-btn" onclick="showSection('progress')" aria-label="Go to Progress Tracker" style="color:#22c55e">📈 Progress</button>
+  <a href="https://eppeok.github.io/quizblitz/" target="_blank" class="nav-btn" style="color:#a78bfa;text-decoration:none;border:1px solid #4c1d95;border-radius:50px;animation:qbpulse 2.5s infinite" aria-label="Open QuizBlitz multiplayer quiz game">⚡ QuizBlitz</a>
 </nav>
 
 <!-- HOME -->
@@ -414,6 +417,25 @@ textarea{resize:vertical;min-height:80px}
       </ul>
       <div class="home-card-cta" style="color:#ec4899">Open English →</div>
     </div>
+
+    <a href="https://eppeok.github.io/quizblitz/" target="_blank" class="home-card sc-qb" style="text-decoration:none;position:relative;overflow:hidden">
+      <div style="position:absolute;top:10px;right:12px;background:#7c3aed;color:#fff;font-size:.65rem;font-weight:800;padding:3px 8px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase">LIVE</div>
+      <div class="home-card-top">
+        <div class="home-card-icon">⚡</div>
+        <div class="home-card-title" style="color:#a78bfa">QuizBlitz</div>
+        <div class="home-card-count">Multiplayer</div>
+      </div>
+      <ul class="home-tool-list">
+        <li>🏆 Classic Race — most points wins</li>
+        <li>💰 Gold Rush — faster answers = more coins</li>
+        <li>❤️ Survival — 3 lives, last one standing</li>
+        <li>🔥 Streak Master — combos = mega points</li>
+        <li>🌍 GK, ➗ Math, 🔬 Science packs</li>
+        <li>📜 History, 📚 English, 🎮 Gaming packs</li>
+        <li>Up to 30 players at once — live, real-time</li>
+      </ul>
+      <div class="home-card-cta" style="color:#a78bfa">Play QuizBlitz ⚡ →</div>
+    </a>
 
   </div>
 </div>

@@ -1109,6 +1109,98 @@ textarea{resize:vertical;min-height:80px}
       <div id="essay-out" style="margin-top:12px"></div>
     </div>
 
+    <!-- SPELLING PRACTICE GAME -->
+    <div class="tool-card" style="border-color:#831843;grid-column:1/-1">
+      <h3><span>🔤</span> Spelling Practice Game</h3>
+      <p class="tool-hint">The word shows on screen for a few seconds — <b>remember it!</b> Then it disappears and you type it from memory. Like the classic Look → Cover → Write → Check method. Choose a word set below to start.</p>
+
+      <!-- Setup screen -->
+      <div id="sp-setup">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px">
+          <select id="sp-set" aria-label="Choose word set" style="font-size:.88rem">
+            <option value="ks2">⭐ Year 3–4 (KS2 Core)</option>
+            <option value="ks3">⭐⭐ Year 5–6 (KS2 Hard)</option>
+            <option value="secondary">⭐⭐⭐ Secondary Level</option>
+            <option value="science">🔬 Science Words</option>
+            <option value="history">📜 History Words</option>
+            <option value="maths">➗ Maths Words</option>
+            <option value="tricky">🤯 Commonly Misspelled</option>
+          </select>
+          <button class="btn btn-eng" onclick="startSP()">▶ Start</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;font-size:.8rem;color:#64748b">
+          <label><input type="checkbox" id="sp-audio" checked style="width:auto;margin-right:4px"/> 🔊 Say the word aloud</label>
+          <span style="margin-left:auto">Show time:</span>
+          <select id="sp-time" style="width:auto;font-size:.8rem;padding:4px 8px" aria-label="How long to show the word">
+            <option value="2">2 sec</option>
+            <option value="3" selected>3 sec</option>
+            <option value="4">4 sec</option>
+            <option value="5">5 sec</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Game screen -->
+      <div id="sp-game" style="display:none">
+        <!-- Progress bar -->
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;color:#64748b;margin-bottom:4px">
+          <span id="sp-progress-label">Word 1 of 10</span>
+          <span>Score: <b id="sp-score" style="color:#4ade80">0</b> &nbsp; Streak: <b id="sp-streak" style="color:#f59e0b">0</b> 🔥</span>
+        </div>
+        <div style="background:#1a2840;border-radius:6px;height:6px;margin-bottom:16px;overflow:hidden">
+          <div id="sp-progress-bar" style="height:100%;background:linear-gradient(90deg,#ec4899,#f9a8d4);border-radius:6px;transition:width .3s ease;width:0%"></div>
+        </div>
+
+        <!-- LOOK phase -->
+        <div id="sp-look" style="text-align:center">
+          <div style="font-size:.72rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">👀 Look at this word...</div>
+          <div id="sp-word" style="font-size:3.5rem;font-weight:900;color:#f9a8d4;letter-spacing:4px;margin-bottom:16px;min-height:72px;line-height:1.1;transition:opacity .4s"></div>
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:14px">
+            <button id="sp-hear-btn" onclick="sayWord()" style="padding:6px 16px;border-radius:20px;border:1px solid #831843;background:transparent;color:#f9a8d4;cursor:pointer;font-size:.8rem">🔊 Hear it again</button>
+          </div>
+          <!-- Countdown bar -->
+          <div style="background:#1a2840;border-radius:6px;height:10px;max-width:300px;margin:0 auto;overflow:hidden">
+            <div id="sp-countdown-bar" style="height:100%;width:100%;background:linear-gradient(90deg,#ec4899,#f9a8d4);border-radius:6px;transition:width .1s linear"></div>
+          </div>
+          <div style="font-size:.72rem;color:#64748b;margin-top:6px" id="sp-countdown-label">Hiding in 3s...</div>
+        </div>
+
+        <!-- WRITE phase -->
+        <div id="sp-write" style="display:none;text-align:center">
+          <div style="font-size:.72rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">✏️ Now spell it from memory...</div>
+          <div style="font-size:1.4rem;color:#1a2840;margin-bottom:14px;min-height:40px;letter-spacing:4px">▓▓▓▓▓▓▓</div>
+          <input type="text" id="sp-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+            placeholder="Type the word here..." aria-label="Type the spelling"
+            style="font-size:1.3rem;text-align:center;letter-spacing:3px;max-width:320px;margin:0 auto 14px"
+            onkeydown="if(event.key==='Enter')checkSP()"/>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <button class="btn btn-eng" onclick="checkSP()" style="font-size:1rem;padding:12px 32px">✅ Check</button>
+            <button onclick="skipSP()" style="padding:12px 20px;border-radius:50px;border:1px solid #1a2840;background:transparent;color:#64748b;cursor:pointer;font-size:.85rem">Skip</button>
+          </div>
+        </div>
+
+        <!-- RESULT phase -->
+        <div id="sp-result" style="display:none;text-align:center">
+          <div id="sp-result-icon" style="font-size:3rem;margin-bottom:8px"></div>
+          <div id="sp-result-msg" style="font-size:1rem;font-weight:700;margin-bottom:6px"></div>
+          <div id="sp-result-breakdown" style="font-size:.85rem;color:#94a3b8;letter-spacing:2px;margin-bottom:14px;min-height:28px"></div>
+          <button class="btn btn-eng" onclick="nextSP()" id="sp-next-btn" style="font-size:.95rem">Next Word →</button>
+        </div>
+
+        <!-- End screen -->
+        <div id="sp-end" style="display:none;text-align:center">
+          <div style="font-size:3rem;margin-bottom:10px" id="sp-end-icon">🎉</div>
+          <div style="font-size:1.5rem;font-weight:800;color:#f9a8d4;margin-bottom:6px" id="sp-end-title"></div>
+          <div style="font-size:.9rem;color:#94a3b8;margin-bottom:20px" id="sp-end-msg"></div>
+          <div id="sp-wrong-list" style="margin-bottom:16px;text-align:left;max-width:320px;margin-left:auto;margin-right:auto"></div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-eng" onclick="startSP()">🔄 Play Again</button>
+            <button onclick="document.getElementById('sp-game').style.display='none';document.getElementById('sp-setup').style.display='block'" style="padding:10px 20px;border-radius:50px;border:1px solid #831843;background:transparent;color:#f9a8d4;cursor:pointer">Change Set</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- SPELL CHECKER -->
     <div class="tool-card" style="border-color:#831843;grid-column:1/-1">
       <h3><span>✍️</span> Spell Checker</h3>
@@ -2512,6 +2604,159 @@ function flipFlashcard(){
   document.getElementById('flashcard-box').style.background=fcFlipped?'#0f2d1a':'#0c1220';
 }
 function nextFlashcard(){fcIdx=(fcIdx+1)%FLASHCARDS.length;showFlashcard()}
+
+// ═══════════════════ ENGLISH: SPELLING PRACTICE GAME ═══════════════════
+const SP_SETS={
+  ks2:{label:'Year 3–4',words:['accident','actually','address','answer','appear','arrive','believe','bicycle','bottom','breath','breathe','build','busy','business','calendar','caught','centre','century','certain','circle','complete','consider','continue','decide','describe','different','difficult','disappear','earth','eight','enough','exercise','experience','experiment','extreme','famous','favourite','february','forward','fruit','grammar','group','guard','guide','heard','heart','height','history','imagine','improve','increase','important','interest','island','knowledge','learn','length','library','material','medicine','mention','minute','natural','naughty','notice','occasion','often','opposite','ordinary','particular','peculiar','perhaps','popular','position','possible','potatoes','pressure','probably','promise','purpose','quarter','question','recent','reign','remember','sentence','separate','special','straight','strange','strength','suppose','surprise','therefore','though','thought','through','various','weight','woman','women']},
+  ks3:{label:'Year 5–6',words:['accommodate','aggressive','amateur','ancient','apparent','appreciate','attached','available','average','awkward','bargain','bruise','category','cemetery','committee','communicate','community','competition','conscience','conscious','controversy','convenience','correspond','criticise','curiosity','definite','desperate','determined','develop','dictionary','disastrous','embarrass','environment','equip','especially','exaggerate','excellent','existence','explanation','familiar','foreign','forty','frequently','government','guarantee','harass','hindrance','identity','immediate','individual','interfere','interrupt','language','leisure','lightning','marvellous','mischievous','muscle','necessary','neighbour','nuisance','occupy','occur','opportunity','parliament','persuade','physical','prejudice','privilege','profession','programme','pronunciation','queue','recognise','recommend','relevant','restaurant','rhyme','rhythm','sacrifice','secretary','shoulder','significant','sincere','soldier','stomach','sufficient','suggest','symbol','system','temperature','thorough','twelfth','variety','vegetable','vehicle','yacht']},
+  secondary:{label:'Secondary',words:['aberration','abstemious','acquiesce','ambiguous','anachronism','benevolent','bureaucracy','cacophony','chiaroscuro','cliché','colloquial','connotation','contemporaneous','curriculum','cynicism','denigrate','ebullient','elegy','enigmatic','ephemeral','euthanasia','exacerbate','facetious','fallacious','gregarious','hyperbole','idiosyncratic','juxtaposition','labyrinthine','melancholy','millennium','miscellaneous','mnemonic','nihilism','obfuscate','omniscient','onomatopoeia','oxymoron','paradox','paraphernalia','pejorative','philanthropy','pragmatic','precedent','prestidigitation','pseudonym','quintessential','rhetorical','sacrilegious','soliloquy','sycophant','taciturn','ubiquitous','unequivocal','verisimilitude','vicarious','zealotry']},
+  science:{label:'Science',words:['acceleration','atmosphere','biodiversity','carbohydrate','chromosome','combustion','condensation','conservation','convection','cytoplasm','diffusion','ecosystem','electromagnetic','evaporation','fertilisation','frequency','gravitational','hypothesis','inheritance','laboratory','magnitude','metabolism','microscope','mitochondria','molecule','organism','osmosis','oxidation','photosynthesis','precipitation','reproduction','resistance','respiration','sedimentary','skeleton','sublimation','temperature','transpiration','ultraviolet','vaccination','vertebrate','wavelength']},
+  history:{label:'History',words:['abdication','abolition','archaeologist','aristocracy','assassination','chronological','civilisation','colonisation','communist','constitution','democracy','dictatorship','emigration','empire','excavation','exploration','feudalism','genocide','imperialism','industrialisation','interpretation','invasion','medieval','mercantile','monarchy','nationalism','oppression','parliament','persecution','prehistoric','propaganda','protestant','reformation','renaissance','republic','revolution','significance','sovereignty','suffragette','totalitarian','tyranny']},
+  maths:{label:'Maths',words:['acute','adjacent','algebra','algorithm','approximation','arithmetic','circumference','coefficient','correlation','denominator','diameter','equation','equivalent','estimate','evaluate','factorise','formula','frequency','gradient','hexagon','hypotenuse','integer','intersect','isosceles','magnitude','numerator','obtuse','parallelogram','percentage','perimeter','perpendicular','polynomial','probability','proportion','quadrant','quadrilateral','quotient','reciprocal','rhombus','simultaneous','statistic','symmetry','tangent','theorem','trapezium','triangle','variable','velocity','vertices']},
+  tricky:{label:'Commonly Misspelled',words:['receive','believe','achieve','neighbour','deceive','perceive','ceiling','conceive','weird','foreign','height','their','separate','definitely','necessary','embarrass','occurred','possession','accommodate','accidentally','conscientious','millennium','questionnaire','bureaucracy','sacrilegious','supersede','pronunciation','privilege','liaison','guarantee','pharaoh','broccoli','fluorescent','entrepreneur','conscience','manoeuvre','silhouette','surveillance','pneumonia','lieutenant']}
+};
+
+let spWords=[],spIdx=0,spScore=0,spStreak=0,spWrong=[],spTimer=null,spCurrentWord='',spShowTime=3;
+
+function startSP(){
+  const setKey=document.getElementById('sp-set').value;
+  spShowTime=parseInt(document.getElementById('sp-time').value)||3;
+  const pool=[...SP_SETS[setKey].words];
+  // shuffle and pick 10
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  spWords=pool.slice(0,10);
+  spIdx=0;spScore=0;spStreak=0;spWrong=[];
+  document.getElementById('sp-setup').style.display='none';
+  document.getElementById('sp-game').style.display='block';
+  ['sp-end','sp-result','sp-write'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('sp-look').style.display='block';
+  showSPWord();
+}
+
+function showSPWord(){
+  spCurrentWord=spWords[spIdx];
+  // update progress
+  const pct=((spIdx)/spWords.length*100);
+  document.getElementById('sp-progress-bar').style.width=pct+'%';
+  document.getElementById('sp-progress-label').textContent=`Word ${spIdx+1} of ${spWords.length}`;
+  document.getElementById('sp-score').textContent=spScore;
+  document.getElementById('sp-streak').textContent=spStreak;
+  // show phases
+  ['sp-end','sp-result','sp-write'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('sp-look').style.display='block';
+  // display word
+  const wordEl=document.getElementById('sp-word');
+  wordEl.style.opacity='1';
+  wordEl.textContent=spCurrentWord;
+  // say it
+  if(document.getElementById('sp-audio')?.checked) sayWord();
+  // start countdown
+  let t=spShowTime;
+  const bar=document.getElementById('sp-countdown-bar');
+  const lbl=document.getElementById('sp-countdown-label');
+  bar.style.transition='none';bar.style.width='100%';
+  setTimeout(()=>{bar.style.transition=`width ${spShowTime}s linear`;bar.style.width='0%'},50);
+  if(spTimer)clearInterval(spTimer);
+  spTimer=setInterval(()=>{
+    t-=0.1;
+    if(lbl)lbl.textContent=`Hiding in ${Math.max(0,t).toFixed(1)}s...`;
+    if(t<=0){clearInterval(spTimer);hideAndWrite()}
+  },100);
+}
+
+function hideAndWrite(){
+  // fade out word
+  const wordEl=document.getElementById('sp-word');
+  wordEl.style.opacity='0';
+  setTimeout(()=>{
+    document.getElementById('sp-look').style.display='none';
+    document.getElementById('sp-write').style.display='block';
+    const inp=document.getElementById('sp-input');
+    inp.value='';inp.focus();
+  },400);
+}
+
+function sayWord(){
+  if(!spCurrentWord)return;
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(spCurrentWord);
+    u.rate=0.85;u.pitch=1;u.lang='en-GB';
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function checkSP(){
+  const typed=document.getElementById('sp-input').value.trim().toLowerCase();
+  const correct=spCurrentWord.toLowerCase();
+  const isRight=typed===correct;
+  document.getElementById('sp-write').style.display='none';
+  document.getElementById('sp-result').style.display='block';
+  if(isRight){
+    spScore++;spStreak++;
+    document.getElementById('sp-result-icon').textContent='✅';
+    document.getElementById('sp-result-msg').innerHTML=`<span style="color:#4ade80">Correct! ${spStreak>=3?'🔥 x'+spStreak+' streak!':''}</span>`;
+    document.getElementById('sp-result-breakdown').innerHTML=`<span style="color:#4ade80;font-size:1.3rem;letter-spacing:4px;font-weight:800">${spCurrentWord}</span>`;
+  } else {
+    spStreak=0;
+    spWrong.push({typed,correct:spCurrentWord});
+    document.getElementById('sp-result-icon').textContent='❌';
+    document.getElementById('sp-result-msg').innerHTML=`<span style="color:#f87171">Not quite!</span>`;
+    // show letter-by-letter comparison
+    const comp=typed.split('').map((ch,i)=>{
+      const expected=spCurrentWord[i]||'';
+      return `<span style="color:${ch===expected?'#4ade80':'#f87171'};font-weight:800">${ch}</span>`;
+    }).join('')+(typed.length<spCurrentWord.length?`<span style="color:#64748b">${spCurrentWord.slice(typed.length)}</span>`:'');
+    document.getElementById('sp-result-breakdown').innerHTML=
+      `<div style="font-size:.8rem;color:#64748b;margin-bottom:4px">You typed:</div>
+       <div style="font-size:1.2rem;letter-spacing:3px">${comp}</div>
+       <div style="font-size:.8rem;color:#64748b;margin:8px 0 4px">Correct spelling:</div>
+       <div style="font-size:1.3rem;letter-spacing:4px;font-weight:800;color:#4ade80">${spCurrentWord}</div>`;
+  }
+  document.getElementById('sp-score').textContent=spScore;
+  document.getElementById('sp-streak').textContent=spStreak;
+}
+
+function skipSP(){
+  if(spTimer)clearInterval(spTimer);
+  spWrong.push({typed:'(skipped)',correct:spCurrentWord});
+  spStreak=0;
+  nextSP();
+}
+
+function nextSP(){
+  spIdx++;
+  if(spIdx>=spWords.length){endSP();return}
+  document.getElementById('sp-result').style.display='none';
+  showSPWord();
+}
+
+function endSP(){
+  document.getElementById('sp-look').style.display='none';
+  document.getElementById('sp-write').style.display='none';
+  document.getElementById('sp-result').style.display='none';
+  document.getElementById('sp-end').style.display='block';
+  document.getElementById('sp-progress-bar').style.width='100%';
+  const pct=Math.round(spScore/spWords.length*100);
+  const icon=pct===100?'🏆':pct>=80?'🌟':pct>=60?'👍':pct>=40?'💪':'📚';
+  const title=pct===100?'Perfect Score!':pct>=80?'Excellent!':pct>=60?'Good job!':pct>=40?'Keep practising!':'Needs more practice';
+  document.getElementById('sp-end-icon').textContent=icon;
+  document.getElementById('sp-end-title').textContent=title;
+  document.getElementById('sp-end-msg').textContent=`You got ${spScore} out of ${spWords.length} correct (${pct}%)`;
+  // show words to revise
+  if(spWrong.length){
+    document.getElementById('sp-wrong-list').innerHTML=
+      `<div style="font-size:.72rem;color:#f87171;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">📝 Words to practise:</div>`+
+      spWrong.map(w=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #0a1420;font-size:.82rem">
+        <span style="color:#f87171">${w.typed}</span>
+        <span style="color:#64748b">→</span>
+        <span style="color:#4ade80;font-weight:700">${w.correct}</span>
+      </div>`).join('');
+  } else {
+    document.getElementById('sp-wrong-list').innerHTML='';
+  }
+  updateProgress('eng',spScore,spScore,spWords.length);
+}
 
 // ═══════════════════ ENGLISH: SPELL CHECKER ═══════════════════
 const MISSPELLINGS={

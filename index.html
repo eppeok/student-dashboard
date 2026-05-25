@@ -3619,7 +3619,7 @@ async function loadLB(){
 
 function renderLocalLB(){
   // No Firebase — show local scores cleanly with no confusing error messages
-  const local=JSON.parse(localStorage.getItem('local_scores')||'[]');
+  let local=[];try{local=JSON.parse(localStorage.getItem('local_scores')||'[]');}catch(e){local=[];}
   const filtered=lbTab==='overall'?local:local.filter(e=>e.subject===lbTab);
   const sorted=filtered.sort((a,b)=>b.score-a.score).slice(0,10);
   return sorted.length
@@ -3654,7 +3654,7 @@ async function submitScore(subject,score,quizName){
   const name=lbName||localStorage.getItem('lb_name')||'Anonymous';
   const entry={name,score,subject,quiz:quizName,ts:Date.now()};
   // Save locally always
-  const local=JSON.parse(localStorage.getItem('local_scores')||'[]');
+  let local=[];try{local=JSON.parse(localStorage.getItem('local_scores')||'[]');}catch(e){local=[];}
   local.push(entry);
   if(local.length>100)local.shift();
   localStorage.setItem('local_scores',JSON.stringify(local));
@@ -3673,7 +3673,7 @@ const SUBJECTS_META=[
 ];
 
 function getProgress(){
-  return JSON.parse(localStorage.getItem('student_progress')||'{}');
+  try{return JSON.parse(localStorage.getItem('student_progress')||'{}');}catch(e){return {};}
 }
 function saveProgress(p){
   localStorage.setItem('student_progress',JSON.stringify(p));
